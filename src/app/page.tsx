@@ -140,6 +140,7 @@ export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [dbProducts, setDbProducts] = useState<Product[]>(initialProducts);
 
   // Real-time market rates simulation
   const [marketRates, setMarketRates] = useState({
@@ -208,105 +209,139 @@ export default function Home() {
   });
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  // Load all customizations from localStorage on mount
+  // Load all customizations from database on mount
   useEffect(() => {
-    const loadedCustoms: Record<string, string> = {};
-    const loadedTexts: Record<string, string> = {};
-    
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key) {
-        if (key.startsWith("oj_custom_img_")) {
-          const id = key.replace("oj_custom_img_", "");
-          const value = localStorage.getItem(key);
-          if (value) loadedCustoms[id] = value;
-        } else if (key.startsWith("oj_custom_txt_")) {
-          const id = key.replace("oj_custom_txt_", "");
-          const value = localStorage.getItem(key);
-          if (value) loadedTexts[id] = value;
+    // Fetch products catalog from database
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.products) {
+          setDbProducts(data.products);
         }
-      }
-    }
-    
-    setCustomizedImages(loadedCustoms);
-    setCustomText(loadedTexts);
+      })
+      .catch((err) => console.error("Failed to load products from server:", err));
 
-    const savedWhatsApp = localStorage.getItem("oj_custom_whatsapp");
-    if (savedWhatsApp) {
-      setWhatsAppNumber(savedWhatsApp);
-    }
+    // Fetch custom content overrides
+    fetch("/api/custom-content")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.content) {
+          const loadedCustoms: Record<string, string> = {};
+          const loadedTexts: Record<string, string> = {};
+          const savedWhatsApp = data.content["oj_custom_whatsapp"] || "9936488845";
+          setWhatsAppNumber(savedWhatsApp);
+
+          Object.entries(data.content).forEach(([key, val]) => {
+            if (key.startsWith("oj_custom_img_")) {
+              loadedCustoms[key.replace("oj_custom_img_", "")] = val as string;
+            } else if (key.startsWith("oj_custom_txt_")) {
+              loadedTexts[key.replace("oj_custom_txt_", "")] = val as string;
+            } else {
+              loadedTexts[key] = val as string;
+            }
+          });
+          setCustomizedImages(loadedCustoms);
+          setCustomText(loadedTexts);
+
+          // Load baseline rates from database
+          const db24k = data.content["oj_base_price_24k"];
+          const db22k = data.content["oj_base_price_22k"];
+          const db18k = data.content["oj_base_price_18k"];
+          const dbSilver = data.content["oj_base_price_silver"];
+
+          if (db24k || db22k || db18k || dbSilver) {
+            setMarketRates((prev) => ({
+              ...prev,
+              g24k: parseFloat(db24k || "7650"),
+              g22k: parseFloat(db22k || "7015"),
+              g18k: parseFloat(db18k || "5740"),
+              s999: parseFloat(dbSilver || "92"),
+            }));
+          } else {
+            // Fetch live rates from our new MCX-linked API route
+            fetch("/api/mcx-rates")
+              .then((res) => res.json())
+              .then((data) => {
+                if (data.success && data.rates) {
+                  setMarketRates((prev) => ({
+                    ...prev,
+                    g24k: data.rates.g24k,
+                    g22k: data.rates.g22k,
+                    g18k: data.rates.g18k,
+                    s999: data.rates.s999,
+                  }));
+                }
+              })
+              .catch((err) => console.error("Failed to load live rates:", err));
+          }
+        }
+      })
+      .catch((err) => console.error("Failed to load custom content:", err));
 
     // Initialize sitar ambient background music loop
     sitarAudioRef.current = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3");
     sitarAudioRef.current.loop = true;
     sitarAudioRef.current.volume = 0.25;
-
-    // Load custom baseline rates set in Admin dashboard
-    const base24k = localStorage.getItem("oj_base_price_24k");
-    const base22k = localStorage.getItem("oj_base_price_22k");
-    const base18k = localStorage.getItem("oj_base_price_18k");
-    const baseSilver = localStorage.getItem("oj_base_price_silver");
-
-    if (base24k || base22k || base18k || baseSilver) {
-      setMarketRates((prev) => ({
-        ...prev,
-        g24k: parseFloat(base24k || "7650"),
-        g22k: parseFloat(base22k || "7015"),
-        g18k: parseFloat(base18k || "5740"),
-        s999: parseFloat(baseSilver || "92"),
-      }));
-    } else {
-      fetch("/api/mcx-rates")
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.success && data.rates) {
-            setMarketRates((prev) => ({
-              ...prev,
-              g24k: data.rates.g24k,
-              g22k: data.rates.g22k,
-              g18k: data.rates.g18k,
-              s999: data.rates.s999,
-            }));
-          }
-        })
-        .catch((err) => console.error("Failed to load live rates:", err));
-    }
   }, []);
 
-  // Save text changes in state & localStorage
-  const handleTextChange = (id: string, newText: string) => {
-    localStorage.setItem(`oj_custom_txt_${id}`, newText);
+  // Save text changes in state & server database
+  const handleTextChange = async (id: string, newText: string) => {
     setCustomText((prev) => ({ ...prev, [id]: newText }));
+    try {
+      await fetch("/api/custom-content", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: `oj_custom_txt_${id}`, value: newText }),
+      });
+    } catch (err) {
+      console.error("Failed to save text edit to server:", err);
+    }
   };
 
-  // Set custom image and save in localStorage
-  const handleUploadImage = (id: string, base64: string) => {
-    localStorage.setItem(`oj_custom_img_${id}`, base64);
+  // Set custom image and save in server database
+  const handleUploadImage = async (id: string, base64: string) => {
     setCustomizedImages((prev) => ({ ...prev, [id]: base64 }));
+    try {
+      await fetch("/api/custom-content", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: `oj_custom_img_${id}`, value: base64 }),
+      });
+    } catch (err) {
+      console.error("Failed to save image edit to server:", err);
+    }
   };
 
   // Save WhatsApp number update
-  const handleWhatsAppUpdate = (num: string) => {
+  const handleWhatsAppUpdate = async (num: string) => {
     const cleanNum = num.replace(/\s+/g, "").replace(/\+/g, "");
     setWhatsAppNumber(cleanNum);
-    localStorage.setItem("oj_custom_whatsapp", cleanNum);
+    try {
+      await fetch("/api/custom-content", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: "oj_custom_whatsapp", value: cleanNum }),
+      });
+    } catch (err) {
+      console.error("Failed to save WhatsApp number to server:", err);
+    }
   };
 
   // Reset all uploaded images & edited text to default settings
-  const handleResetAllEdits = () => {
+  const handleResetAllEdits = async () => {
     if (window.confirm("Are you sure you want to delete all text edits and custom photos, and restore initial defaults?")) {
-      const keysToRemove: string[] = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && (key.startsWith("oj_custom_img_") || key.startsWith("oj_custom_txt_") || key === "oj_custom_whatsapp")) {
-          keysToRemove.push(key);
-        }
+      try {
+        await fetch("/api/custom-content", {
+          method: "DELETE",
+        });
+      } catch (err) {
+        console.error("Failed to delete settings on server:", err);
       }
-      keysToRemove.forEach((k) => localStorage.removeItem(k));
       setCustomizedImages({});
       setCustomText({});
       setWhatsAppNumber("9936488845");
       setIsDesignMode(false);
+      window.location.reload();
     }
   };
 
@@ -324,8 +359,8 @@ export default function Home() {
     }
   };
 
-  // Map products to include local customizations
-  const products = initialProducts.map((p) => ({
+  // Map products to include database customizations
+  const products = dbProducts.map((p) => ({
     ...p,
     image: customizedImages[p.id] || p.image,
   }));

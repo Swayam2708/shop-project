@@ -58,7 +58,7 @@ export default function AdminDashboard() {
     loadDashboardData();
   }, []);
 
-  const loadDashboardData = () => {
+  const loadDashboardData = async () => {
     // Load contact form inquiries
     const savedInquiries = localStorage.getItem("oj_form_submissions");
     if (savedInquiries) {
@@ -69,52 +69,55 @@ export default function AdminDashboard() {
       }
     }
 
-    // Load WhatsApp & Address configs
-    const savedWhatsApp = localStorage.getItem("oj_custom_whatsapp");
-    if (savedWhatsApp) setWhatsAppNumber(savedWhatsApp);
+    try {
+      // Fetch custom content overrides
+      const ccRes = await fetch("/api/custom-content");
+      const ccData = await ccRes.json();
+      if (ccData.success && ccData.content) {
+        const loadedTexts: Record<string, string> = {};
+        const loadedImages: Record<string, string> = {};
+        
+        const savedWhatsApp = ccData.content["oj_custom_whatsapp"] || "9936488845";
+        setWhatsAppNumber(savedWhatsApp);
 
-    const savedAddress = localStorage.getItem("oj_custom_txt_cont_val1");
-    if (savedAddress) setAddressText(savedAddress);
+        const savedAddress = ccData.content["oj_custom_txt_cont_val1"];
+        if (savedAddress) setAddressText(savedAddress);
 
-    // Load baseline rates
-    const saved24k = localStorage.getItem("oj_base_price_24k") || "7650";
-    const saved22k = localStorage.getItem("oj_base_price_22k") || "7015";
-    const saved18k = localStorage.getItem("oj_base_price_18k") || "5740";
-    const savedSilver = localStorage.getItem("oj_base_price_silver") || "92";
-    setRate24kInput(saved24k);
-    setRate22kInput(saved22k);
-    setRate18kInput(saved18k);
-    setRateSilverInput(savedSilver);
+        const saved24k = ccData.content["oj_base_price_24k"] || "7650";
+        const saved22k = ccData.content["oj_base_price_22k"] || "7015";
+        const saved18k = ccData.content["oj_base_price_18k"] || "5740";
+        const savedSilver = ccData.content["oj_base_price_silver"] || "92";
+        setRate24kInput(saved24k);
+        setRate22kInput(saved22k);
+        setRate18kInput(saved18k);
+        setRateSilverInput(savedSilver);
 
-    // Load customized product details
-    const loadedTexts: Record<string, string> = {};
-    const loadedImages: Record<string, string> = {};
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key) {
-        if (key.startsWith("oj_custom_txt_")) {
-          loadedTexts[key.replace("oj_custom_txt_", "")] = localStorage.getItem(key) || "";
-        } else if (key.startsWith("oj_custom_img_")) {
-          loadedImages[key.replace("oj_custom_img_", "")] = localStorage.getItem(key) || "";
-        }
+        Object.entries(ccData.content).forEach(([key, val]) => {
+          if (key.startsWith("oj_custom_txt_")) {
+            loadedTexts[key.replace("oj_custom_txt_", "")] = val as string;
+          } else if (key.startsWith("oj_custom_img_")) {
+            loadedImages[key.replace("oj_custom_img_", "")] = val as string;
+          } else {
+            loadedTexts[key] = val as string;
+          }
+        });
+        setCustomText(loadedTexts);
+        setCustomizedImages(loadedImages);
       }
+    } catch (err) {
+      console.error("Failed to load dashboard settings:", err);
     }
-    setCustomText(loadedTexts);
-    setCustomizedImages(loadedImages);
 
-    // Map initial products with customized values
-    const mapped = initialProducts.map((p) => ({
-      ...p,
-      image: loadedImages[p.id] || p.image,
-      name: loadedTexts[`prod_name_${p.id}`] || p.name,
-      subCategory: loadedTexts[`prod_subcat_${p.id}`] || p.subCategory,
-      description: loadedTexts[`prod_desc_${p.id}`] || p.description,
-      materials: loadedTexts[`prod_mat_${p.id}`] || p.materials,
-      price: loadedTexts[`prod_price_${p.id}`]
-        ? parseFloat(loadedTexts[`prod_price_${p.id}`].replace(/[^0-9.]/g, "")) || p.price
-        : p.price,
-    }));
-    setProducts(mapped);
+    try {
+      // Fetch products catalog from server
+      const prodRes = await fetch("/api/products");
+      const prodData = await prodRes.json();
+      if (prodData.success && prodData.products) {
+        setProducts(prodData.products);
+      }
+    } catch (err) {
+      console.error("Failed to load dashboard products:", err);
+    }
 
     // Generate mock visitor logs for visual dashboard analytics
     const mockLogs = [
@@ -157,15 +160,33 @@ export default function AdminDashboard() {
   };
 
   // Update a product's price/name/category/description/materials from dashboard
-  const handleUpdateProduct = (id: string, name: string, priceStr: string, subCategory: string, description: string, materials: string) => {
+  const handleUpdateProduct = async (id: string, name: string, priceStr: string, subCategory: string, description: string, materials: string) => {
     const cleanPrice = priceStr.replace(/[^0-9.]/g, "");
-    localStorage.setItem(`oj_custom_txt_prod_name_${id}`, name);
-    localStorage.setItem(`oj_custom_txt_prod_price_${id}`, `$${parseFloat(cleanPrice).toLocaleString()}`);
-    localStorage.setItem(`oj_custom_txt_prod_subcat_${id}`, subCategory);
-    localStorage.setItem(`oj_custom_txt_prod_desc_${id}`, description);
-    localStorage.setItem(`oj_custom_txt_prod_mat_${id}`, materials);
-    loadDashboardData();
-    alert("Product details updated successfully! Changes applied to storefront & quick view.");
+    const numericPrice = parseFloat(cleanPrice);
+
+    try {
+      const res = await fetch(`/api/products/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          price: numericPrice,
+          subCategory,
+          description,
+          materials,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        loadDashboardData();
+        alert("Product details updated successfully in database!");
+      } else {
+        alert("Failed to update product details: " + data.error);
+      }
+    } catch (err: any) {
+      console.error("Failed to update product:", err);
+      alert("Error updating product: " + err.message);
+    }
   };
 
   // Upload product image from dashboard
@@ -173,11 +194,22 @@ export default function AdminDashboard() {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
+      reader.onloadend = async () => {
         if (typeof reader.result === "string") {
-          localStorage.setItem(`oj_custom_img_${id}`, reader.result);
-          loadDashboardData();
-          alert("Product image updated!");
+          try {
+            const res = await fetch("/api/custom-content", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ key: `oj_custom_img_${id}`, value: reader.result }),
+            });
+            const data = await res.json();
+            if (data.success) {
+              loadDashboardData();
+              alert("Product image updated in database!");
+            }
+          } catch (err) {
+             console.error("Failed to update image:", err);
+          }
         }
       };
       reader.readAsDataURL(file);
@@ -709,14 +741,35 @@ export default function AdminDashboard() {
               <div className="bg-neutral-900 border border-neutral-800 p-6 space-y-6">
                 <h4 className="font-serif text-lg text-white">Bazaar Metal Rates Management</h4>
                 <form 
-                  onSubmit={(e) => {
+                  onSubmit={async (e) => {
                     e.preventDefault();
-                    localStorage.setItem("oj_base_price_24k", rate24kInput);
-                    localStorage.setItem("oj_base_price_22k", rate22kInput);
-                    localStorage.setItem("oj_base_price_18k", rate18kInput);
-                    localStorage.setItem("oj_base_price_silver", rateSilverInput);
-                    alert("Storefront baseline metal rates updated successfully!");
-                  }} 
+                    try {
+                      await fetch("/api/custom-content", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ key: "oj_base_price_24k", value: rate24kInput }),
+                      });
+                      await fetch("/api/custom-content", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ key: "oj_base_price_22k", value: rate22kInput }),
+                      });
+                      await fetch("/api/custom-content", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ key: "oj_base_price_18k", value: rate18kInput }),
+                      });
+                      await fetch("/api/custom-content", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ key: "oj_base_price_silver", value: rateSilverInput }),
+                      });
+                      alert("Storefront baseline metal rates updated successfully in database!");
+                    } catch (err) {
+                      console.error("Failed to update metal rates:", err);
+                      alert("Failed to save rates to server.");
+                    }
+                  }}
                   className="space-y-4"
                 >
                   <div className="grid grid-cols-2 gap-4">
