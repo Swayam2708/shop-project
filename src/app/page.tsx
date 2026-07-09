@@ -607,18 +607,18 @@ export default function Home() {
       </section>
 
       {/* TODAY'S SHOWROOM METAL RATES WIDGET */}
-      <section className="py-12 px-6 max-w-7xl mx-auto z-10 relative">
-        <div className="bg-white/40 dark:bg-[#0F0E0B]/40 border border-[#dfba73]/20 p-8 rounded-sm shadow-xl backdrop-blur-md relative overflow-hidden">
+      <section className="py-16 md:py-24 px-6 md:px-12 max-w-7xl mx-auto z-10 relative">
+        <div className="bg-white/40 dark:bg-[#0F0E0B]/40 border border-[#dfba73]/15 p-8 md:p-12 rounded-sm shadow-luxury-glow backdrop-blur-md relative overflow-hidden">
           {/* Filigree Corner Accents */}
-          <GoldCorner className="absolute top-2 left-2 w-8 h-8 pointer-events-none opacity-40" />
-          <GoldCorner className="absolute bottom-2 right-2 w-8 h-8 pointer-events-none opacity-40" flipX flipY />
+          <GoldCorner className="absolute top-2 left-2 w-8 h-8 pointer-events-none opacity-30" />
+          <GoldCorner className="absolute bottom-2 right-2 w-8 h-8 pointer-events-none opacity-30" flipX flipY />
           
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-[#dfba73]/15">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-[#dfba73]/10">
             <div>
               <span className="font-sans text-[10px] text-[#dfba73] tracking-[0.3em] uppercase font-bold block">
                 Official Live Board
               </span>
-              <h3 className="font-serif text-2xl md:text-3xl text-neutral-900 dark:text-neutral-100 mt-1">
+              <h3 className="font-serif text-2xl md:text-3xl tracking-wide text-neutral-900 dark:text-neutral-100 mt-1">
                 Today's Showroom Metal Rates
               </h3>
               <p className="font-sans text-xs text-neutral-500 mt-1">
@@ -626,16 +626,16 @@ export default function Home() {
               </p>
             </div>
             <div className="text-right shrink-0">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full text-[10px] text-green-600 dark:text-green-400 font-sans tracking-wider uppercase font-bold">
+              <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-green-500/5 border border-green-500/20 rounded-full text-[9px] text-green-600 dark:text-green-400 font-sans tracking-widest uppercase font-bold">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping" />
                 Live Updated
               </span>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-6 text-center">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-8 text-center">
             {/* 24K Gold Card */}
-            <div className="bg-neutral-50/50 dark:bg-neutral-900/20 border border-[#dfba73]/10 p-5 rounded-sm relative group hover:border-[#dfba73]/40 transition-colors">
+            <div className="bg-neutral-50/40 dark:bg-neutral-900/10 border border-[#dfba73]/10 p-6 rounded-sm relative group hover:border-[#dfba73]/30 transition-all duration-300 shadow-sm hover:shadow-luxury-gold">
               <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-neutral-400">Gold 24K</span>
               <p className="text-[9px] font-sans text-neutral-500 mt-0.5">99.9% Pure Fine Gold</p>
               <h4 className="font-serif text-xl sm:text-2xl text-neutral-900 dark:text-white mt-3 font-semibold">
@@ -647,7 +647,7 @@ export default function Home() {
             </div>
 
             {/* 22K Gold Card */}
-            <div className="bg-neutral-50/50 dark:bg-neutral-900/20 border border-[#dfba73]/10 p-5 rounded-sm relative group hover:border-[#dfba73]/40 transition-colors">
+            <div className="bg-neutral-50/40 dark:bg-neutral-900/10 border border-[#dfba73]/10 p-6 rounded-sm relative group hover:border-[#dfba73]/30 transition-all duration-300 shadow-sm hover:shadow-luxury-gold">
               <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-[#dfba73]">Gold 22K</span>
               <p className="text-[9px] font-sans text-neutral-500 mt-0.5">91.6% Pure Jeweller Gold</p>
               <h4 className="font-serif text-xl sm:text-2xl text-neutral-900 dark:text-white mt-3 font-semibold">
@@ -659,7 +659,7 @@ export default function Home() {
             </div>
 
             {/* 18K Gold Card */}
-            <div className="bg-neutral-50/50 dark:bg-neutral-900/20 border border-[#dfba73]/10 p-5 rounded-sm relative group hover:border-[#dfba73]/40 transition-colors">
+            <div className="bg-neutral-50/40 dark:bg-neutral-900/10 border border-[#dfba73]/10 p-6 rounded-sm relative group hover:border-[#dfba73]/30 transition-all duration-300 shadow-sm hover:shadow-luxury-gold">
               <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-neutral-400">Gold 18K</span>
               <p className="text-[9px] font-sans text-neutral-500 mt-0.5">75% Pure Designer Gold</p>
               <h4 className="font-serif text-xl sm:text-2xl text-neutral-900 dark:text-white mt-3 font-semibold">
@@ -671,7 +671,7 @@ export default function Home() {
             </div>
 
             {/* 999 Silver Card */}
-            <div className="bg-neutral-50/50 dark:bg-neutral-900/20 border border-[#dfba73]/10 p-5 rounded-sm relative group hover:border-[#dfba73]/40 transition-colors">
+            <div className="bg-neutral-50/40 dark:bg-neutral-900/10 border border-[#dfba73]/10 p-6 rounded-sm relative group hover:border-[#dfba73]/30 transition-all duration-300 shadow-sm hover:shadow-luxury-gold">
               <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-neutral-400">Silver 999</span>
               <p className="text-[9px] font-sans text-neutral-500 mt-0.5">99.9% Pure Fine Silver</p>
               <h4 className="font-serif text-xl sm:text-2xl text-neutral-900 dark:text-white mt-3 font-semibold">
@@ -683,7 +683,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-[#dfba73]/10 text-[9px] uppercase tracking-widest text-neutral-400 font-sans font-semibold">
+          <div className="mt-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-[#dfba73]/10 text-[9px] uppercase tracking-widest text-neutral-400 font-sans font-semibold">
             <span>Official Showroom Board • Omar Jewellers OJ</span>
             <span className="text-neutral-500">Government Certified BIS Hallmark Standards</span>
           </div>
@@ -697,7 +697,7 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="new-arrivals"
-        className="py-24 px-6 max-w-7xl mx-auto z-10 relative"
+        className="py-32 md:py-44 px-6 md:px-12 max-w-7xl mx-auto z-10 relative"
       >
         <div className="text-center mb-16">
           <span 
@@ -755,7 +755,7 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="best-sellers"
-        className="bg-white/10 dark:bg-neutral-950/30 border-y border-[#dfba73]/10 py-24 px-6 z-10 relative"
+        className="bg-white/5 dark:bg-neutral-950/15 border-y border-[#dfba73]/10 py-32 md:py-44 px-6 md:px-12 z-10 relative"
       >
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-16">
@@ -778,15 +778,15 @@ export default function Home() {
               </h2>
             </div>
             {/* Category Filter Tabs */}
-            <div className="flex flex-wrap gap-4 font-sans text-xs tracking-wider uppercase">
+            <div className="flex flex-wrap gap-2.5 font-sans text-xs tracking-wider uppercase">
               {["all", "rings", "necklaces", "earrings", "bracelets"].map((category) => (
                 <button
                   key={category}
                   onClick={() => setActiveCategory(category)}
-                  className={`px-4 py-2 border rounded-full transition-all duration-300 ${
+                  className={`px-5 py-2.5 border rounded-none tracking-widest uppercase transition-all duration-500 font-sans text-[10px] ${
                     activeCategory === category
-                      ? "bg-[#dfba73] border-[#dfba73] text-neutral-950 font-semibold"
-                      : "border-[#dfba73]/20 hover:border-[#dfba73] text-neutral-800 dark:text-neutral-200"
+                      ? "bg-[#dfba73] border-[#dfba73] text-neutral-950 font-bold"
+                      : "border-[#dfba73]/15 hover:border-[#dfba73] text-neutral-800 dark:text-neutral-200 hover:bg-[#dfba73]/5"
                   }`}
                 >
                   {category}
@@ -894,9 +894,9 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="bridal"
-        className="relative py-24 overflow-hidden z-10"
+        className="relative py-32 md:py-44 overflow-hidden z-10"
       >
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-5">
             <span 
               contentEditable={isDesignMode}
@@ -1058,7 +1058,7 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="daily-wear"
-        className="py-24 px-6 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
+        className="py-32 md:py-44 px-6 md:px-12 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
       >
         <div className="text-center mb-16">
           <span 
@@ -1116,7 +1116,7 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="silver-collection"
-        className="py-24 px-6 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
+        className="py-32 md:py-44 px-6 md:px-12 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
       >
         {/* Cute Cartoon corner ornaments for Silver collection */}
         <CuteCoinCorner className="absolute top-4 left-4 w-12 h-12 pointer-events-none opacity-40 animate-pulse" />
@@ -1178,9 +1178,9 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="about"
-        className="bg-[#dfba73]/5 py-24 border-y border-[#dfba73]/10 z-10 relative"
+        className="bg-[#dfba73]/3 dark:bg-neutral-950/10 py-32 md:py-44 border-y border-[#dfba73]/10 z-10 relative"
       >
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="relative aspect-square border border-[#dfba73]/25 overflow-hidden">
             <img
               src={customAboutImage}
@@ -1407,7 +1407,7 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="reviews"
-        className="py-24 px-6 max-w-7xl mx-auto z-10 relative"
+        className="py-32 md:py-44 px-6 md:px-12 max-w-7xl mx-auto z-10 relative"
       >
         <div className="text-center mb-16">
           <span 
@@ -1534,7 +1534,7 @@ export default function Home() {
       </motion.section>
 
       {/* 8. INSTAGRAM-STYLE GALLERY */}
-      <section id="gallery" className="py-24 border-t border-[#dfba73]/10 bg-white/10 dark:bg-neutral-900/20 z-10 relative">
+      <section id="gallery" className="py-32 md:py-44 border-t border-[#dfba73]/10 bg-white/5 dark:bg-neutral-950/10 z-10 relative">
         <div className="text-center mb-16">
           <span 
             contentEditable={isDesignMode}
@@ -1622,7 +1622,7 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="contact"
-        className="py-24 px-6 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
+        className="py-32 md:py-44 px-6 md:px-12 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           <div>
