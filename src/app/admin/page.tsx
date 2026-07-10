@@ -47,6 +47,10 @@ export default function AdminDashboard() {
   // Mock visitor log feed
   const [visitorLogs, setVisitorLogs] = useState<any[]>([]);
 
+  // Database connectivity status
+  const [dbConnected, setDbConnected] = useState<boolean | null>(null);
+  const [dbError, setDbError] = useState<string>("");
+
   // Load data on mount
   useEffect(() => {
     // Check if session passcode is already correct
@@ -56,6 +60,22 @@ export default function AdminDashboard() {
     }
 
     loadDashboardData();
+
+    // Verify database connectivity
+    fetch("/api/db-check")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.connected) {
+          setDbConnected(true);
+        } else {
+          setDbConnected(false);
+          setDbError(data.error || "Failed to reach database server.");
+        }
+      })
+      .catch((err) => {
+        setDbConnected(false);
+        setDbError(err.message || "Failed to call status API.");
+      });
   }, []);
 
   const loadDashboardData = async () => {
@@ -386,6 +406,34 @@ export default function AdminDashboard() {
 
         {/* Main Content Area */}
         <main className="flex-1 p-6 md:p-10 overflow-y-auto bg-neutral-950">
+          {/* Database Connectivity Status Alert */}
+          {dbConnected === false && (
+            <div className="mb-8 p-6 bg-red-500/10 border border-red-500/25 rounded-md flex flex-col md:flex-row md:items-center justify-between gap-4 animate-pulse-subtle">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-red-400 font-bold text-sm">
+                  <ShieldAlert className="w-5 h-5 shrink-0" />
+                  DATABASE CONNECTION ERROR
+                </div>
+                <p className="font-sans text-xs text-neutral-300">
+                  The Admin Panel edits are not saving permanently because the server database is offline or not configured. 
+                  Please verify your <code>DATABASE_URL</code> variable is set correctly in your Vercel Project Settings.
+                </p>
+                {dbError && (
+                  <p className="font-mono text-[10px] text-red-500/80 bg-black/40 p-2 rounded mt-2 max-w-2xl overflow-x-auto">
+                    Error detail: {dbError}
+                  </p>
+                )}
+              </div>
+              <a 
+                href="https://vercel.com" 
+                target="_blank" 
+                rel="noreferrer" 
+                className="shrink-0 py-2.5 px-5 bg-red-500/20 hover:bg-red-500/35 border border-red-500/30 hover:border-red-500 text-red-200 font-sans text-[10px] font-bold tracking-widest uppercase transition-all rounded-sm text-center"
+              >
+                Configure Vercel Settings
+              </a>
+            </div>
+          )}
           {/* TAB 1: INQUIRIES */}
           {activeTab === "inquiries" && (
             <div className="space-y-6 animate-fade-in">
