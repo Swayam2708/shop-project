@@ -301,6 +301,29 @@ export default function Home() {
     }
   }, [customText["audio_url"]]);
 
+  // Global user interaction auto-play trigger for ambient music
+  useEffect(() => {
+    const startAudio = () => {
+      if (sitarAudioRef.current && sitarAudioRef.current.paused && !isSitarPlaying) {
+        sitarAudioRef.current.play()
+          .then(() => {
+            setIsSitarPlaying(true);
+          })
+          .catch((err) => console.log("Audio autoplay interaction trigger blocked:", err));
+      }
+      window.removeEventListener("click", startAudio);
+      window.removeEventListener("touchstart", startAudio);
+    };
+
+    window.addEventListener("click", startAudio);
+    window.addEventListener("touchstart", startAudio);
+
+    return () => {
+      window.removeEventListener("click", startAudio);
+      window.removeEventListener("touchstart", startAudio);
+    };
+  }, [isSitarPlaying]);
+
   // Save text changes in state & server database
   const handleTextChange = async (id: string, newText: string) => {
     setCustomText((prev) => ({ ...prev, [id]: newText }));

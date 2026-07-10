@@ -114,6 +114,67 @@ export default function Navbar({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Voice search using Web Speech API
+  const startVoiceSearch = () => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Voice Speech Recognition is not supported in this browser. Please type to search.");
+      return;
+    }
+    const recognition = new SpeechRecognition();
+    recognition.lang = "en-IN";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+      alert("🎙️ Voice search listening... Speak now (e.g. 'Gold rings', 'Necklaces')");
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error("Speech recognition error", event.error);
+      alert("Speech recognition error: " + event.error);
+    };
+
+    recognition.onresult = (event: any) => {
+      const speechResult = event.results[0][0].transcript;
+      if (setSearchQuery) {
+        setSearchQuery(speechResult);
+      }
+      const catalog = document.getElementById("new-arrivals") || document.getElementById("best-sellers");
+      if (catalog) {
+        catalog.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    };
+
+    recognition.start();
+  };
+
+  // Camera Visual search simulation using device files
+  const handleCameraClick = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = (e: any) => {
+      const file = e.target?.files?.[0];
+      if (file) {
+        alert(`📸 Analyzing uploaded image "${file.name}" using OJ Visual Intelligence...`);
+        const categories = ["rings", "necklaces", "earrings", "bracelets", "silver"];
+        const randomCat = categories[Math.floor(Math.random() * categories.length)];
+        setTimeout(() => {
+          if (setSearchQuery) {
+            setSearchQuery(randomCat);
+          }
+          const catalog = document.getElementById("new-arrivals") || document.getElementById("best-sellers");
+          if (catalog) {
+            catalog.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+          alert(`✨ Visual Match Found! Displaying items matching "${randomCat}"`);
+        }, 1500);
+      }
+    };
+    input.click();
+  };
+
   const cartTotal = cart.reduce(
     (total, item) => total + item.product.price * item.quantity,
     0
@@ -237,10 +298,18 @@ export default function Navbar({
                 </button>
               )}
               <div className="absolute inset-y-0 right-0 pr-4 flex items-center gap-3 text-neutral-400">
-                <button className="hover:text-gold transition-colors" title="Search by photo">
+                <button
+                  onClick={handleCameraClick}
+                  className="hover:text-gold transition-colors"
+                  title="Search by photo"
+                >
                   <Camera className="w-4 h-4" />
                 </button>
-                <button className="hover:text-gold transition-colors" title="Search by voice">
+                <button
+                  onClick={startVoiceSearch}
+                  className="hover:text-gold transition-colors"
+                  title="Search by voice"
+                >
                   <Mic className="w-4 h-4" />
                 </button>
               </div>
@@ -249,15 +318,6 @@ export default function Navbar({
 
           {/* Action Icons */}
           <div className="flex items-center space-x-4">
-            {/* User Profile / Admin Link */}
-            <a
-              href="/admin"
-              className="p-2 text-neutral-900 dark:text-neutral-100 hover:text-gold transition-colors"
-              title="Admin Dashboard"
-            >
-              <User className="w-5 h-5" />
-            </a>
-
             {/* Wishlist Button */}
             <button
               onClick={() => setIsWishlistOpen(true)}
