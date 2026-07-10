@@ -15,6 +15,8 @@ interface NavbarProps {
   customText?: Record<string, string>;
   activeCategory?: string;
   setActiveCategory?: (cat: string) => void;
+  searchQuery?: string;
+  setSearchQuery?: (query: string) => void;
 }
 
 export default function Navbar({
@@ -27,6 +29,8 @@ export default function Navbar({
   customText = {},
   activeCategory = "all",
   setActiveCategory,
+  searchQuery = "",
+  setSearchQuery,
 }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -211,9 +215,27 @@ export default function Navbar({
               </span>
               <input
                 type="text"
-                placeholder="Search for gold necklaces, diamond rings..."
-                className="w-full bg-[#FAF9F5]/40 dark:bg-neutral-900/40 border border-neutral-200 dark:border-neutral-800 focus:border-gold hover:border-neutral-300 dark:hover:border-neutral-700 outline-none rounded-full py-2 pl-11 pr-20 text-xs font-sans text-neutral-900 dark:text-neutral-100 transition-all shadow-xs"
+                value={searchQuery}
+                onChange={(e) => {
+                  if (setSearchQuery) {
+                    setSearchQuery(e.target.value);
+                  }
+                  const catalog = document.getElementById("new-arrivals") || document.getElementById("best-sellers");
+                  if (catalog) {
+                    catalog.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }
+                }}
+                placeholder="Search for gold, diamonds, rings..."
+                className="w-full bg-[#FAF9F5]/40 dark:bg-neutral-900/40 border border-neutral-200 dark:border-neutral-800 focus:border-gold hover:border-neutral-300 dark:hover:border-neutral-700 outline-none rounded-full py-2 pl-11 pr-24 text-xs font-sans text-neutral-900 dark:text-neutral-100 transition-all shadow-xs"
               />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery && setSearchQuery("")}
+                  className="absolute inset-y-0 right-14 flex items-center pr-2 text-neutral-400 hover:text-gold transition-colors text-[9px] uppercase tracking-wider font-sans font-bold"
+                >
+                  Clear
+                </button>
+              )}
               <div className="absolute inset-y-0 right-0 pr-4 flex items-center gap-3 text-neutral-400">
                 <button className="hover:text-gold transition-colors" title="Search by photo">
                   <Camera className="w-4 h-4" />

@@ -190,6 +190,9 @@ export default function Home() {
   const [isSitarPlaying, setIsSitarPlaying] = useState(false);
   const sitarAudioRef = React.useRef<HTMLAudioElement | null>(null);
 
+  // Search input query state
+  const [searchQuery, setSearchQuery] = useState("");
+
   // State to hold customized images & text edits from localStorage
   const [customizedImages, setCustomizedImages] = useState<Record<string, string>>({});
   const [customText, setCustomText] = useState<Record<string, string>>({});
@@ -486,7 +489,15 @@ export default function Home() {
   // Filter products for the Best Sellers section tab
   const filteredBestSellers = products
     .filter((p) => p.category === "best-sellers")
-    .filter((p) => activeCategory === "all" || p.subCategory.toLowerCase() === activeCategory.toLowerCase());
+    .filter((p) => activeCategory === "all" || p.subCategory.toLowerCase() === activeCategory.toLowerCase())
+    .filter((p) => {
+      if (!searchQuery) return true;
+      const name = (customText[`prod_name_${p.id}`] || p.name).toLowerCase();
+      const sub = p.subCategory.toLowerCase();
+      const desc = (customText[`prod_desc_${p.id}`] || p.description).toLowerCase();
+      const mat = (customText[`prod_mat_${p.id}`] || p.materials).toLowerCase();
+      return name.includes(searchQuery.toLowerCase()) || sub.includes(searchQuery.toLowerCase()) || desc.includes(searchQuery.toLowerCase()) || mat.includes(searchQuery.toLowerCase());
+    });
 
   // Dynamic values or defaults
   const customHeroBanner = customText["hero_banner_url"] || customizedImages["hero_banner"];
@@ -510,6 +521,8 @@ export default function Home() {
         customText={customText}
         activeCategory={activeCategory}
         setActiveCategory={setActiveCategory}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
       />
 
       {/* Floating Ambient Glows */}
@@ -939,6 +952,14 @@ export default function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {products
             .filter((p) => p.category === "new-arrivals")
+            .filter((p) => {
+              if (!searchQuery) return true;
+              const name = (customText[`prod_name_${p.id}`] || p.name).toLowerCase();
+              const sub = p.subCategory.toLowerCase();
+              const desc = (customText[`prod_desc_${p.id}`] || p.description).toLowerCase();
+              const mat = (customText[`prod_mat_${p.id}`] || p.materials).toLowerCase();
+              return name.includes(searchQuery.toLowerCase()) || sub.includes(searchQuery.toLowerCase()) || desc.includes(searchQuery.toLowerCase()) || mat.includes(searchQuery.toLowerCase());
+            })
             .map((product) => (
               <ProductCard
                 key={product.id}
@@ -1362,6 +1383,14 @@ export default function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {products
             .filter((p) => p.category === "silver")
+            .filter((p) => {
+              if (!searchQuery) return true;
+              const name = (customText[`prod_name_${p.id}`] || p.name).toLowerCase();
+              const sub = p.subCategory.toLowerCase();
+              const desc = (customText[`prod_desc_${p.id}`] || p.description).toLowerCase();
+              const mat = (customText[`prod_mat_${p.id}`] || p.materials).toLowerCase();
+              return name.includes(searchQuery.toLowerCase()) || sub.includes(searchQuery.toLowerCase()) || desc.includes(searchQuery.toLowerCase()) || mat.includes(searchQuery.toLowerCase());
+            })
             .map((product) => (
               <ProductCard
                 key={product.id}
