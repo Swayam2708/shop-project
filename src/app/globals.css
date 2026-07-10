@@ -88,18 +88,18 @@
 }
 
 :root {
-  --background: #FAF9F6; /* Premium Alabaster White (just like Tanishq) */
-  --foreground: #002e27; /* Deep Tanishq Emerald Charcoal */
-  --gold-text: #8c6a26; /* Deep high-contrast antique gold */
+  --background: #FAF9F6; /* Premium Warm Alabaster */
+  --foreground: #001f1c; /* Luxury Deep Green-Black */
+  --gold-text: #8c6a26; /* Deep high-contrast antique gold for light mode readability */
   --gold-primary: #cca250; /* Premium Champagne Gold */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #FAF9F6; /* Retain premium white theme in system dark mode */
-    --foreground: #002e27;
-    --gold-text: #8c6a26;
-    --gold-primary: #cca250;
+    --background: #001210; /* Deepest Emerald-Black */
+    --foreground: #FCFCFA;
+    --gold-text: #dfba73; /* Radiant champagne gold for dark mode contrast */
+    --gold-primary: #dfba73;
   }
 }
 
@@ -121,7 +121,7 @@ body {
 }
 
 @utility bg-luxury-gradient-dark {
-  background: radial-gradient(circle at top, #fcfbfa 0%, #FAF9F6 50%, #e4eeec 100%);
+  background: radial-gradient(circle at top, #002e27 0%, #001210 60%, #000807 100%);
 }
 
 /* Glassmorphism custom styles */

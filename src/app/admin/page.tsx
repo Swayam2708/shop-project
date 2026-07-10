@@ -1067,6 +1067,299 @@ export default function AdminDashboard() {
                   </button>
                 </form>
               </div>
+
+              {/* Boutique Brand & Content Settings */}
+              <div className="bg-neutral-900 border border-neutral-800 p-6 space-y-6">
+                <h4 className="font-serif text-lg text-white">Boutique Brand & Content Settings</h4>
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    const navLeft = (document.getElementById("inp_nav_left") as HTMLInputElement)?.value;
+                    const navBlessings = (document.getElementById("inp_nav_blessings") as HTMLInputElement)?.value;
+                    const navRight = (document.getElementById("inp_nav_right") as HTMLInputElement)?.value;
+                    
+                    const heroBadge = (document.getElementById("inp_hero_badge") as HTMLInputElement)?.value;
+                    const heroTitle1 = (document.getElementById("inp_hero_title_1") as HTMLInputElement)?.value;
+                    const heroTitle2 = (document.getElementById("inp_hero_title_2") as HTMLInputElement)?.value;
+                    const heroSubtitle = (document.getElementById("inp_hero_subtitle") as HTMLTextAreaElement)?.value;
+                    const heroVideoUrl = (document.getElementById("inp_hero_video_url") as HTMLInputElement)?.value;
+                    const heroBannerUrl = (document.getElementById("inp_hero_banner_url") as HTMLInputElement)?.value;
+
+                    const aboutSub = (document.getElementById("inp_about_sub") as HTMLInputElement)?.value;
+                    const aboutTitle = (document.getElementById("inp_about_title") as HTMLInputElement)?.value;
+                    const aboutDesc1 = (document.getElementById("inp_about_desc1") as HTMLTextAreaElement)?.value;
+                    const aboutDesc2 = (document.getElementById("inp_about_desc2") as HTMLTextAreaElement)?.value;
+                    const aboutImageUrl = (document.getElementById("inp_about_image_url") as HTMLInputElement)?.value;
+
+                    const audioUrl = (document.getElementById("inp_audio_url") as HTMLInputElement)?.value;
+
+                    try {
+                      const payload = [
+                        { key: "oj_custom_txt_nav_left_txt", value: navLeft },
+                        { key: "oj_custom_txt_nav_blessings", value: navBlessings },
+                        { key: "oj_custom_txt_nav_right_txt", value: navRight },
+                        
+                        { key: "oj_custom_txt_hero_badge", value: heroBadge },
+                        { key: "oj_custom_txt_hero_title_l1", value: heroTitle1 },
+                        { key: "oj_custom_txt_hero_title_l2", value: heroTitle2 },
+                        { key: "oj_custom_txt_hero_subtitle", value: heroSubtitle },
+                        { key: "oj_custom_txt_hero_video_url", value: heroVideoUrl },
+                        { key: "oj_custom_txt_hero_banner_url", value: heroBannerUrl },
+
+                        { key: "oj_custom_txt_about_sub", value: aboutSub },
+                        { key: "oj_custom_txt_about_title", value: aboutTitle },
+                        { key: "oj_custom_txt_about_desc1", value: aboutDesc1 },
+                        { key: "oj_custom_txt_about_desc2", value: aboutDesc2 },
+                        { key: "oj_custom_txt_about_image_url", value: aboutImageUrl },
+
+                        { key: "oj_custom_txt_audio_url", value: audioUrl },
+                      ];
+
+                      for (const item of payload) {
+                        await fetch("/api/custom-content", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify(item),
+                        });
+                      }
+
+                      // Update local state
+                      setCustomText((prev) => {
+                        const updated = { ...prev };
+                        payload.forEach(item => {
+                          const id = item.key.replace("oj_custom_txt_", "");
+                          updated[id] = item.value;
+                        });
+                        return updated;
+                      });
+
+                      alert("Boutique brand info and media settings saved successfully!");
+                    } catch (err) {
+                      console.error("Failed to save brand settings:", err);
+                      alert("Failed to save brand settings to server.");
+                    }
+                  }}
+                  className="space-y-4"
+                >
+                  {/* Navbar Slogans */}
+                  <div className="border-b border-neutral-800 pb-4">
+                    <h5 className="font-serif text-sm text-[#dfba73] mb-3">Sacred Header Bar</h5>
+                    <div className="grid grid-cols-2 gap-4 mb-3">
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                          Left Address Label
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="inp_nav_left"
+                          defaultValue={customText["nav_left_txt"] || "SHAHABAD HARDOI CHOWK"}
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                          Right Purity Label
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="inp_nav_right"
+                          defaultValue={customText["nav_right_txt"] || "100% BIS HALLMARKED PURE GOLD"}
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                        Central Blessings Slogans
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        id="inp_nav_blessings"
+                        defaultValue={customText["nav_blessings"] || "ॐ श्री गणेशाय नमः • ॐ नमः शिवाय • शुभ लाभ"}
+                        className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Hero Banner Text & Media */}
+                  <div className="border-b border-neutral-800 pb-4">
+                    <h5 className="font-serif text-sm text-[#dfba73] mb-3">Hero Section Banner & Showcase</h5>
+                    <div className="grid grid-cols-2 gap-4 mb-3">
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                          Hero Badge
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="inp_hero_badge"
+                          defaultValue={customText["hero_badge"] || "EST. 2026 • PURE GOLD REDEFINED"}
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                          Showcase Video URL
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="inp_hero_video_url"
+                          defaultValue={customText["hero_video_url"] || "https://player.vimeo.com/external/371433846.sd.mp4?s=236da2f3c054e08b15d0ec3efd8ec92a353d7f4b&profile_id=139&oauth2_token_id=57447761"}
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs font-mono"
+                        />
+                      </div>
+                    </div>
+                    <div className="mb-3">
+                      <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                        Showcase Photo Banner URL (Overrides video background if set)
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        id="inp_hero_banner_url"
+                        defaultValue={customText["hero_banner_url"] || ""}
+                        placeholder="Paste image URL (e.g. Unsplash link) to use an image instead of video"
+                        className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs font-mono"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4 mb-3">
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                          Hero Title Line 1
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="inp_hero_title_1"
+                          defaultValue={customText["hero_title_l1"] || "Pure Golden Legacies,"}
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                          Hero Title Line 2
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="inp_hero_title_2"
+                          defaultValue={customText["hero_title_l2"] || "Sculpted for the Modern Era."}
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                        Hero Subtitle Description
+                      </label>
+                      <textarea
+                        required
+                        id="inp_hero_subtitle"
+                        rows={2}
+                        defaultValue={customText["hero_subtitle"] || "Discover Omar Jewellers OJ. Modern Gen Z aesthetics meet 18k and 22k pure solid gold, forming hand-finished silhouettes that whisper absolute luxury."}
+                        className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs resize-none"
+                      />
+                    </div>
+                  </div>
+
+                  {/* About Section details */}
+                  <div className="border-b border-neutral-800 pb-4">
+                    <h5 className="font-serif text-sm text-[#dfba73] mb-3">About Story & Heritage Section</h5>
+                    <div className="grid grid-cols-2 gap-4 mb-3">
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                          About Subtitle
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="inp_about_sub"
+                          defaultValue={customText["about_sub"] || "Gold Alchemy"}
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                          About Main Title
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="inp_about_title"
+                          defaultValue={customText["about_title"] || "Omar Jewellers OJ"}
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs"
+                        />
+                      </div>
+                    </div>
+                    <div className="mb-3">
+                      <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                        About Showcase Photo URL
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        id="inp_about_image_url"
+                        defaultValue={customText["about_image_url"] || "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?q=80&w=800&auto=format&fit=crop"}
+                        className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs font-mono"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                          Heritage Paragraph 1
+                        </label>
+                        <textarea
+                          required
+                          id="inp_about_desc1"
+                          rows={3}
+                          defaultValue={customText["about_desc1"] || "Founded on the values of trust, master craftsmanship, and absolute purity, Omar Jewellers OJ redefines precious metal couture for the self-expressive generation..."}
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs resize-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                          Heritage Paragraph 2
+                        </label>
+                        <textarea
+                          required
+                          id="inp_about_desc2"
+                          rows={3}
+                          defaultValue={customText["about_desc2"] || "Every silhouette is hallmarked with unique HUID codes laser-inscribed under central registry standards. Enjoy digital gold clarity linked directly to your order catalog."}
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs resize-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Ambient Music Source */}
+                  <div>
+                    <h5 className="font-serif text-sm text-[#dfba73] mb-3">Ambient Sound settings</h5>
+                    <div>
+                      <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                        Background Sitar/Flute Music Audio URL (Direct MP3 link)
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        id="inp_audio_url"
+                        defaultValue={customText["audio_url"] || "https://archive.org/download/ICCR-474-AC/ICCR-474-AC.mp3"}
+                        className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2.5 px-4 text-white text-xs font-mono"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="py-2.5 px-6 bg-amber-500 hover:bg-amber-600 text-neutral-950 font-sans text-[10px] font-bold tracking-widest uppercase transition-colors rounded-sm"
+                  >
+                    Save Boutique Content
+                  </button>
+                </form>
+              </div>
             </div>
           )}
         </main>

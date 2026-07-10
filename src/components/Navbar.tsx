@@ -12,6 +12,7 @@ interface NavbarProps {
   removeFromCart: (id: string) => void;
   onOpenQuickView: (product: Product) => void;
   onOpenInquiry: (product: Product, quantity?: number) => void;
+  customText?: Record<string, string>;
 }
 
 export default function Navbar({
@@ -21,6 +22,7 @@ export default function Navbar({
   removeFromCart,
   onOpenQuickView,
   onOpenInquiry,
+  customText = {},
 }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -122,17 +124,17 @@ export default function Navbar({
         <div className="bg-neutral-950 border-b border-[#dfba73]/25 py-2 px-4 flex justify-between items-center text-[10px] sm:text-xs font-serif text-[#dfba73] tracking-[0.2em] relative uppercase z-50">
           <div className="flex items-center gap-1.5 shrink-0">
             <span className="text-sm font-bold animate-pulse text-[#dfba73] font-serif">ॐ</span>
-            <span className="hidden md:inline font-sans text-[8px] text-neutral-400 tracking-wider font-semibold">SHAHABAD HARDOI CHOWK</span>
+            <span className="hidden md:inline font-sans text-[8px] text-neutral-400 tracking-wider font-semibold">
+              {customText["nav_left_txt"] || "SHAHABAD HARDOI CHOWK"}
+            </span>
           </div>
           <div className="text-center font-bold font-serif flex items-center gap-2 sm:gap-4 overflow-x-auto whitespace-nowrap px-2 scrollbar-none mx-auto text-[#dfba73] select-none text-[11px] sm:text-xs">
-            <span>ॐ श्री गणेशाय नमः</span>
-            <span className="text-[#dfba73]/30">•</span>
-            <span>ॐ नमः शिवाय</span>
-            <span className="text-[#dfba73]/30">•</span>
-            <span>शुभ लाभ</span>
+            <span>{customText["nav_blessings"] || "ॐ श्री गणेशाय नमः • ॐ नमः शिवाय • शुभ लाभ"}</span>
           </div>
           <div className="flex items-center gap-1.5 shrink-0">
-            <span className="hidden md:inline font-sans text-[8px] text-neutral-400 tracking-wider font-semibold">100% BIS HALLMARKED PURE GOLD</span>
+            <span className="hidden md:inline font-sans text-[8px] text-neutral-400 tracking-wider font-semibold">
+              {customText["nav_right_txt"] || "100% BIS HALLMARKED PURE GOLD"}
+            </span>
             <span className="text-sm font-bold animate-pulse text-[#dfba73] font-serif">ॐ</span>
           </div>
         </div>

@@ -277,12 +277,26 @@ export default function Home() {
         }
       })
       .catch((err) => console.error("Failed to load custom content:", err));
-
-    // Initialize sitar ambient background music loop
-    sitarAudioRef.current = new Audio("https://archive.org/download/ICCR-474-AC/ICCR-474-AC.mp3");
-    sitarAudioRef.current.loop = true;
-    sitarAudioRef.current.volume = 0.15;
   }, []);
+
+  // Initialize and dynamically update sitar ambient background music loop from database
+  useEffect(() => {
+    const audioUrl = customText["audio_url"] || "https://archive.org/download/ICCR-474-AC/ICCR-474-AC.mp3";
+    if (!sitarAudioRef.current) {
+      sitarAudioRef.current = new Audio(audioUrl);
+      sitarAudioRef.current.loop = true;
+      sitarAudioRef.current.volume = 0.15;
+    } else if (sitarAudioRef.current.src !== audioUrl) {
+      const playing = !sitarAudioRef.current.paused;
+      sitarAudioRef.current.pause();
+      sitarAudioRef.current = new Audio(audioUrl);
+      sitarAudioRef.current.loop = true;
+      sitarAudioRef.current.volume = 0.15;
+      if (playing) {
+        sitarAudioRef.current.play().catch((e) => console.log("Audio play blocked by browser:", e));
+      }
+    }
+  }, [customText["audio_url"]]);
 
   // Save text changes in state & server database
   const handleTextChange = async (id: string, newText: string) => {
@@ -475,8 +489,8 @@ export default function Home() {
     .filter((p) => activeCategory === "all" || p.subCategory.toLowerCase() === activeCategory.toLowerCase());
 
   // Dynamic values or defaults
-  const customHeroBanner = customizedImages["hero_banner"];
-  const customAboutImage = customizedImages["about_image"] || "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?q=80&w=800&auto=format&fit=crop";
+  const customHeroBanner = customText["hero_banner_url"] || customizedImages["hero_banner"];
+  const customAboutImage = customText["about_image_url"] || customizedImages["about_image"] || "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?q=80&w=800&auto=format&fit=crop";
 
   // Editable text styling outline
   const editOutlineClass = isDesignMode
@@ -493,6 +507,7 @@ export default function Home() {
         removeFromCart={handleRemoveFromCart}
         onOpenQuickView={handleOpenQuickView}
         onOpenInquiry={handleWhatsAppInquiry}
+        customText={customText}
       />
 
       {/* Floating Ambient Glows */}
@@ -521,6 +536,7 @@ export default function Home() {
             />
           ) : (
             <video
+              key={customText["hero_video_url"] || "default_video"}
               autoPlay
               loop
               muted
@@ -528,7 +544,7 @@ export default function Home() {
               className="w-full h-full object-cover brightness-[0.35] scale-105 animate-slow-pan"
             >
               <source
-                src="https://player.vimeo.com/external/371433846.sd.mp4?s=236da2f3c054e08b15d0ec3efd8ec92a353d7f4b&profile_id=139&oauth2_token_id=57447761"
+                src={customText["hero_video_url"] || "https://player.vimeo.com/external/371433846.sd.mp4?s=236da2f3c054e08b15d0ec3efd8ec92a353d7f4b&profile_id=139&oauth2_token_id=57447761"}
                 type="video/mp4"
               />
             </video>
