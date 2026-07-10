@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ShoppingBag, Heart, Menu, X, Search, Trash2, ArrowRight } from "lucide-react";
+import { ShoppingBag, Heart, Menu, X, Search, Trash2, ArrowRight, Camera, Mic, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Product } from "@/data/products";
 
@@ -13,6 +13,8 @@ interface NavbarProps {
   onOpenQuickView: (product: Product) => void;
   onOpenInquiry: (product: Product, quantity?: number) => void;
   customText?: Record<string, string>;
+  activeCategory?: string;
+  setActiveCategory?: (cat: string) => void;
 }
 
 export default function Navbar({
@@ -23,6 +25,8 @@ export default function Navbar({
   onOpenQuickView,
   onOpenInquiry,
   customText = {},
+  activeCategory = "all",
+  setActiveCategory,
 }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -199,22 +203,39 @@ export default function Navbar({
             </div>
           </a>
 
-          {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center space-x-8 font-sans text-sm font-medium tracking-wider uppercase text-neutral-900/70 dark:text-neutral-100/70">
-            {["home", "new-arrivals", "best-sellers", "bridal", "daily-wear", "about", "reviews", "gallery", "contact"].map((section) => (
-              <a
-                key={section}
-                href={`#${section}`}
-                className="relative py-1 text-neutral-900 dark:text-neutral-100 hover:text-gold transition-colors duration-300 group"
-              >
-                {section.replace("-", " ")}
-                <span className="absolute bottom-0 left-0 w-full h-[1px] bg-gold scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-              </a>
-            ))}
+          {/* Centered Search Pill (Tanishq Style) */}
+          <div className="hidden md:flex flex-1 max-w-md mx-8 relative items-center">
+            <div className="relative w-full">
+              <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-neutral-400">
+                <Search className="w-4 h-4" />
+              </span>
+              <input
+                type="text"
+                placeholder="Search for gold necklaces, diamond rings..."
+                className="w-full bg-[#FAF9F5]/40 dark:bg-neutral-900/40 border border-neutral-200 dark:border-neutral-800 focus:border-gold hover:border-neutral-300 dark:hover:border-neutral-700 outline-none rounded-full py-2 pl-11 pr-20 text-xs font-sans text-neutral-900 dark:text-neutral-100 transition-all shadow-xs"
+              />
+              <div className="absolute inset-y-0 right-0 pr-4 flex items-center gap-3 text-neutral-400">
+                <button className="hover:text-gold transition-colors" title="Search by photo">
+                  <Camera className="w-4 h-4" />
+                </button>
+                <button className="hover:text-gold transition-colors" title="Search by voice">
+                  <Mic className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* Action Icons */}
           <div className="flex items-center space-x-4">
+            {/* User Profile / Admin Link */}
+            <a
+              href="/admin"
+              className="p-2 text-neutral-900 dark:text-neutral-100 hover:text-gold transition-colors"
+              title="Admin Dashboard"
+            >
+              <User className="w-5 h-5" />
+            </a>
+
             {/* Wishlist Button */}
             <button
               onClick={() => setIsWishlistOpen(true)}
@@ -250,6 +271,39 @@ export default function Navbar({
                 </motion.span>
               )}
             </button>
+          </div>
+        </div>
+
+        {/* Tanishq-Style Categories Menu Bar */}
+        <div className="hidden md:block border-t border-neutral-200/50 dark:border-neutral-900/50 bg-[#FCFAF6] dark:bg-neutral-950 py-3 transition-colors duration-300">
+          <div className="max-w-7xl mx-auto px-6 flex items-center justify-center gap-8 font-sans text-[11px] font-bold uppercase tracking-[0.18em] text-neutral-900/80 dark:text-neutral-100/80">
+            {[
+              { label: "All Jewellery", href: "#new-arrivals", cat: "all" },
+              { label: "Gold Edit", href: "#best-sellers", cat: "rings" },
+              { label: "Diamond Edit", href: "#best-sellers", cat: "necklaces" },
+              { label: "Earrings", href: "#best-sellers", cat: "earrings" },
+              { label: "Rings", href: "#best-sellers", cat: "rings" },
+              { label: "Daily Wear", href: "#daily-wear", cat: "daily" },
+              { label: "Bridal", href: "#bridal", cat: "bridal" },
+              { label: "Silver", href: "#silver-collection", cat: "silver" },
+              { label: "Heritage", href: "#about", cat: "about" },
+              { label: "Contact", href: "#contact", cat: "contact" }
+            ].map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                onClick={() => {
+                  if (setActiveCategory && item.cat !== "about" && item.cat !== "contact") {
+                    setActiveCategory(item.cat);
+                  }
+                }}
+                className={`hover:text-gold border-b border-transparent hover:border-gold pb-0.5 transition-all duration-300 ${
+                  activeCategory === item.cat ? "text-gold border-gold" : ""
+                }`}
+              >
+                {item.label}
+              </a>
+            ))}
           </div>
         </div>
       </nav>

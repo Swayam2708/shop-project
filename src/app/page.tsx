@@ -508,6 +508,8 @@ export default function Home() {
         onOpenQuickView={handleOpenQuickView}
         onOpenInquiry={handleWhatsAppInquiry}
         customText={customText}
+        activeCategory={activeCategory}
+        setActiveCategory={setActiveCategory}
       />
 
       {/* Floating Ambient Glows */}

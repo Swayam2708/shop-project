@@ -19,12 +19,12 @@
   --color-gold-light: #e6d7b8;
   --color-gold-dark: #a37c3f;
   
-  --color-ivory: #faf8f5;
-  --color-blush: #f3efe9;
-  --color-pearl: #fcfaf6;
-  --color-luxury-black: #001f1c; /* Deepest Tanishq Green-Black */
-  --color-luxury-dark: #003d34; /* Signature Brand Emerald Green */
-  --color-tanishq-green: #003d34; /* Signature Brand Emerald Green */
+  --color-ivory: #FCFAF6;
+  --color-blush: #fcf8f2;
+  --color-pearl: #fffdfc;
+  --color-luxury-black: #18090a; /* Tanishq Ruby-Black */
+  --color-luxury-dark: #4A0D12; /* Tanishq Deep Burgundy */
+  --color-tanishq-green: #832729; /* Tanishq Burgundy-Red */
   --color-tanishq-gold: #cca250; /* Premium Champagne Gold */
 
   /* Font Families */
@@ -88,17 +88,17 @@
 }
 
 :root {
-  --background: #FAF9F6; /* Premium Warm Alabaster */
-  --foreground: #001f1c; /* Luxury Deep Green-Black */
-  --gold-text: #8c6a26; /* Deep high-contrast antique gold for light mode readability */
+  --background: #FCFAF6; /* Tanishq Warm Alabaster Ivory */
+  --foreground: #2D1F21; /* Burgundy Charcoal */
+  --gold-text: #832729; /* Tanishq Burgundy Red for text links/buttons */
   --gold-primary: #cca250; /* Premium Champagne Gold */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #001210; /* Deepest Emerald-Black */
-    --foreground: #FCFCFA;
-    --gold-text: #dfba73; /* Radiant champagne gold for dark mode contrast */
+    --background: #18090a; /* Deepest Luxury Ruby-Black */
+    --foreground: #FCFAF6;
+    --gold-text: #dfba73;
     --gold-primary: #dfba73;
   }
 }
@@ -117,11 +117,11 @@ body {
 
 /* Luxury ambient backgrounds */
 @utility bg-luxury-gradient-light {
-  background: radial-gradient(circle at top, #fcfbfa 0%, #FAF9F6 50%, #e4eeec 100%);
+  background: radial-gradient(circle at top, #fffefc 0%, #FCFAF6 50%, #f7eded 100%);
 }
 
 @utility bg-luxury-gradient-dark {
-  background: radial-gradient(circle at top, #002e27 0%, #001210 60%, #000807 100%);
+  background: radial-gradient(circle at top, #3b0a0d 0%, #100203 60%, #050000 100%);
 }
 
 /* Glassmorphism custom styles */
