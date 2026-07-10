@@ -240,5 +240,17 @@ export const products: Product[] = [
     description: "A complete puja set crafted in pure silver, including a thali plate, diya cup, incense stand, and kumkum bowl.",
     materials: "80% Pure Silver",
     details: ["Plate diameter: 8 inches", "Total set weight: 180g", "Exquisite flower carvings", "BIS hallmarked assurance"]
+  },
+  {
+    id: "oj-silver-008",
+    name: "999 Pure Silver Ganesha Idol",
+    category: "silver",
+    subCategory: "Idols",
+    price: 350,
+    rating: 5.0,
+    image: "https://images.unsplash.com/photo-1608962914070-dfd3744663aa?q=80&w=500&auto=format&fit=crop",
+    description: "Exquisitely detailed Ganesha Idol crafted in 99.9% fine silver. Perfect for pooja altars, home decor, and divine gifting.",
+    materials: "999 Fine Silver, Antique finish",
+    details: ["Height: 3.5 inches", "Weight: 85.0g", "BIS hallmarked purity stamp", "Arrives in velvet lined showcase box"]
   }
 ];

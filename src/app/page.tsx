@@ -140,6 +140,7 @@ export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>("silver");
+  const [activeSilverSub, setActiveSilverSub] = useState<string>("all");
   const [dbProducts, setDbProducts] = useState<Product[]>(initialProducts);
 
   // Real-time market rates simulation
@@ -201,7 +202,7 @@ export default function Home() {
   const whatsAppNumber = customText["whats_app_number"] || "9936488845";
 
   // Design mode toggles
-  const isDesignMode = false;
+  const [isDesignMode, setIsDesignMode] = useState(false);
 
   // Contact Form State
   const [formState, setFormState] = useState({
@@ -490,7 +491,22 @@ export default function Home() {
     }, 3500);
   };
 
-  // Removed storefront toggle design mode (CMS handled inside admin panel)
+  // Restrict Edit Website trigger to Owner Passcode
+  const handleToggleDesignMode = () => {
+    if (isDesignMode) {
+      setIsDesignMode(false);
+      return;
+    }
+
+    const enteredCode = window.prompt("Enter Owner Security Passcode to Edit Website:");
+    const correctCode = localStorage.getItem("oj_admin_passcode") || "OJ2026";
+
+    if (enteredCode === correctCode) {
+      setIsDesignMode(true);
+    } else if (enteredCode !== null) {
+      alert("Access Denied: Incorrect Security Passcode.");
+    }
+  };
 
   // Filter products for the Best Sellers section tab
   const filteredBestSellers = products
@@ -940,25 +956,92 @@ export default function Home() {
 
         <div className="text-center mb-16">
           <span 
-            className="font-sans text-xs text-neutral-400 dark:text-[#dfba73] tracking-[0.3em] uppercase font-bold inline-block"
+            contentEditable={isDesignMode}
+            suppressContentEditableWarning
+            onBlur={(e) => handleTextChange("silver_sub", e.currentTarget.textContent || "")}
+            className={`font-sans text-xs text-neutral-400 dark:text-[#dfba73] tracking-[0.3em] uppercase font-bold inline-block ${editOutlineClass}`}
           >
             {customText["silver_sub"] || "925 Sterling Silver Edit"}
           </span>
           <h2 
-            className="font-serif text-3xl md:text-5xl font-light text-neutral-900 dark:text-neutral-100 mt-2"
+            contentEditable={isDesignMode}
+            suppressContentEditableWarning
+            onBlur={(e) => handleTextChange("silver_title", e.currentTarget.textContent || "")}
+            className={`font-serif text-3xl md:text-5xl font-light text-neutral-900 dark:text-neutral-100 mt-2 ${editOutlineClass}`}
           >
             {customText["silver_title"] || "Sterling Silver Collection"}
           </h2>
           <p className="font-sans text-xs md:text-sm text-neutral-500 dark:text-neutral-400 mt-4 max-w-md mx-auto leading-relaxed">
-            <span>
+            <span
+              contentEditable={isDesignMode}
+              suppressContentEditableWarning
+              onBlur={(e) => handleTextChange("silver_desc", e.currentTarget.textContent || "")}
+              className={editOutlineClass}
+            >
               {customText["silver_desc"] || "Pure hallmarked 925 sterling silver jewelry. Anti-tarnish, hypoallergenic creations crafted for brilliant luster."}
             </span>
           </p>
         </div>
 
+        {/* Shop Silver by Space / Category Grid */}
+        <div className="mb-12">
+          <p className="text-center font-sans text-[10px] tracking-[0.25em] text-[#dfba73] uppercase font-bold mb-6">
+            Shop Silver by Category
+          </p>
+          <div className="flex flex-wrap md:flex-nowrap items-center justify-center gap-4 sm:gap-6 overflow-x-auto scrollbar-none pb-4">
+            {[
+              { id: "all", label: "All Silver", sub: "Signature Ornaments", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=200&auto=format&fit=crop" },
+              { id: "coins", label: "Pure Coins", sub: "999 Fine Coins", img: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=200&auto=format&fit=crop" },
+              { id: "idols", label: "Devotional Idols", sub: "Laxmi & Ganesha", img: "https://images.unsplash.com/photo-1608962914070-dfd3744663aa?q=80&w=200&auto=format&fit=crop" },
+              { id: "anklets", label: "Traditional Payal", sub: "Musical Anklets", img: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=200&auto=format&fit=crop" },
+              { id: "toe rings", label: "Auspicious Bichhiya", sub: "Toe Rings set", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=200&auto=format&fit=crop" },
+              { id: "pooja set", label: "Pooja Utensils", sub: "Thali & Diyas", img: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=200&auto=format&fit=crop" },
+              { id: "rings", label: "Silver Rings", sub: "Designer bands", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=200&auto=format&fit=crop" },
+            ].map((space) => {
+              const isActive = activeSilverSub === space.id;
+              return (
+                <button
+                  key={space.id}
+                  onClick={() => setActiveSilverSub(space.id)}
+                  className={`flex flex-col items-center p-3 rounded-xl border transition-all duration-500 shrink-0 w-28 sm:w-32 group/card text-center cursor-pointer ${
+                    isActive
+                      ? "bg-[#dfba73]/15 border-[#dfba73] shadow-md shadow-[#dfba73]/5 scale-105"
+                      : "bg-white/5 border-neutral-200/10 hover:border-[#dfba73]/40"
+                  }`}
+                >
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border border-[#dfba73]/20 mb-3 group-hover/card:border-[#dfba73] transition-colors relative shadow-sm">
+                    <img
+                      src={space.img}
+                      alt={space.label}
+                      className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-500"
+                    />
+                    {isActive && (
+                      <div className="absolute inset-0 bg-[#dfba73]/10 backdrop-blur-xs flex items-center justify-center">
+                        <span className="text-[10px] text-white font-serif font-bold">✓</span>
+                      </div>
+                    )}
+                  </div>
+                  <span className={`font-serif text-[11px] sm:text-xs leading-tight font-medium ${
+                    isActive ? "text-[#dfba73]" : "text-neutral-900 dark:text-neutral-100 group-hover/card:text-gold"
+                  }`}>
+                    {space.label}
+                  </span>
+                  <span className="font-sans text-[7px] sm:text-[8px] text-neutral-500 tracking-wider uppercase mt-1">
+                    {space.sub}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {products
             .filter((p) => p.category === "silver")
+            .filter((p) => {
+              if (activeSilverSub === "all") return true;
+              return p.subCategory.toLowerCase() === activeSilverSub.toLowerCase();
+            })
             .filter((p) => {
               if (!searchQuery) return true;
               const name = (customText[`prod_name_${p.id}`] || p.name).toLowerCase();
@@ -2282,6 +2365,28 @@ export default function Home() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        <button
+          onClick={handleToggleDesignMode}
+          className={`px-5 py-3 rounded-full shadow-2xl font-sans text-xs font-bold tracking-widest uppercase transition-all duration-300 flex items-center gap-2 border ${
+            isDesignMode
+              ? "bg-red-600 border-red-500 text-white hover:bg-red-700 scale-105"
+              : "bg-[#dfba73] border-[#dfba73] text-neutral-950 hover:bg-[#c5a059] hover:scale-105"
+          }`}
+          title={isDesignMode ? "Exit Design Mode" : "Design Mode: Customize Website"}
+        >
+          {isDesignMode ? (
+            <>
+              <X className="w-4 h-4" />
+              Close Editor
+            </>
+          ) : (
+            <>
+              <Edit className="w-4 h-4" />
+              Edit Website
+            </>
+          )}
+        </button>
 
         {/* Floating Sitar Ambient Music Player */}
         <button
