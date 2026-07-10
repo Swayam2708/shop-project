@@ -500,16 +500,16 @@ export default function Home() {
       <div className="absolute top-2/3 right-[-10%] w-[600px] h-[600px] bg-amber-500/5 blur-[180px] rounded-full animate-gold-glow pointer-events-none z-0" style={{ animationDelay: "-3s" }} />
 
       {/* 1. HERO SECTION */}
-      <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden">
+      <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden pt-[140px]">
         {/* Beautiful Decorative Corner Scrolls */}
-        <GoldCorner className="absolute top-28 left-6 w-12 h-12 pointer-events-none z-20" />
-        <GoldCorner className="absolute top-28 right-6 w-12 h-12 pointer-events-none z-20" flipX />
+        <GoldCorner className="absolute top-[150px] left-6 w-12 h-12 pointer-events-none z-20" />
+        <GoldCorner className="absolute top-[150px] right-6 w-12 h-12 pointer-events-none z-20" flipX />
         <GoldCorner className="absolute bottom-6 left-6 w-12 h-12 pointer-events-none z-20" flipY />
         <GoldCorner className="absolute bottom-6 right-6 w-12 h-12 pointer-events-none z-20" flipX flipY />
 
         {/* Cute Cartoon auspicious stickers in corners */}
-        <CuteGaneshaCorner className="absolute top-[160px] left-6 w-14 h-14 pointer-events-none z-20 animate-bounce" />
-        <CuteCoinCorner className="absolute top-[160px] right-6 w-12 h-12 pointer-events-none z-20 animate-pulse" />
+        <CuteGaneshaCorner className="absolute top-[210px] left-6 w-14 h-14 pointer-events-none z-20 animate-bounce" />
+        <CuteCoinCorner className="absolute top-[210px] right-6 w-12 h-12 pointer-events-none z-20 animate-pulse" />
 
         {/* Background Banner or Video */}
         <div className="absolute inset-0 z-0 bg-neutral-950">
