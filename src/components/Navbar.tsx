@@ -356,9 +356,57 @@ export default function Navbar({
           </div>
         </div>
 
+        {/* Mobile Search Bar Row */}
+        <div className="block md:hidden px-6 pb-4">
+          <div className="relative w-full">
+            <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400">
+              <Search className="w-3.5 h-3.5" />
+            </span>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => {
+                if (setSearchQuery) {
+                  setSearchQuery(e.target.value);
+                }
+                const catalog = document.getElementById("new-arrivals") || document.getElementById("best-sellers");
+                if (catalog) {
+                  catalog.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
+              }}
+              placeholder="Search gold, silver, rings..."
+              className="w-full bg-[#FAF9F5]/60 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 focus:border-gold outline-none rounded-full py-1.5 pl-9 pr-20 text-xs font-sans text-neutral-900 dark:text-neutral-100 transition-all shadow-xs"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery && setSearchQuery("")}
+                className="absolute inset-y-0 right-14 flex items-center pr-2 text-neutral-400 hover:text-gold transition-colors text-[9px] uppercase tracking-wider font-sans font-bold"
+              >
+                Clear
+              </button>
+            )}
+            <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center gap-2.5 text-neutral-400">
+              <button
+                onClick={handleCameraClick}
+                className="hover:text-gold transition-colors"
+                title="Search by photo"
+              >
+                <Camera className="w-3.5 h-3.5" />
+              </button>
+              <button
+                onClick={startVoiceSearch}
+                className="hover:text-gold transition-colors"
+                title="Search by voice"
+              >
+                <Mic className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        </div>
+
         {/* Tanishq-Style Categories Menu Bar */}
-        <div className="hidden md:block border-t border-neutral-200/50 dark:border-neutral-900/50 bg-[#FCFAF6] dark:bg-neutral-950 py-3 transition-colors duration-300">
-          <div className="max-w-7xl mx-auto px-6 flex items-center justify-center gap-8 font-sans text-[11px] font-bold uppercase tracking-[0.18em] text-neutral-900/80 dark:text-neutral-100/80">
+        <div className="border-t border-neutral-200/50 dark:border-neutral-900/50 bg-[#FCFAF6] dark:bg-neutral-950 py-3 transition-colors duration-300">
+          <div className="max-w-7xl mx-auto px-6 flex items-center justify-start md:justify-center gap-6 md:gap-8 overflow-x-auto md:overflow-x-visible whitespace-nowrap scrollbar-none font-sans text-[11px] font-bold uppercase tracking-[0.18em] text-neutral-900/80 dark:text-neutral-100/80">
             {[
               { label: "All Jewellery", href: "#new-arrivals", cat: "all" },
               { label: "Gold Edit", href: "#best-sellers", cat: "rings" },

@@ -204,5 +204,41 @@ export const products: Product[] = [
     description: "A solid sterling silver curb link chain. Diamond-cut edges catch the light, offering a clean polished look for modern daily outfits.",
     materials: "925 Sterling Silver",
     details: ["Length: 20 inches", "Width: 4.5mm", "Weight: 22g", "Heavy-duty lobster clasp"]
+  },
+  {
+    id: "oj-silver-005",
+    name: "Sterling Silver Designer Twist Ring",
+    category: "silver",
+    subCategory: "Rings",
+    price: 110,
+    rating: 4.8,
+    image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=500&auto=format&fit=crop",
+    description: "An elegant, minimalist sterling silver twist ring with a high-shine polish. Comfort-fit interior makes it perfect for daily wear.",
+    materials: "925 Sterling Silver",
+    details: ["Band width: 3.0mm", "High polish finish", "Comfort curve inside", "Sizing options available"]
+  },
+  {
+    id: "oj-silver-006",
+    name: "Traditional Silver Bichhiya (Toe Rings)",
+    category: "silver",
+    subCategory: "Toe Rings",
+    price: 65,
+    rating: 4.9,
+    image: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?q=80&w=500&auto=format&fit=crop",
+    description: "A beautiful set of hand-crafted silver toe rings featuring traditional filigree work, adjustable open-back loops.",
+    materials: "925 Sterling Silver",
+    details: ["Includes 1 pair of toe rings", "Adjustable open band", "Lightweight comfortable shape", "Anti-tarnish finished coating"]
+  },
+  {
+    id: "oj-silver-007",
+    name: "Luxury Silver Pooja Thali Set",
+    category: "silver",
+    subCategory: "Pooja Set",
+    price: 480,
+    rating: 5.0,
+    image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=500&auto=format&fit=crop",
+    description: "A complete puja set crafted in pure silver, including a thali plate, diya cup, incense stand, and kumkum bowl.",
+    materials: "80% Pure Silver",
+    details: ["Plate diameter: 8 inches", "Total set weight: 180g", "Exquisite flower carvings", "BIS hallmarked assurance"]
   }
 ];

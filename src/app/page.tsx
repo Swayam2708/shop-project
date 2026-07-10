@@ -511,8 +511,16 @@ export default function Home() {
 
   // Filter products for the Best Sellers section tab
   const filteredBestSellers = products
-    .filter((p) => p.category === "best-sellers")
-    .filter((p) => activeCategory === "all" || p.subCategory.toLowerCase() === activeCategory.toLowerCase())
+    .filter((p) => {
+      if (activeCategory === "all") {
+        return p.category === "best-sellers" || p.category === "silver";
+      }
+      if (activeCategory === "silver") {
+        return p.category === "silver";
+      }
+      // Filter by subcategory (Rings, Necklaces, etc.) for both best-sellers and silver products
+      return (p.category === "best-sellers" || p.category === "silver") && p.subCategory.toLowerCase() === activeCategory.toLowerCase();
+    })
     .filter((p) => {
       if (!searchQuery) return true;
       const name = (customText[`prod_name_${p.id}`] || p.name).toLowerCase();
@@ -941,7 +949,7 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="new-arrivals"
-        className="py-16 md:py-36 px-4 md:px-12 max-w-7xl mx-auto z-10 relative"
+        className="py-10 md:py-20 px-4 md:px-12 max-w-7xl mx-auto z-10 relative"
       >
         <div className="text-center mb-16">
           <span 
@@ -1007,7 +1015,7 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="best-sellers"
-        className="bg-white/5 dark:bg-neutral-950/15 border-y border-[#dfba73]/10 py-16 md:py-36 px-4 md:px-12 z-10 relative"
+        className="bg-white/5 dark:bg-neutral-950/15 border-y border-[#dfba73]/10 py-10 md:py-20 px-4 md:px-12 z-10 relative"
       >
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-16">
@@ -1031,7 +1039,7 @@ export default function Home() {
             </div>
             {/* Category Filter Tabs */}
             <div className="flex flex-wrap gap-2.5 font-sans text-xs tracking-wider uppercase">
-              {["all", "rings", "necklaces", "earrings", "bracelets"].map((category) => (
+              {["all", "rings", "necklaces", "earrings", "bracelets", "silver"].map((category) => (
                 <button
                   key={category}
                   onClick={() => setActiveCategory(category)}
@@ -1074,7 +1082,7 @@ export default function Home() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8 }}
-        className="py-20 px-6 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
+        className="py-10 md:py-16 px-6 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
       >
         <div className="text-center mb-12">
           <span className="font-sans text-xs text-[#dfba73] tracking-[0.3em] uppercase font-bold">
@@ -1146,7 +1154,7 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="bridal"
-        className="relative py-16 md:py-36 overflow-hidden z-10"
+        className="relative py-10 md:py-20 overflow-hidden z-10"
       >
         <div className="max-w-7xl mx-auto px-4 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-5">
@@ -1310,7 +1318,7 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="daily-wear"
-        className="py-16 md:py-36 px-4 md:px-12 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
+        className="py-10 md:py-20 px-4 md:px-12 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
       >
         <div className="text-center mb-16">
           <span 
@@ -1368,7 +1376,7 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="silver-collection"
-        className="py-16 md:py-36 px-4 md:px-12 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
+        className="py-10 md:py-20 px-4 md:px-12 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
       >
         {/* Cute Cartoon corner ornaments for Silver collection */}
         <CuteCoinCorner className="absolute top-4 left-4 w-12 h-12 pointer-events-none opacity-40 animate-pulse" />
