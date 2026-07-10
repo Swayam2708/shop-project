@@ -139,7 +139,7 @@ export default function Home() {
   const [cart, setCart] = useState<{ product: Product; quantity: number }[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [activeCategory, setActiveCategory] = useState<string>("silver");
   const [dbProducts, setDbProducts] = useState<Product[]>(initialProducts);
 
   // Real-time market rates simulation
@@ -198,10 +198,10 @@ export default function Home() {
   const [customText, setCustomText] = useState<Record<string, string>>({});
   
   // Custom WhatsApp number configuration
-  const [whatsAppNumber, setWhatsAppNumber] = useState("9936488845");
+  const whatsAppNumber = customText["whats_app_number"] || "9936488845";
 
   // Design mode toggles
-  const [isDesignMode, setIsDesignMode] = useState(false);
+  const isDesignMode = false;
 
   // Contact Form State
   const [formState, setFormState] = useState({
@@ -231,8 +231,6 @@ export default function Home() {
         if (data.success && data.content) {
           const loadedCustoms: Record<string, string> = {};
           const loadedTexts: Record<string, string> = {};
-          const savedWhatsApp = data.content["oj_custom_whatsapp"] || "9936488845";
-          setWhatsAppNumber(savedWhatsApp);
 
           Object.entries(data.content).forEach(([key, val]) => {
             if (key.startsWith("oj_custom_img_")) {
@@ -492,22 +490,7 @@ export default function Home() {
     }, 3500);
   };
 
-  // Restrict Edit Website trigger to Owner Passcode
-  const handleToggleDesignMode = () => {
-    if (isDesignMode) {
-      setIsDesignMode(false);
-      return;
-    }
-
-    const enteredCode = window.prompt("Enter Owner Security Passcode to Edit Website:");
-    const correctCode = localStorage.getItem("oj_admin_passcode") || "OJ2026";
-
-    if (enteredCode === correctCode) {
-      setIsDesignMode(true);
-    } else if (enteredCode !== null) {
-      alert("Access Denied: Incorrect Security Passcode.");
-    }
-  };
+  // Removed storefront toggle design mode (CMS handled inside admin panel)
 
   // Filter products for the Best Sellers section tab
   const filteredBestSellers = products
@@ -942,6 +925,65 @@ export default function Home() {
         </div>
       </section>
 
+      {/* 1.5 PURE STERLING SILVER COLLECTION (Silver Dominant) */}
+      <motion.section
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        id="silver-collection"
+        className="py-10 md:py-20 px-4 md:px-12 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
+      >
+        {/* Cute Cartoon corner ornaments for Silver collection */}
+        <CuteCoinCorner className="absolute top-4 left-4 w-12 h-12 pointer-events-none opacity-40 animate-pulse" />
+        <CuteGaneshaCorner className="absolute top-4 right-4 w-12 h-12 pointer-events-none opacity-40 animate-bounce" flipX />
+
+        <div className="text-center mb-16">
+          <span 
+            className="font-sans text-xs text-neutral-400 dark:text-[#dfba73] tracking-[0.3em] uppercase font-bold inline-block"
+          >
+            {customText["silver_sub"] || "925 Sterling Silver Edit"}
+          </span>
+          <h2 
+            className="font-serif text-3xl md:text-5xl font-light text-neutral-900 dark:text-neutral-100 mt-2"
+          >
+            {customText["silver_title"] || "Sterling Silver Collection"}
+          </h2>
+          <p className="font-sans text-xs md:text-sm text-neutral-500 dark:text-neutral-400 mt-4 max-w-md mx-auto leading-relaxed">
+            <span>
+              {customText["silver_desc"] || "Pure hallmarked 925 sterling silver jewelry. Anti-tarnish, hypoallergenic creations crafted for brilliant luster."}
+            </span>
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {products
+            .filter((p) => p.category === "silver")
+            .filter((p) => {
+              if (!searchQuery) return true;
+              const name = (customText[`prod_name_${p.id}`] || p.name).toLowerCase();
+              const sub = p.subCategory.toLowerCase();
+              const desc = (customText[`prod_desc_${p.id}`] || p.description).toLowerCase();
+              const mat = (customText[`prod_mat_${p.id}`] || p.materials).toLowerCase();
+              return name.includes(searchQuery.toLowerCase()) || sub.includes(searchQuery.toLowerCase()) || desc.includes(searchQuery.toLowerCase()) || mat.includes(searchQuery.toLowerCase());
+            })
+            .map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                isWishlisted={wishlist.some((item) => item.id === product.id)}
+                onWishlistToggle={handleWishlistToggle}
+                onQuickView={handleOpenQuickView}
+                onAddToCart={handleAddToCart}
+                isDesignMode={isDesignMode}
+                onUploadPhoto={handleUploadImage}
+                onEditText={handleTextChange}
+                customText={customText}
+              />
+            ))}
+        </div>
+      </motion.section>
+
       {/* 2. NEW ARRIVALS */}
       <motion.section
         initial={{ opacity: 0, y: 60 }}
@@ -1369,75 +1411,7 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* 5.5 PURE STERLING SILVER COLLECTION (New requested feature) */}
-      <motion.section
-        initial={{ opacity: 0, y: 60 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        id="silver-collection"
-        className="py-10 md:py-20 px-4 md:px-12 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
-      >
-        {/* Cute Cartoon corner ornaments for Silver collection */}
-        <CuteCoinCorner className="absolute top-4 left-4 w-12 h-12 pointer-events-none opacity-40 animate-pulse" />
-        <CuteGaneshaCorner className="absolute top-4 right-4 w-12 h-12 pointer-events-none opacity-40 animate-bounce" flipX />
-
-        <div className="text-center mb-16">
-          <span 
-            contentEditable={isDesignMode}
-            suppressContentEditableWarning
-            onBlur={(e) => handleTextChange("silver_sub", e.currentTarget.textContent || "")}
-            className={`font-sans text-xs text-neutral-400 dark:text-[#dfba73] tracking-[0.3em] uppercase font-bold inline-block ${editOutlineClass}`}
-          >
-            {customText["silver_sub"] || "925 Sterling Silver Edit"}
-          </span>
-          <h2 
-            contentEditable={isDesignMode}
-            suppressContentEditableWarning
-            onBlur={(e) => handleTextChange("silver_title", e.currentTarget.textContent || "")}
-            className={`font-serif text-3xl md:text-5xl font-light text-neutral-900 dark:text-neutral-100 mt-2 ${editOutlineClass}`}
-          >
-            {customText["silver_title"] || "Sterling Silver Collection"}
-          </h2>
-          <p className="font-sans text-xs md:text-sm text-neutral-500 dark:text-neutral-400 mt-4 max-w-md mx-auto leading-relaxed">
-            <span
-              contentEditable={isDesignMode}
-              suppressContentEditableWarning
-              onBlur={(e) => handleTextChange("silver_desc", e.currentTarget.textContent || "")}
-              className={editOutlineClass}
-            >
-              {customText["silver_desc"] || "Pure hallmarked 925 sterling silver jewelry. Anti-tarnish, hypoallergenic creations crafted for brilliant luster."}
-            </span>
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {products
-            .filter((p) => p.category === "silver")
-            .filter((p) => {
-              if (!searchQuery) return true;
-              const name = (customText[`prod_name_${p.id}`] || p.name).toLowerCase();
-              const sub = p.subCategory.toLowerCase();
-              const desc = (customText[`prod_desc_${p.id}`] || p.description).toLowerCase();
-              const mat = (customText[`prod_mat_${p.id}`] || p.materials).toLowerCase();
-              return name.includes(searchQuery.toLowerCase()) || sub.includes(searchQuery.toLowerCase()) || desc.includes(searchQuery.toLowerCase()) || mat.includes(searchQuery.toLowerCase());
-            })
-            .map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                isWishlisted={wishlist.some((item) => item.id === product.id)}
-                onWishlistToggle={handleWishlistToggle}
-                onQuickView={handleOpenQuickView}
-                onAddToCart={handleAddToCart}
-                isDesignMode={isDesignMode}
-                onUploadPhoto={handleUploadImage}
-                onEditText={handleTextChange}
-                customText={customText}
-              />
-            ))}
-        </div>
-      </motion.section>
+      {/* Silver Collection Section Swapped to the top */}
 
       {/* 6. ABOUT SECTION */}
       <motion.section
@@ -2309,27 +2283,6 @@ export default function Home() {
           )}
         </AnimatePresence>
 
-        <button
-          onClick={handleToggleDesignMode}
-          className={`px-5 py-3 rounded-full shadow-2xl font-sans text-xs font-bold tracking-widest uppercase transition-all duration-300 flex items-center gap-2 border ${
-            isDesignMode
-              ? "bg-red-600 border-red-500 text-white hover:bg-red-700 scale-105"
-              : "bg-[#dfba73] border-[#dfba73] text-neutral-950 hover:bg-[#c5a059] hover:scale-105"
-          }`}
-          title={isDesignMode ? "Exit Design Mode" : "Design Mode: Customize Website"}
-        >
-          {isDesignMode ? (
-            <>
-              <X className="w-4 h-4" />
-              Close Editor
-            </>
-          ) : (
-            <>
-              <Edit className="w-4 h-4" />
-              Edit Website
-            </>
-          )}
-        </button>
         {/* Floating Sitar Ambient Music Player */}
         <button
           onClick={() => {

@@ -1091,6 +1091,24 @@ export default function AdminDashboard() {
                     const aboutDesc2 = (document.getElementById("inp_about_desc2") as HTMLTextAreaElement)?.value;
                     const aboutImageUrl = (document.getElementById("inp_about_image_url") as HTMLInputElement)?.value;
 
+                    const silverSub = (document.getElementById("inp_silver_sub") as HTMLInputElement)?.value;
+                    const silverTitle = (document.getElementById("inp_silver_title") as HTMLInputElement)?.value;
+                    const silverDesc = (document.getElementById("inp_silver_desc") as HTMLTextAreaElement)?.value;
+
+                    const newArrSub = (document.getElementById("inp_new_arr_sub") as HTMLInputElement)?.value;
+                    const newArrTitle = (document.getElementById("inp_new_arr_title") as HTMLInputElement)?.value;
+                    const newArrDesc = (document.getElementById("inp_new_arr_desc") as HTMLTextAreaElement)?.value;
+
+                    const bestSellSub = (document.getElementById("inp_best_sell_sub") as HTMLInputElement)?.value;
+                    const bestSellTitle = (document.getElementById("inp_best_sell_title") as HTMLInputElement)?.value;
+
+                    const founderQuote = (document.getElementById("inp_founder_quote") as HTMLTextAreaElement)?.value;
+                    const founderName = (document.getElementById("inp_founder_name") as HTMLInputElement)?.value;
+                    const founderRole = (document.getElementById("inp_founder_role") as HTMLInputElement)?.value;
+                    const founderPhotoUrl = (document.getElementById("inp_founder_photo_url") as HTMLInputElement)?.value;
+                    const founderBigPhotoUrl = (document.getElementById("inp_founder_big_photo_url") as HTMLInputElement)?.value;
+
+                    const whatsappNum = (document.getElementById("inp_whatsapp_num") as HTMLInputElement)?.value;
                     const audioUrl = (document.getElementById("inp_audio_url") as HTMLInputElement)?.value;
 
                     try {
@@ -1112,6 +1130,24 @@ export default function AdminDashboard() {
                         { key: "oj_custom_txt_about_desc2", value: aboutDesc2 },
                         { key: "oj_custom_txt_about_image_url", value: aboutImageUrl },
 
+                        { key: "oj_custom_txt_silver_sub", value: silverSub },
+                        { key: "oj_custom_txt_silver_title", value: silverTitle },
+                        { key: "oj_custom_txt_silver_desc", value: silverDesc },
+
+                        { key: "oj_custom_txt_new_arr_sub", value: newArrSub },
+                        { key: "oj_custom_txt_new_arr_title", value: newArrTitle },
+                        { key: "oj_custom_txt_new_arr_desc", value: newArrDesc },
+
+                        { key: "oj_custom_txt_best_sell_sub", value: bestSellSub },
+                        { key: "oj_custom_txt_best_sell_title", value: bestSellTitle },
+
+                        { key: "oj_custom_txt_founder_quote_txt", value: founderQuote },
+                        { key: "oj_custom_txt_owner_card_name", value: founderName },
+                        { key: "oj_custom_txt_owner_card_role", value: founderRole },
+                        { key: "oj_custom_txt_owner_photo", value: founderPhotoUrl },
+                        { key: "oj_custom_txt_owner_big_photo", value: founderBigPhotoUrl },
+
+                        { key: "oj_custom_txt_whats_app_number", value: whatsappNum },
                         { key: "oj_custom_txt_audio_url", value: audioUrl },
                       ];
 
@@ -1332,6 +1368,204 @@ export default function AdminDashboard() {
                           className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs resize-none"
                         />
                       </div>
+                    </div>
+                  </div>
+
+                  {/* Sterling Silver Collection settings */}
+                  <div className="border-b border-neutral-800 pb-4">
+                    <h5 className="font-serif text-sm text-[#dfba73] mb-3">Sterling Silver Collection Header</h5>
+                    <div className="grid grid-cols-2 gap-4 mb-3">
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                          Silver Section Subtitle
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="inp_silver_sub"
+                          defaultValue={customText["silver_sub"] || "925 Sterling Silver Edit"}
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                          Silver Section Main Title
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="inp_silver_title"
+                          defaultValue={customText["silver_title"] || "Sterling Silver Collection"}
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                        Silver Section Description
+                      </label>
+                      <textarea
+                        required
+                        id="inp_silver_desc"
+                        rows={2}
+                        defaultValue={customText["silver_desc"] || "Pure hallmarked 925 sterling silver jewelry. Anti-tarnish, hypoallergenic creations crafted for brilliant luster."}
+                        className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs resize-none"
+                      />
+                    </div>
+                  </div>
+
+                  {/* New Arrivals & Best Sellers headings */}
+                  <div className="border-b border-neutral-800 pb-4">
+                    <h5 className="font-serif text-sm text-[#dfba73] mb-3">Gold Collections Titles</h5>
+                    <div className="grid grid-cols-2 gap-4 mb-3">
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                          New Arrivals Subtitle
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="inp_new_arr_sub"
+                          defaultValue={customText["new_arr_sub"] || "The Pure Gold Edit"}
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                          New Arrivals Main Title
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="inp_new_arr_title"
+                          defaultValue={customText["new_arr_title"] || "New Gold Arrivals"}
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs"
+                        />
+                      </div>
+                    </div>
+                    <div className="mb-3">
+                      <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                        New Arrivals Description
+                      </label>
+                      <textarea
+                        required
+                        id="inp_new_arr_desc"
+                        rows={2}
+                        defaultValue={customText["new_arr_desc"] || "Freshly cast designs curated in rich 18k and 22k gold, showcasing brushed, hammered, and mirror finishes."}
+                        className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs resize-none"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                          Best Sellers Subtitle
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="inp_best_sell_sub"
+                          defaultValue={customText["best_sell_sub"] || "Gold Statements"}
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                          Best Sellers Main Title
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="inp_best_sell_title"
+                          defaultValue={customText["best_sell_title"] || "Best Sellers"}
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Founder details */}
+                  <div className="border-b border-neutral-800 pb-4">
+                    <h5 className="font-serif text-sm text-[#dfba73] mb-3">Founder Profile Details</h5>
+                    <div className="grid grid-cols-2 gap-4 mb-3">
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                          Founder Name
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="inp_founder_name"
+                          defaultValue={customText["owner_card_name"] || "Mr. Yogesh Kumar Gupta"}
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                          Founder Title / Role
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="inp_founder_role"
+                          defaultValue={customText["owner_card_role"] || "Managing Director & Boutique Founder"}
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs"
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4 mb-3">
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                          Small Avatar Photo URL (Round headshot)
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="inp_founder_photo_url"
+                          defaultValue={customText["owner_photo"] || "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=200&auto=format&fit=crop"}
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs font-mono"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                          Large Founder Profile Image URL (Left side)
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="inp_founder_big_photo_url"
+                          defaultValue={customText["owner_big_photo"] || "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?q=80&w=800&auto=format&fit=crop"}
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs font-mono"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                        Founder Quote Statement
+                      </label>
+                      <textarea
+                        required
+                        id="inp_founder_quote"
+                        rows={3}
+                        defaultValue={customText["founder_quote_txt"] || "“Jewellery is not merely an ornament; it is a timestamp of your legacy. When we hand-craft pure gold at Omar Jewellers OJ, we are shaping stories of love, heritage, and pride that will be passed down for generations.”"}
+                        className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs resize-none"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Contact configurations */}
+                  <div className="border-b border-neutral-800 pb-4">
+                    <h5 className="font-serif text-sm text-[#dfba73] mb-3">Concierge Contact configurations</h5>
+                    <div>
+                      <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                        WhatsApp Contact Number (No space/prefix, e.g. 9936488845)
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        id="inp_whatsapp_num"
+                        defaultValue={customText["whats_app_number"] || "9936488845"}
+                        className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs"
+                      />
                     </div>
                   </div>
 
