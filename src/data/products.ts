@@ -252,5 +252,53 @@ export const products: Product[] = [
     description: "Exquisitely detailed Ganesha Idol crafted in 99.9% fine silver. Perfect for pooja altars, home decor, and divine gifting.",
     materials: "999 Fine Silver, Antique finish",
     details: ["Height: 3.5 inches", "Weight: 85.0g", "BIS hallmarked purity stamp", "Arrives in velvet lined showcase box"]
+  },
+  {
+    id: "oj-silver-009",
+    name: "Sterling Silver Royal Kundan Payal",
+    category: "silver",
+    subCategory: "Anklets",
+    price: 165,
+    rating: 4.9,
+    image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=500&auto=format&fit=crop",
+    description: "Exquisite pair of anklets embellished with royal Kundan stones, fine micro-pearl drops, and detailed silver work.",
+    materials: "925 Sterling Silver, Kundan stone",
+    details: ["Includes 1 pair of anklets", "Traditional hook lock", "Purity certificate included", "Total length: 10.5 inches"]
+  },
+  {
+    id: "oj-silver-010",
+    name: "999 Fine Silver Lakshmi & Ganesha Combo Coin (20g)",
+    category: "silver",
+    subCategory: "Coins",
+    price: 95,
+    rating: 5.0,
+    image: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=500&auto=format&fit=crop",
+    description: "Double-sided auspicious coin featuring Lakshmi and Ganesha in ultra-relief minting. Packed in a tamper-proof card.",
+    materials: "999 Fine Silver",
+    details: ["Weight: 20.0 grams", "Diameter: 38mm", "Serialized assay certificate", "Ideal for Diwali pooja and gifting"]
+  },
+  {
+    id: "oj-silver-011",
+    name: "Traditional Royal Silver Bichhiya Set (4 Pieces)",
+    category: "silver",
+    subCategory: "Toe Rings",
+    price: 85,
+    rating: 4.8,
+    image: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?q=80&w=500&auto=format&fit=crop",
+    description: "A complete set of four adjustable toe rings decorated with traditional floral carvings and auspicious red gemstones.",
+    materials: "925 Sterling Silver",
+    details: ["Includes 4 toe rings", "Adjustable open bands", "Skin friendly anti-tarnish coating", "Gift box included"]
+  },
+  {
+    id: "oj-silver-012",
+    name: "999 Pure Silver Saraswati Idol",
+    category: "silver",
+    subCategory: "Idols",
+    price: 290,
+    rating: 4.9,
+    image: "https://images.unsplash.com/photo-1608962914070-dfd3744663aa?q=80&w=500&auto=format&fit=crop",
+    description: "Highly detailed miniature idol of Goddess Saraswati playing the veena, beautifully carved from 99.9% pure solid silver.",
+    materials: "999 Fine Silver",
+    details: ["Height: 3.0 inches", "Weight: 68g", "Hallmarked purity assurance", "Arrives in premium packaging"]
   }
 ];
