@@ -114,8 +114,8 @@ export default function Navbar({
       <nav
         className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 ${
           isScrolled
-            ? "bg-[#FAF9F5]/95 dark:bg-[#050505]/95 backdrop-blur-md border-b border-gold/20 shadow-md"
-            : "bg-[#FAF9F5]/85 dark:bg-[#050505]/85 backdrop-blur-md border-b border-gold/10"
+            ? "glass-scrolled shadow-md"
+            : "glass"
         }`}
       >
         {/* ॐ Sacred Slogans & Auspicious Blessings Header Bar */}

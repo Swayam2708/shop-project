@@ -124,10 +124,19 @@ body {
 
 /* Glassmorphism custom styles */
 .glass {
-  background: rgba(250, 249, 245, 0.75);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(212, 175, 55, 0.12);
+  background: rgba(250, 249, 245, 0.45) !important; /* Low opacity when unscrolled */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(197, 160, 89, 0.12);
+  transition: all 0.3s ease;
+}
+
+.glass-scrolled {
+  background: rgba(250, 249, 245, 0.75) !important; /* Slightly more opaque when scrolled */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(197, 160, 89, 0.22);
+  transition: all 0.3s ease;
 }
 
 .glass-gold {
@@ -139,8 +148,13 @@ body {
 
 @media (prefers-color-scheme: dark) {
   .glass {
-    background: rgba(5, 5, 5, 0.75);
-    border: 1px solid rgba(212, 175, 55, 0.08);
+    background: rgba(5, 5, 5, 0.35) !important; /* Very low opacity for immersive dark mode */
+    border-bottom: 1px solid rgba(223, 186, 115, 0.12);
+  }
+  
+  .glass-scrolled {
+    background: rgba(5, 5, 5, 0.65) !important; /* Elevated contrast when scrolled */
+    border-bottom: 1px solid rgba(223, 186, 115, 0.22);
   }
   
   .glass-gold {

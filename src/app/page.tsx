@@ -725,6 +725,93 @@ export default function Home() {
         </div>
       </section>
 
+      {/* EXCLUSIVE TANISHQ-STYLE FESTIVE OFFER SECTION */}
+      <section className="py-16 md:py-24 px-4 md:px-12 max-w-7xl mx-auto z-10 relative">
+        <div className="bg-gradient-to-br from-[#1a1105] via-neutral-950 to-[#1a1105] border border-gold/25 p-8 md:p-16 rounded-sm shadow-luxury-glow relative overflow-hidden flex flex-col lg:flex-row items-center gap-12">
+          {/* Subtle background textures */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(223,186,115,0.05)_0%,transparent_70%)] pointer-events-none" />
+          
+          <div className="flex-1 space-y-6 z-10">
+            <span className="font-sans text-xs text-gold tracking-[0.4em] uppercase font-bold block">
+              Exclusive Festive Invitation
+            </span>
+            <h2 className="font-serif text-3xl md:text-5xl font-light text-white leading-tight">
+              Celebrate OJ's Legacy <br />
+              <span className="metallic-gold-shine font-normal">Get 10% Off Making Charges</span>
+            </h2>
+            <p className="font-sans text-sm text-neutral-300 font-light leading-relaxed max-w-lg">
+              Indulge in the finest 18K and 22K hallmarked gold creations. This festive season, claim our digital Gift Card to enjoy an exclusive <strong className="text-gold font-bold">10% discount on making charges</strong> for all bridal, daily wear, and custom order gold jewelry.
+            </p>
+            
+            <div className="flex flex-wrap gap-4 items-center pt-2">
+              <div className="border border-gold/30 bg-gold/5 px-4 py-2 rounded-sm font-mono text-sm text-gold tracking-widest flex items-center gap-2 select-all">
+                CODE: <span className="font-bold">OJGOLD10</span>
+              </div>
+              <button
+                onClick={() => {
+                  const msg = encodeURIComponent("Hi Omar Jewellers, I want to claim the 10% OFF Festive Gift Card (Code: OJGOLD10) for my purchase.");
+                  window.open(`https://wa.me/91${whatsAppNumber}?text=${msg}`, "_blank");
+                }}
+                className="px-6 py-3 bg-gold hover:bg-[#b8912b] text-neutral-950 font-sans text-xs font-bold tracking-widest uppercase transition-all duration-300 rounded-sm shadow-md"
+              >
+                Claim Gift Code
+              </button>
+            </div>
+          </div>
+          
+          {/* 3D-effect Gold Gift Card container */}
+          <div className="flex-1 w-full max-w-md flex justify-center z-10">
+            <motion.div
+              whileHover={{ rotateY: 15, rotateX: -5, scale: 1.03 }}
+              transition={{ type: "spring", stiffness: 200, damping: 15 }}
+              className="relative w-full aspect-[1.586/1] bg-gradient-to-br from-neutral-900 via-neutral-950 to-neutral-900 border border-gold/40 rounded-xl p-6 shadow-2xl flex flex-col justify-between overflow-hidden group/card cursor-pointer select-none"
+              style={{ transformStyle: "preserve-3d" }}
+            >
+              {/* Shimmer overlay */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover/card:animate-shimmer duration-1000 pointer-events-none" />
+              
+              {/* Card Header */}
+              <div className="flex justify-between items-start">
+                <div className="flex flex-col">
+                  <span className="font-serif text-sm tracking-[0.25em] text-white">
+                    OMAR JEWELLERS
+                  </span>
+                  <span className="font-sans text-[7px] tracking-[0.3em] text-gold uppercase mt-0.5">
+                    OJ • Luxury Gold
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 bg-gold/10 border border-gold/30 px-2 py-0.5 rounded-sm">
+                  <span className="text-gold text-[8px] font-sans font-bold">100% BIS</span>
+                  <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                </div>
+              </div>
+              
+              {/* Card Center: large 10% Off */}
+              <div className="text-center my-auto flex flex-col items-center">
+                <span className="font-serif text-5xl md:text-6xl text-gold font-light tracking-wide drop-shadow-md">
+                  10% OFF
+                </span>
+                <span className="font-sans text-[9px] tracking-[0.2em] text-neutral-400 uppercase mt-1">
+                  Festive Gold Gift Card
+                </span>
+              </div>
+              
+              {/* Card Footer */}
+              <div className="flex justify-between items-end border-t border-gold/10 pt-4 text-[8px] font-sans text-neutral-500 tracking-wider">
+                <div>
+                  <p className="uppercase text-gold font-bold">OJGOLD10</p>
+                  <p className="text-[7px] uppercase mt-0.5">VIP Privilege Code</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-neutral-400 font-serif italic text-[10px]">शुभ लाभ</p>
+                  <p className="text-[6px] uppercase mt-0.5">Valid Shahabad Chowk</p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* 2. NEW ARRIVALS */}
       <motion.section
         initial={{ opacity: 0, y: 60 }}
