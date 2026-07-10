@@ -63,7 +63,7 @@ export default function ProductCard({
         />
 
         {/* Hover overlay icons */}
-        <div className="absolute inset-0 bg-neutral-950/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
+        <div className="absolute inset-0 bg-neutral-950/40 opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 hidden md:flex items-center justify-center gap-3">
           <button
             onClick={() => onQuickView(product)}
             className="p-3 bg-white dark:bg-neutral-900 rounded-full text-neutral-900 dark:text-neutral-100 hover:bg-gold hover:text-neutral-950 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-lg"
@@ -159,6 +159,24 @@ export default function ProductCard({
               {product.rating}
             </span>
           </div>
+        </div>
+
+        {/* Mobile Action Buttons */}
+        <div className="flex gap-2 mt-4 md:hidden">
+          <button
+            onClick={() => onQuickView(product)}
+            className="flex-1 py-2 border border-gold/30 hover:border-gold/60 text-neutral-900 dark:text-neutral-200 hover:bg-gold hover:text-neutral-950 font-sans text-[10px] font-bold tracking-widest uppercase transition-colors flex items-center justify-center gap-1 rounded-sm"
+          >
+            <Eye className="w-3.5 h-3.5" />
+            Quick View
+          </button>
+          <button
+            onClick={() => onAddToCart(product)}
+            className="py-2 px-3 bg-gold text-neutral-950 font-sans text-[10px] tracking-widest uppercase hover:bg-amber-600 transition-colors flex items-center justify-center rounded-sm"
+            title="Add to Bag"
+          >
+            <ShoppingBag className="w-3.5 h-3.5" />
+          </button>
         </div>
       </div>
     </motion.div>

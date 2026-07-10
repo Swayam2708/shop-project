@@ -6,7 +6,7 @@
   --color-gold-100: #f8efe0;
   --color-gold-200: #eddcb7;
   --color-gold-300: #e3c485;
-  --color-gold-400: #dfba73;
+  --color-gold-400: var(--gold-primary);
   --color-gold-500: #d4af37;
   --color-gold-600: #b8912b;
   --color-gold-700: #967220;
@@ -15,7 +15,7 @@
   --color-gold-950: #38260b;
   
   /* Additional Shorthands - Warm Luxury Accents */
-  --color-gold: #c5a059;
+  --color-gold: var(--gold-text);
   --color-gold-light: #e6d7b8;
   --color-gold-dark: #a37c3f;
   
@@ -88,12 +88,16 @@
 :root {
   --background: #FAF9F5; /* Premium Ivory */
   --foreground: #050505; /* Luxury Black */
+  --gold-text: #8c6a26; /* Deep high-contrast antique gold for light mode readability */
+  --gold-primary: #c5a059;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #050505;
     --foreground: #FCFCFA;
+    --gold-text: #dfba73; /* Radiant champagne gold for dark mode contrast */
+    --gold-primary: #dfba73;
   }
 }
 

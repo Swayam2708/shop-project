@@ -279,9 +279,9 @@ export default function Home() {
       .catch((err) => console.error("Failed to load custom content:", err));
 
     // Initialize sitar ambient background music loop
-    sitarAudioRef.current = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3");
+    sitarAudioRef.current = new Audio("https://archive.org/download/ICCR-474-AC/ICCR-474-AC.mp3");
     sitarAudioRef.current.loop = true;
-    sitarAudioRef.current.volume = 0.25;
+    sitarAudioRef.current.volume = 0.15;
   }, []);
 
   // Save text changes in state & server database
@@ -642,7 +642,7 @@ export default function Home() {
       </section>
 
       {/* TODAY'S SHOWROOM METAL RATES WIDGET */}
-      <section className="py-16 md:py-24 px-6 md:px-12 max-w-7xl mx-auto z-10 relative">
+      <section className="py-12 md:py-20 px-4 md:px-12 max-w-7xl mx-auto z-10 relative">
         <div className="bg-white/40 dark:bg-[#0F0E0B]/40 border border-[#dfba73]/15 p-8 md:p-12 rounded-sm shadow-luxury-glow backdrop-blur-md relative overflow-hidden">
           {/* Filigree Corner Accents */}
           <GoldCorner className="absolute top-2 left-2 w-8 h-8 pointer-events-none opacity-30" />
@@ -732,7 +732,7 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="new-arrivals"
-        className="py-32 md:py-44 px-6 md:px-12 max-w-7xl mx-auto z-10 relative"
+        className="py-16 md:py-36 px-4 md:px-12 max-w-7xl mx-auto z-10 relative"
       >
         <div className="text-center mb-16">
           <span 
@@ -790,7 +790,7 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="best-sellers"
-        className="bg-white/5 dark:bg-neutral-950/15 border-y border-[#dfba73]/10 py-32 md:py-44 px-6 md:px-12 z-10 relative"
+        className="bg-white/5 dark:bg-neutral-950/15 border-y border-[#dfba73]/10 py-16 md:py-36 px-4 md:px-12 z-10 relative"
       >
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-16">
@@ -929,9 +929,9 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="bridal"
-        className="relative py-32 md:py-44 overflow-hidden z-10"
+        className="relative py-16 md:py-36 overflow-hidden z-10"
       >
-        <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div className="max-w-7xl mx-auto px-4 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-5">
             <span 
               contentEditable={isDesignMode}
@@ -1093,7 +1093,7 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="daily-wear"
-        className="py-32 md:py-44 px-6 md:px-12 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
+        className="py-16 md:py-36 px-4 md:px-12 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
       >
         <div className="text-center mb-16">
           <span 
@@ -1151,7 +1151,7 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="silver-collection"
-        className="py-32 md:py-44 px-6 md:px-12 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
+        className="py-16 md:py-36 px-4 md:px-12 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
       >
         {/* Cute Cartoon corner ornaments for Silver collection */}
         <CuteCoinCorner className="absolute top-4 left-4 w-12 h-12 pointer-events-none opacity-40 animate-pulse" />
@@ -1213,9 +1213,9 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="about"
-        className="bg-[#dfba73]/3 dark:bg-neutral-950/10 py-32 md:py-44 border-y border-[#dfba73]/10 z-10 relative"
+        className="bg-[#dfba73]/3 dark:bg-neutral-950/10 py-16 md:py-36 border-y border-[#dfba73]/10 z-10 relative"
       >
-        <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div className="max-w-7xl mx-auto px-4 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="relative aspect-square border border-[#dfba73]/25 overflow-hidden">
             <img
               src={customAboutImage}
@@ -1442,7 +1442,7 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="reviews"
-        className="py-32 md:py-44 px-6 md:px-12 max-w-7xl mx-auto z-10 relative"
+        className="py-16 md:py-36 px-4 md:px-12 max-w-7xl mx-auto z-10 relative"
       >
         <div className="text-center mb-16">
           <span 
@@ -1569,7 +1569,7 @@ export default function Home() {
       </motion.section>
 
       {/* 8. INSTAGRAM-STYLE GALLERY */}
-      <section id="gallery" className="py-32 md:py-44 border-t border-[#dfba73]/10 bg-white/5 dark:bg-neutral-950/10 z-10 relative">
+      <section id="gallery" className="py-16 md:py-36 border-t border-[#dfba73]/10 bg-white/5 dark:bg-neutral-950/10 z-10 relative">
         <div className="text-center mb-16">
           <span 
             contentEditable={isDesignMode}
@@ -1657,7 +1657,7 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="contact"
-        className="py-32 md:py-44 px-6 md:px-12 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
+        className="py-16 md:py-36 px-4 md:px-12 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           <div>
