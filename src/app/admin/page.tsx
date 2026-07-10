@@ -882,6 +882,191 @@ export default function AdminDashboard() {
                   </button>
                 </form>
               </div>
+
+              {/* Festive Promo Card/Banner Content Override */}
+              <div className="bg-neutral-900 border border-neutral-800 p-6 space-y-6">
+                <h4 className="font-serif text-lg text-white">Festive Offer & Gift Card Management</h4>
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    const festiveSub = (document.getElementById("inp_festive_sub") as HTMLInputElement)?.value;
+                    const festiveTitle1 = (document.getElementById("inp_festive_title_1") as HTMLInputElement)?.value;
+                    const festiveTitle2 = (document.getElementById("inp_festive_title_2") as HTMLInputElement)?.value;
+                    const festiveDesc = (document.getElementById("inp_festive_desc") as HTMLTextAreaElement)?.value;
+                    const festiveCode = (document.getElementById("inp_festive_code") as HTMLInputElement)?.value;
+                    const festivePct = (document.getElementById("inp_festive_pct") as HTMLInputElement)?.value;
+                    const festiveSubCard = (document.getElementById("inp_festive_sub_card") as HTMLInputElement)?.value;
+                    const festiveBless = (document.getElementById("inp_festive_bless") as HTMLInputElement)?.value;
+                    const festiveLoc = (document.getElementById("inp_festive_loc") as HTMLInputElement)?.value;
+
+                    try {
+                      const payload = [
+                        { key: "oj_custom_txt_festive_sub", value: festiveSub },
+                        { key: "oj_custom_txt_festive_title_l1", value: festiveTitle1 },
+                        { key: "oj_custom_txt_festive_title_l2", value: festiveTitle2 },
+                        { key: "oj_custom_txt_festive_desc", value: festiveDesc },
+                        { key: "oj_custom_txt_festive_code", value: festiveCode },
+                        { key: "oj_custom_txt_festive_card_pct", value: festivePct },
+                        { key: "oj_custom_txt_festive_card_sub", value: festiveSubCard },
+                        { key: "oj_custom_txt_festive_card_bless", value: festiveBless },
+                        { key: "oj_custom_txt_festive_card_loc", value: festiveLoc },
+                      ];
+
+                      for (const item of payload) {
+                        await fetch("/api/custom-content", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify(item),
+                        });
+                      }
+
+                      // Update local state
+                      setCustomText((prev) => {
+                        const updated = { ...prev };
+                        payload.forEach(item => {
+                          const id = item.key.replace("oj_custom_txt_", "");
+                          updated[id] = item.value;
+                        });
+                        return updated;
+                      });
+
+                      alert("Festive discount banner and gift card copy updated successfully!");
+                    } catch (err) {
+                      console.error("Failed to save festive settings:", err);
+                      alert("Failed to save festive settings to server.");
+                    }
+                  }}
+                  className="space-y-4"
+                >
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[10px] uppercase tracking-widest text-amber-500 font-bold mb-2">
+                        Promo Code
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        id="inp_festive_code"
+                        defaultValue={customText["festive_code"] || "OJGOLD10"}
+                        className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2.5 px-4 text-white text-xs font-mono font-bold"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] uppercase tracking-widest text-amber-500 font-bold mb-2">
+                        Gift Card Discount %
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        id="inp_festive_pct"
+                        defaultValue={customText["festive_card_pct"] || "10% OFF"}
+                        className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2.5 px-4 text-white text-xs font-bold"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[10px] uppercase tracking-widest text-amber-500 font-bold mb-2">
+                        Festive Card Subtitle
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        id="inp_festive_sub_card"
+                        defaultValue={customText["festive_card_sub"] || "Festive Gold Gift Card"}
+                        className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2.5 px-4 text-white text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] uppercase tracking-widest text-amber-500 font-bold mb-2">
+                        Invitation Subtitle
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        id="inp_festive_sub"
+                        defaultValue={customText["festive_sub"] || "Exclusive Festive Invitation"}
+                        className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2.5 px-4 text-white text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[10px] uppercase tracking-widest text-amber-500 font-bold mb-2">
+                        Offer Title Line 1
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        id="inp_festive_title_1"
+                        defaultValue={customText["festive_title_l1"] || "Celebrate OJ's Legacy"}
+                        className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2.5 px-4 text-white text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] uppercase tracking-widest text-amber-500 font-bold mb-2">
+                        Offer Title Line 2
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        id="inp_festive_title_2"
+                        defaultValue={customText["festive_title_l2"] || "Get 10% Off Making Charges"}
+                        className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2.5 px-4 text-white text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] uppercase tracking-widest text-amber-500 font-bold mb-2">
+                      Offer Description Copy
+                    </label>
+                    <textarea
+                      required
+                      id="inp_festive_desc"
+                      rows={3}
+                      defaultValue={customText["festive_desc"] || "Indulge in the finest 18K and 22K hallmarked gold creations. This festive season, claim our digital Gift Card to enjoy an exclusive 10% discount on making charges for all bridal, daily wear, and custom order gold jewelry."}
+                      className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2.5 px-4 text-white text-xs resize-none"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[10px] uppercase tracking-widest text-amber-500 font-bold mb-2">
+                        Auspicious Blessing
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        id="inp_festive_bless"
+                        defaultValue={customText["festive_card_bless"] || "शुभ लाभ"}
+                        className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2.5 px-4 text-white text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] uppercase tracking-widest text-amber-500 font-bold mb-2">
+                        Location Restriction
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        id="inp_festive_loc"
+                        defaultValue={customText["festive_card_loc"] || "Valid Shahabad Chowk"}
+                        className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2.5 px-4 text-white text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="py-2.5 px-6 bg-amber-500 hover:bg-amber-600 text-neutral-950 font-sans text-[10px] font-bold tracking-widest uppercase transition-colors rounded-sm"
+                  >
+                    Save Festive Settings
+                  </button>
+                </form>
+              </div>
             </div>
           )}
         </main>

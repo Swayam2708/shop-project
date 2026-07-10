@@ -22,8 +22,10 @@
   --color-ivory: #faf8f5;
   --color-blush: #f3efe9;
   --color-pearl: #fcfaf6;
-  --color-luxury-black: #0f0e0c;
-  --color-luxury-dark: #171614;
+  --color-luxury-black: #001f1c; /* Deepest Tanishq Green-Black */
+  --color-luxury-dark: #003d34; /* Signature Brand Emerald Green */
+  --color-tanishq-green: #003d34; /* Signature Brand Emerald Green */
+  --color-tanishq-gold: #cca250; /* Premium Champagne Gold */
 
   /* Font Families */
   --font-serif: var(--font-playfair), Georgia, serif;
@@ -86,15 +88,15 @@
 }
 
 :root {
-  --background: #FAF9F5; /* Premium Ivory */
-  --foreground: #050505; /* Luxury Black */
+  --background: #FAF9F6; /* Premium Warm Alabaster */
+  --foreground: #001f1c; /* Luxury Deep Green-Black */
   --gold-text: #8c6a26; /* Deep high-contrast antique gold for light mode readability */
-  --gold-primary: #c5a059;
+  --gold-primary: #cca250; /* Premium Champagne Gold */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #050505;
+    --background: #001210; /* Deepest Emerald-Black */
     --foreground: #FCFCFA;
     --gold-text: #dfba73; /* Radiant champagne gold for dark mode contrast */
     --gold-primary: #dfba73;
@@ -115,11 +117,11 @@ body {
 
 /* Luxury ambient backgrounds */
 @utility bg-luxury-gradient-light {
-  background: radial-gradient(circle at top, #FCFCFA 0%, #FAF9F5 50%, #F5EDE0 100%);
+  background: radial-gradient(circle at top, #fcfbfa 0%, #FAF9F6 50%, #e4eeec 100%);
 }
 
 @utility bg-luxury-gradient-dark {
-  background: radial-gradient(circle at top, #0F0E0B 0%, #050505 60%, #020202 100%);
+  background: radial-gradient(circle at top, #002e27 0%, #001210 60%, #000807 100%);
 }
 
 /* Glassmorphism custom styles */

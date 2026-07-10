@@ -732,24 +732,59 @@ export default function Home() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(223,186,115,0.05)_0%,transparent_70%)] pointer-events-none" />
           
           <div className="flex-1 space-y-6 z-10">
-            <span className="font-sans text-xs text-gold tracking-[0.4em] uppercase font-bold block">
-              Exclusive Festive Invitation
+            <span 
+              contentEditable={isDesignMode}
+              suppressContentEditableWarning
+              onBlur={(e) => handleTextChange("festive_sub", e.currentTarget.textContent || "")}
+              className={`font-sans text-xs text-gold tracking-[0.4em] uppercase font-bold block ${editOutlineClass}`}
+            >
+              {customText["festive_sub"] || "Exclusive Festive Invitation"}
             </span>
             <h2 className="font-serif text-3xl md:text-5xl font-light text-white leading-tight">
-              Celebrate OJ's Legacy <br />
-              <span className="metallic-gold-shine font-normal">Get 10% Off Making Charges</span>
+              <span
+                contentEditable={isDesignMode}
+                suppressContentEditableWarning
+                onBlur={(e) => handleTextChange("festive_title_l1", e.currentTarget.textContent || "")}
+                className={`block mb-1 ${editOutlineClass}`}
+              >
+                {customText["festive_title_l1"] || "Celebrate OJ's Legacy"}
+              </span>
+              <span
+                contentEditable={isDesignMode}
+                suppressContentEditableWarning
+                onBlur={(e) => handleTextChange("festive_title_l2", e.currentTarget.textContent || "")}
+                className={`metallic-gold-shine font-normal ${editOutlineClass}`}
+              >
+                {customText["festive_title_l2"] || "Get 10% Off Making Charges"}
+              </span>
             </h2>
             <p className="font-sans text-sm text-neutral-300 font-light leading-relaxed max-w-lg">
-              Indulge in the finest 18K and 22K hallmarked gold creations. This festive season, claim our digital Gift Card to enjoy an exclusive <strong className="text-gold font-bold">10% discount on making charges</strong> for all bridal, daily wear, and custom order gold jewelry.
+              <span
+                contentEditable={isDesignMode}
+                suppressContentEditableWarning
+                onBlur={(e) => handleTextChange("festive_desc", e.currentTarget.textContent || "")}
+                className={editOutlineClass}
+              >
+                {customText["festive_desc"] || "Indulge in the finest 18K and 22K hallmarked gold creations. This festive season, claim our digital Gift Card to enjoy an exclusive 10% discount on making charges for all bridal, daily wear, and custom order gold jewelry."}
+              </span>
             </p>
             
             <div className="flex flex-wrap gap-4 items-center pt-2">
-              <div className="border border-gold/30 bg-gold/5 px-4 py-2 rounded-sm font-mono text-sm text-gold tracking-widest flex items-center gap-2 select-all">
-                CODE: <span className="font-bold">OJGOLD10</span>
+              <div className="border border-gold/30 bg-gold/5 px-4 py-2 rounded-sm font-mono text-sm text-gold tracking-widest flex items-center gap-2">
+                CODE:{" "}
+                <span
+                  contentEditable={isDesignMode}
+                  suppressContentEditableWarning
+                  onBlur={(e) => handleTextChange("festive_code", e.currentTarget.textContent || "")}
+                  className={`font-bold focus:outline-none ${editOutlineClass}`}
+                >
+                  {customText["festive_code"] || "OJGOLD10"}
+                </span>
               </div>
               <button
                 onClick={() => {
-                  const msg = encodeURIComponent("Hi Omar Jewellers, I want to claim the 10% OFF Festive Gift Card (Code: OJGOLD10) for my purchase.");
+                  const currentCode = customText["festive_code"] || "OJGOLD10";
+                  const msg = encodeURIComponent(`Hi Omar Jewellers, I want to claim the 10% OFF Festive Gift Card (Code: ${currentCode}) for my purchase.`);
                   window.open(`https://wa.me/91${whatsAppNumber}?text=${msg}`, "_blank");
                 }}
                 className="px-6 py-3 bg-gold hover:bg-[#b8912b] text-neutral-950 font-sans text-xs font-bold tracking-widest uppercase transition-all duration-300 rounded-sm shadow-md"
@@ -788,23 +823,56 @@ export default function Home() {
               
               {/* Card Center: large 10% Off */}
               <div className="text-center my-auto flex flex-col items-center">
-                <span className="font-serif text-5xl md:text-6xl text-gold font-light tracking-wide drop-shadow-md">
-                  10% OFF
+                <span
+                  contentEditable={isDesignMode}
+                  suppressContentEditableWarning
+                  onBlur={(e) => handleTextChange("festive_card_pct", e.currentTarget.textContent || "")}
+                  className={`font-serif text-5xl md:text-6xl text-gold font-light tracking-wide drop-shadow-md ${editOutlineClass}`}
+                >
+                  {customText["festive_card_pct"] || "10% OFF"}
                 </span>
-                <span className="font-sans text-[9px] tracking-[0.2em] text-neutral-400 uppercase mt-1">
-                  Festive Gold Gift Card
+                <span
+                  contentEditable={isDesignMode}
+                  suppressContentEditableWarning
+                  onBlur={(e) => handleTextChange("festive_card_sub", e.currentTarget.textContent || "")}
+                  className={`font-sans text-[9px] tracking-[0.2em] text-neutral-400 uppercase mt-1 ${editOutlineClass}`}
+                >
+                  {customText["festive_card_sub"] || "Festive Gold Gift Card"}
                 </span>
               </div>
               
               {/* Card Footer */}
               <div className="flex justify-between items-end border-t border-gold/10 pt-4 text-[8px] font-sans text-neutral-500 tracking-wider">
                 <div>
-                  <p className="uppercase text-gold font-bold">OJGOLD10</p>
-                  <p className="text-[7px] uppercase mt-0.5">VIP Privilege Code</p>
+                  <p className="uppercase text-gold font-bold">
+                    {customText["festive_code"] || "OJGOLD10"}
+                  </p>
+                  <p 
+                    contentEditable={isDesignMode}
+                    suppressContentEditableWarning
+                    onBlur={(e) => handleTextChange("festive_card_priv", e.currentTarget.textContent || "")}
+                    className={`text-[7px] uppercase mt-0.5 ${editOutlineClass}`}
+                  >
+                    {customText["festive_card_priv"] || "VIP Privilege Code"}
+                  </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-neutral-400 font-serif italic text-[10px]">शुभ लाभ</p>
-                  <p className="text-[6px] uppercase mt-0.5">Valid Shahabad Chowk</p>
+                  <p 
+                    contentEditable={isDesignMode}
+                    suppressContentEditableWarning
+                    onBlur={(e) => handleTextChange("festive_card_bless", e.currentTarget.textContent || "")}
+                    className={`text-neutral-400 font-serif italic text-[10px] ${editOutlineClass}`}
+                  >
+                    {customText["festive_card_bless"] || "शुभ लाभ"}
+                  </p>
+                  <p 
+                    contentEditable={isDesignMode}
+                    suppressContentEditableWarning
+                    onBlur={(e) => handleTextChange("festive_card_loc", e.currentTarget.textContent || "")}
+                    className={`text-[6px] uppercase mt-0.5 ${editOutlineClass}`}
+                  >
+                    {customText["festive_card_loc"] || "Valid Shahabad Chowk"}
+                  </p>
                 </div>
               </div>
             </motion.div>

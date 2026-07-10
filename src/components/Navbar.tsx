@@ -181,13 +181,20 @@ export default function Navbar({
           </button>
 
           {/* Logo */}
-          <a href="#" className="flex flex-col items-center select-none group">
-            <span className="font-serif text-2xl md:text-3xl font-light tracking-[0.25em] text-neutral-900 dark:text-neutral-100 group-hover:text-gold transition-colors duration-300">
-              OMAR JEWELLERS
-            </span>
-            <span className="font-sans text-[10px] md:text-xs tracking-[0.4em] text-gold uppercase mt-0.5 font-semibold">
-              OJ • Luxury Gold
-            </span>
+          <a href="#" className="flex items-center gap-3 select-none group">
+            <img
+              src="/logo.jpg"
+              alt="Omar Jewellers Logo"
+              className="w-10 h-10 rounded-full border border-gold/30 object-cover shadow-sm group-hover:border-gold transition-colors duration-300"
+            />
+            <div className="flex flex-col">
+              <span className="font-serif text-lg md:text-xl font-light tracking-[0.2em] text-neutral-900 dark:text-neutral-100 group-hover:text-gold transition-colors duration-300">
+                OMAR JEWELLERS
+              </span>
+              <span className="font-sans text-[9px] tracking-[0.35em] text-gold uppercase mt-0.5 font-bold">
+                OJ • Luxury Gold
+              </span>
+            </div>
           </a>
 
           {/* Desktop Nav Links */}
@@ -267,13 +274,20 @@ export default function Navbar({
             >
               <div>
                 <div className="flex items-center justify-between mb-12">
-                  <div className="flex flex-col">
-                    <span className="font-serif text-xl tracking-[0.2em] font-light text-neutral-900 dark:text-neutral-100">
-                      OMAR JEWELLERS
-                    </span>
-                    <span className="font-sans text-[9px] tracking-[0.45em] text-gold uppercase mt-0.5 font-bold">
-                      OJ • LUXURY
-                    </span>
+                  <div className="flex items-center gap-3">
+                    <img
+                      src="/logo.jpg"
+                      alt="Omar Jewellers Logo"
+                      className="w-11 h-11 rounded-full border border-gold/30 object-cover"
+                    />
+                    <div className="flex flex-col">
+                      <span className="font-serif text-base tracking-[0.15em] font-light text-neutral-900 dark:text-neutral-100">
+                        OMAR JEWELLERS
+                      </span>
+                      <span className="font-sans text-[8px] tracking-[0.4em] text-gold uppercase mt-0.5 font-bold">
+                        OJ • LUXURY
+                      </span>
+                    </div>
                   </div>
                   <button
                     onClick={() => setIsMobileMenuOpen(false)}
