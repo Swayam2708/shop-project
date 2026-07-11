@@ -539,8 +539,8 @@ export default function Home() {
     : "";
 
   return (
-    <div className="min-h-screen bg-[#0d0405] text-neutral-100">
-      <div className="min-h-screen bg-luxury-gradient-dark relative overflow-hidden max-w-[1280px] mx-auto xl:border-l xl:border-r xl:border-[#dfba73]/15 xl:shadow-[0_0_80px_rgba(0,0,0,0.8)]">
+    <div className="min-h-[100dvh] bg-[#0d0405] text-neutral-100">
+      <div className="min-h-[100dvh] bg-luxury-gradient-dark relative overflow-hidden max-w-[1280px] mx-auto xl:border-l xl:border-r xl:border-[#dfba73]/15 xl:shadow-[0_0_80px_rgba(0,0,0,0.8)]">
       {/* Sticky Premium Navbar */}
       <Navbar
         wishlist={wishlist}
@@ -561,7 +561,7 @@ export default function Home() {
       <div className="absolute top-2/3 right-[-10%] w-[600px] h-[600px] bg-amber-500/5 blur-[180px] rounded-full animate-gold-glow pointer-events-none z-0" style={{ animationDelay: "-3s" }} />
 
       {/* 1. HERO SECTION */}
-      <section id="home" className="relative min-h-[600px] lg:h-screen flex items-center justify-center overflow-hidden pt-[140px]">
+      <section id="home" className="relative min-h-[600px] lg:h-[100dvh] flex items-center justify-center overflow-hidden pt-[140px]">
         {/* Beautiful Decorative Corner Scrolls */}
         <GoldCorner className="absolute top-[150px] left-6 w-12 h-12 pointer-events-none z-20" />
         <GoldCorner className="absolute top-[150px] right-6 w-12 h-12 pointer-events-none z-20" flipX />
@@ -571,6 +571,20 @@ export default function Home() {
         {/* Cute Cartoon auspicious stickers in corners */}
         <CuteGaneshaCorner className="absolute top-[210px] left-6 w-14 h-14 pointer-events-none z-20 animate-bounce" />
         <CuteCoinCorner className="absolute top-[210px] right-6 w-12 h-12 pointer-events-none z-20 animate-pulse" />
+
+        {/* Big Circular Seals Logo in Hero Corner */}
+        <div className="absolute top-[170px] right-24 z-20 hidden md:block">
+          <div className="w-24 h-24 rounded-full border-2 border-[#dfba73]/40 bg-neutral-950/80 backdrop-blur-xs flex items-center justify-center p-2 shadow-2xl relative group hover:border-[#dfba73] transition-colors duration-500">
+            {/* Spinning gold text border inside seal */}
+            <div className="absolute inset-0 rounded-full border border-dashed border-[#dfba73]/20 animate-[spin_20s_linear_infinite]" />
+            <img
+              src="/logo.jpg"
+              alt="OJ Seal of Purity"
+              className="w-full h-full rounded-full object-cover grayscale brightness-110 group-hover:grayscale-0 transition-all duration-500"
+            />
+          </div>
+          <span className="block text-center font-sans text-[7px] tracking-widest text-[#dfba73] uppercase mt-1.5 font-bold">OJ Purity Seal</span>
+        </div>
 
         {/* Background Banner or Video */}
         <div className="absolute inset-0 z-0 bg-neutral-950">

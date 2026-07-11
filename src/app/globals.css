@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -28,8 +29,8 @@
   --color-tanishq-gold: #cca250; /* Premium Champagne Gold */
 
   /* Font Families */
-  --font-serif: var(--font-playfair), Georgia, serif;
-  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
 
   --animate-shimmer: shimmer 2.5s infinite linear;
   --animate-fade-in: fadeIn 1s ease-out forwards;
