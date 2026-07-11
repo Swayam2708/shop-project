@@ -183,7 +183,7 @@ export default function Navbar({
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 ${
+        className={`absolute md:fixed top-0 left-0 w-full z-40 transition-all duration-300 ${
           isScrolled
             ? "glass-scrolled shadow-md"
             : "glass"
@@ -405,8 +405,8 @@ export default function Navbar({
         </div>
 
         {/* Tanishq-Style Categories Menu Bar */}
-        <div className="border-t border-neutral-200/50 dark:border-neutral-900/50 bg-[#FCFAF6] dark:bg-neutral-950 py-3 transition-colors duration-300">
-          <div className="max-w-7xl mx-auto px-6 flex items-center justify-start md:justify-center gap-6 md:gap-8 overflow-x-auto md:overflow-x-visible whitespace-nowrap scrollbar-none font-sans text-[11px] font-bold uppercase tracking-[0.18em] text-neutral-900/80 dark:text-neutral-100/80">
+        <div className="border-t border-[#dfba73]/15 bg-neutral-950/95 py-3 transition-colors duration-300">
+          <div className="max-w-7xl mx-auto px-6 flex items-center justify-start md:justify-center gap-6 md:gap-8 overflow-x-auto md:overflow-x-visible whitespace-nowrap scrollbar-none font-sans text-[11px] font-bold uppercase tracking-[0.18em] text-neutral-100/80">
             {[
               { label: "All Jewellery", href: "#new-arrivals", cat: "all" },
               { label: "Gold Edit", href: "#best-sellers", cat: "rings" },

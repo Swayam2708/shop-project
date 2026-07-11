@@ -561,7 +561,7 @@ export default function Home() {
       <div className="absolute top-2/3 right-[-10%] w-[600px] h-[600px] bg-amber-500/5 blur-[180px] rounded-full animate-gold-glow pointer-events-none z-0" style={{ animationDelay: "-3s" }} />
 
       {/* 1. HERO SECTION */}
-      <section id="home" className="relative min-h-[600px] lg:h-[100dvh] flex items-center justify-center overflow-hidden pt-[140px]">
+      <section id="home" className="relative min-h-[600px] lg:h-[100dvh] flex items-center justify-center overflow-hidden pt-[220px] md:pt-[160px] lg:pt-[140px]">
         {/* Beautiful Decorative Corner Scrolls */}
         <GoldCorner className="absolute top-[150px] left-6 w-12 h-12 pointer-events-none z-20" />
         <GoldCorner className="absolute top-[150px] right-6 w-12 h-12 pointer-events-none z-20" flipX />
