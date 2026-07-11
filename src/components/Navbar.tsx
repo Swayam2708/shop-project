@@ -241,28 +241,28 @@ export default function Navbar({
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-2.5 md:py-4 flex items-center justify-between">
           {/* Mobile Menu Trigger */}
           <button
             onClick={() => setIsMobileMenuOpen(true)}
             className="md:hidden text-neutral-900 dark:text-neutral-100 hover:text-gold transition-colors"
             aria-label="Open menu"
           >
-            <Menu className="w-6 h-6" />
+            <Menu className="w-5 h-5" />
           </button>
 
           {/* Logo */}
-          <a href="#" className="flex items-center gap-3 select-none group">
+          <a href="#" className="flex items-center gap-2 sm:gap-3 select-none group">
             <img
               src="/logo.jpg"
               alt="Omar Jewellers Logo"
-              className="w-10 h-10 rounded-full border border-gold/30 object-cover shadow-sm group-hover:border-gold transition-colors duration-300"
+              className="w-7 h-7 sm:w-10 sm:h-10 rounded-full border border-gold/30 object-cover shadow-sm group-hover:border-gold transition-colors duration-300"
             />
             <div className="flex flex-col">
-              <span className="font-serif text-lg md:text-xl font-light tracking-[0.2em] text-neutral-900 dark:text-neutral-100 group-hover:text-gold transition-colors duration-300">
+              <span className="font-serif text-xs sm:text-base md:text-xl font-light tracking-[0.2em] text-neutral-900 dark:text-neutral-100 group-hover:text-gold transition-colors duration-300">
                 OMAR JEWELLERS
               </span>
-              <span className="font-sans text-[9px] tracking-[0.35em] text-gold uppercase mt-0.5 font-bold">
+              <span className="font-sans text-[7px] sm:text-[9px] tracking-[0.35em] text-gold uppercase mt-0.5 font-bold">
                 OJ • Luxury Gold
               </span>
             </div>

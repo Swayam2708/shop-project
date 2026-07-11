@@ -650,7 +650,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 35 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-            className="font-serif text-4xl sm:text-6xl md:text-7xl font-light tracking-wider text-white leading-none mb-6"
+            className="font-serif text-2xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-wider text-white leading-tight mb-4"
           >
             <span
               contentEditable={isDesignMode}
@@ -674,7 +674,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, delay: 0.2, ease: "easeOut" }}
-            className="font-sans text-sm md:text-base text-neutral-200 max-w-xl font-light tracking-wide leading-relaxed mb-10"
+            className="font-sans text-xs md:text-base text-neutral-200 max-w-xl font-light tracking-wide leading-relaxed mb-6 md:mb-10"
           >
             <span
               contentEditable={isDesignMode}
@@ -690,18 +690,18 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
-            className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
+            className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto px-4 sm:px-0"
           >
             <a
               href="#new-arrivals"
-              className="px-8 py-4 bg-[#dfba73] hover:bg-[#c5a059] text-neutral-950 font-sans text-xs font-bold tracking-widest uppercase transition-all duration-300 rounded-sm flex items-center justify-center gap-2 shadow-lg shadow-[#dfba73]/10 hover:shadow-[#dfba73]/20"
+              className="px-5 py-3 md:px-8 md:py-4 bg-[#dfba73] hover:bg-[#c5a059] text-neutral-950 font-sans text-[10px] md:text-xs font-bold tracking-widest uppercase transition-all duration-300 rounded-sm flex items-center justify-center gap-2 shadow-lg shadow-[#dfba73]/10 hover:shadow-[#dfba73]/20"
             >
               Explore Gold Arrivals
               <ArrowRight className="w-4 h-4" />
             </a>
             <button
               onClick={handleGeneralWhatsApp}
-              className="px-8 py-4 border border-neutral-200/30 hover:border-[#dfba73] hover:bg-white/5 text-white font-sans text-xs font-bold tracking-widest uppercase transition-all duration-300 rounded-sm backdrop-blur-sm"
+              className="px-5 py-3 md:px-8 md:py-4 border border-neutral-200/30 hover:border-[#dfba73] hover:bg-white/5 text-white font-sans text-[10px] md:text-xs font-bold tracking-widest uppercase transition-all duration-300 rounded-sm backdrop-blur-sm"
             >
               Book Private Consultation
             </button>
@@ -1050,7 +1050,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8">
           {products
             .filter((p) => p.category === "silver")
             .filter((p) => {
@@ -1120,7 +1120,7 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8">
           {products
             .filter((p) => p.category === "new-arrivals")
             .filter((p) => {
@@ -1195,7 +1195,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8">
             <AnimatePresence mode="popLayout">
               {filteredBestSellers.map((product) => (
                 <ProductCard
@@ -1489,7 +1489,7 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8">
           {products
             .filter((p) => p.category === "daily-wear")
             .map((product) => (
