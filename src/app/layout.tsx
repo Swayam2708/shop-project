@@ -33,7 +33,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${playfair.variable} ${outfit.variable} h-full scroll-smooth antialiased`}
+      className={`${playfair.variable} ${outfit.variable} dark h-full scroll-smooth antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-[#dfba73] selection:text-white font-sans">
         {children}

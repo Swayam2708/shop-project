@@ -539,7 +539,8 @@ export default function Home() {
     : "";
 
   return (
-    <div className="min-h-screen bg-luxury-gradient-light dark:bg-luxury-gradient-dark text-neutral-900 dark:text-neutral-100 relative overflow-hidden">
+    <div className="min-h-screen bg-[#0d0405] text-neutral-100">
+      <div className="min-h-screen bg-luxury-gradient-dark relative overflow-hidden max-w-[1280px] mx-auto xl:border-l xl:border-r xl:border-[#dfba73]/15 xl:shadow-[0_0_80px_rgba(0,0,0,0.8)]">
       {/* Sticky Premium Navbar */}
       <Navbar
         wishlist={wishlist}
@@ -2433,6 +2434,7 @@ export default function Home() {
         onUploadPhoto={handleUploadImage}
         customText={customText}
       />
+      </div>
     </div>
   );
 }

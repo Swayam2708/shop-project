@@ -88,19 +88,10 @@
 }
 
 :root {
-  --background: #FCFAF6; /* Tanishq Warm Alabaster Ivory */
-  --foreground: #2D1F21; /* Burgundy Charcoal */
-  --gold-text: #832729; /* Tanishq Burgundy Red for text links/buttons */
-  --gold-primary: #cca250; /* Premium Champagne Gold */
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #18090a; /* Deepest Luxury Ruby-Black */
-    --foreground: #FCFAF6;
-    --gold-text: #dfba73;
-    --gold-primary: #dfba73;
-  }
+  --background: #18090a; /* Deepest Luxury Ruby-Black */
+  --foreground: #FCFAF6;
+  --gold-text: #dfba73;
+  --gold-primary: #dfba73;
 }
 
 html {
@@ -117,7 +108,7 @@ body {
 
 /* Luxury ambient backgrounds */
 @utility bg-luxury-gradient-light {
-  background: radial-gradient(circle at top, #fffefc 0%, #FCFAF6 50%, #f7eded 100%);
+  background: radial-gradient(circle at top, #3b0a0d 0%, #100203 60%, #050000 100%);
 }
 
 @utility bg-luxury-gradient-dark {
@@ -126,43 +117,26 @@ body {
 
 /* Glassmorphism custom styles */
 .glass {
-  background: rgba(250, 249, 245, 0.45) !important; /* Low opacity when unscrolled */
+  background: rgba(5, 5, 5, 0.35) !important; /* Very low opacity for immersive dark mode */
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(197, 160, 89, 0.12);
+  border-bottom: 1px solid rgba(223, 186, 115, 0.12);
   transition: all 0.3s ease;
 }
 
 .glass-scrolled {
-  background: rgba(250, 249, 245, 0.75) !important; /* Slightly more opaque when scrolled */
+  background: rgba(5, 5, 5, 0.65) !important; /* Elevated contrast when scrolled */
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(197, 160, 89, 0.22);
+  border-bottom: 1px solid rgba(223, 186, 115, 0.22);
   transition: all 0.3s ease;
 }
 
 .glass-gold {
-  background: rgba(247, 239, 229, 0.6);
+  background: rgba(15, 14, 11, 0.6);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(212, 175, 55, 0.25);
-}
-
-@media (prefers-color-scheme: dark) {
-  .glass {
-    background: rgba(5, 5, 5, 0.35) !important; /* Very low opacity for immersive dark mode */
-    border-bottom: 1px solid rgba(223, 186, 115, 0.12);
-  }
-  
-  .glass-scrolled {
-    background: rgba(5, 5, 5, 0.65) !important; /* Elevated contrast when scrolled */
-    border-bottom: 1px solid rgba(223, 186, 115, 0.22);
-  }
-  
-  .glass-gold {
-    background: rgba(15, 14, 11, 0.6);
-    border: 1px solid rgba(212, 175, 55, 0.18);
-  }
+  border: 1px solid rgba(212, 175, 55, 0.18);
 }
 
 /* Luxury Refined Shadows */
