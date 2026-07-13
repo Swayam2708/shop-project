@@ -715,7 +715,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-14 md:py-24 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto z-10 relative">
+      <section id="live-rates" className="py-14 md:py-24 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto z-10 relative">
         <div className="bg-white/40 dark:bg-[#0F0E0B]/40 border border-[#dfba73]/15 p-8 md:p-12 rounded-sm shadow-luxury-glow backdrop-blur-md relative overflow-hidden">
           {/* Filigree Corner Accents */}
           <GoldCorner className="absolute top-2 left-2 w-8 h-8 pointer-events-none opacity-30" />

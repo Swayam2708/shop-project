@@ -283,3 +283,83 @@ html, body {
     font-size: 16px !important;
   }
 }
+
+/* Mobile Visibility and WCAG AA Accessibility Overrides (320px - 768px) */
+@media (max-width: 767px) {
+  /* 1. Body Background lock */
+  body {
+    background-color: #18090a !important;
+    color: #F5F5F5 !important;
+  }
+
+  /* 2. Headings contrast lock (white / premium soft gold) */
+  h1, h2, h3, h4, h5, h6,
+  .font-serif {
+    color: #FFF4D6 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9) !important;
+  }
+
+  /* 3. Global text and labels contrast enhancement on dark maroon background */
+  p, span, label,
+  .text-neutral-900,
+  .text-neutral-800,
+  .text-neutral-700,
+  .text-neutral-600,
+  .text-neutral-500,
+  .text-neutral-400 {
+    color: #F5F5F5 !important;
+  }
+
+  /* Exceptions: preserve visibility inside light modal boxes, inputs, active button wrappers, or custom forms */
+  .bg-white p, .bg-white span, .bg-white label, .bg-white h2, .bg-white h3, .bg-white h4,
+  .bg-\[\#FAF9F5\] p, .bg-\[\#FAF9F5\] span, .bg-\[\#FAF9F5\] label, .bg-\[\#FAF9F5\] h2, .bg-\[\#FAF9F5\] h3, .bg-\[\#FAF9F5\] h4,
+  #ud_form p, #ud_form label, #ud_form span,
+  .glass p, .glass label, .glass span,
+  .glass-scrolled p, .glass-scrolled label, .glass-scrolled span,
+  input, select, textarea {
+    color: inherit;
+  }
+
+  /* Force light-colored placeholders and fields inside standard forms */
+  input[type="text"], input[type="number"], input[type="tel"], textarea, select {
+    color: #ffffff !important;
+    background-color: #050505 !important;
+    border-color: #444444 !important;
+  }
+
+  /* 4. Active category tabs colors */
+  button.bg-\[\#dfba73\],
+  .bg-gold {
+    background-color: #dfba73 !important;
+    color: #18090a !important;
+    font-weight: 700 !important;
+  }
+
+  /* 5. Inactive category and button borders visibility */
+  button.border-neutral-300,
+  button.border-neutral-800,
+  button.border-neutral-200 {
+    color: #F5F5F5 !important;
+    border-color: rgba(223, 186, 115, 0.4) !important;
+    background-color: rgba(255, 255, 255, 0.05) !important;
+  }
+
+  /* 6. Solid contrast-rich icon strokes and colors (Menu, Cart, Wishlist, Profile) */
+  nav svg,
+  button svg,
+  a svg,
+  .text-gold svg {
+    color: #dfba73 !important;
+    stroke: #dfba73 !important;
+    opacity: 1 !important;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8)) !important;
+  }
+
+  /* Ratings stars visibility */
+  .text-amber-400,
+  .text-gold,
+  .text-\[\#dfba73\] {
+    color: #F8E7B5 !important;
+  }
+}
+
