@@ -568,9 +568,7 @@ export default function Home() {
         <GoldCorner className="absolute bottom-6 left-6 w-12 h-12 pointer-events-none z-20" flipY />
         <GoldCorner className="absolute bottom-6 right-6 w-12 h-12 pointer-events-none z-20" flipX flipY />
 
-        {/* Cute Cartoon auspicious stickers in corners */}
-        <CuteGaneshaCorner className="absolute top-[210px] left-6 w-14 h-14 pointer-events-none z-20 animate-bounce" />
-        <CuteCoinCorner className="absolute top-[210px] right-6 w-12 h-12 pointer-events-none z-20 animate-pulse" />
+
 
         {/* Big Circular Seals Logo in Hero Corner */}
         <div className="absolute top-[170px] right-24 z-20 hidden md:block">
@@ -1003,7 +1001,7 @@ export default function Home() {
           <p className="text-center font-sans text-[10px] tracking-[0.25em] text-[#dfba73] uppercase font-bold mb-6">
             Shop Silver by Category
           </p>
-          <div className="flex flex-wrap md:flex-nowrap items-center justify-center gap-4 sm:gap-6 overflow-x-auto scrollbar-none pb-4">
+          <div className="flex flex-nowrap items-center justify-start md:justify-center gap-4 sm:gap-6 overflow-x-auto scrollbar-none pb-4 px-4 w-full">
             {[
               { id: "all", label: "All Silver", sub: "Signature Ornaments", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=200&auto=format&fit=crop" },
               { id: "coins", label: "Pure Coins", sub: "999 Fine Coins", img: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=200&auto=format&fit=crop" },
