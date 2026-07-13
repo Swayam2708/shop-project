@@ -61,6 +61,9 @@ export default function AdminDashboard() {
   const [udhaarRecords, setUdhaarRecords] = useState<UdhaarRecord[]>([]);
   const [udhaarSearchQuery, setUdhaarSearchQuery] = useState("");
   const [newEntryItems, setNewEntryItems] = useState<{ ornament: string; weight: string }[]>([{ ornament: "", weight: "" }]);
+  const [newEntryAmount, setNewEntryAmount] = useState("");
+  const [newEntryDiscount, setNewEntryDiscount] = useState("");
+  const [newEntryPaid, setNewEntryPaid] = useState("");
 
   // Baseline market rate settings inputs
   const [rate24kInput, setRate24kInput] = useState("7650");
@@ -126,6 +129,8 @@ export default function AdminDashboard() {
             { name: "Gold Ring", weight: "5.8g" }
           ],
           amount: "127000", 
+          discount: "2000",
+          paid: "80000",
           dues: "45000", 
           date: "2026-07-10", 
           notes: "Promised to clear by next crop cycle" 
@@ -142,6 +147,8 @@ export default function AdminDashboard() {
             { name: "Silver Payal Set", weight: "120g" }
           ],
           amount: "9500", 
+          discount: "500",
+          paid: "9000",
           dues: "0", 
           date: "2026-07-08", 
           notes: "Fully Paid" 
@@ -159,6 +166,8 @@ export default function AdminDashboard() {
             { name: "Gold Chain", weight: "10.5g" }
           ],
           amount: "105000", 
+          discount: "3000",
+          paid: "90000",
           dues: "12000", 
           date: "2026-07-12", 
           notes: "Dues pending" 
@@ -345,8 +354,10 @@ export default function AdminDashboard() {
     const sonOfInput = (document.getElementById("ud_sonOf") as HTMLInputElement)?.value || "";
     const phoneInput = (document.getElementById("ud_phone") as HTMLInputElement)?.value || "";
     const villageInput = (document.getElementById("ud_village") as HTMLInputElement)?.value || "";
-    const amountInput = (document.getElementById("ud_amount") as HTMLInputElement)?.value || "";
-    const duesInput = (document.getElementById("ud_dues") as HTMLInputElement)?.value || "";
+    const amountInput = (document.getElementById("ud_amount") as HTMLInputElement)?.value || "0";
+    const discountInput = (document.getElementById("ud_discount") as HTMLInputElement)?.value || "0";
+    const paidInput = (document.getElementById("ud_paid") as HTMLInputElement)?.value || "0";
+    const duesInput = (document.getElementById("ud_dues") as HTMLInputElement)?.value || "0";
     const notesInput = (document.getElementById("ud_notes") as HTMLTextAreaElement)?.value || "";
 
     const activeOrnaments = newEntryItems.filter(item => item.ornament.trim() !== "");
@@ -365,6 +376,8 @@ export default function AdminDashboard() {
       weight: activeOrnaments[0].weight,     // fallback compatibility
       ornaments: activeOrnaments,
       amount: amountInput,
+      discount: discountInput,
+      paid: paidInput,
       dues: duesInput,
       date: new Date().toISOString().split("T")[0],
       notes: notesInput
@@ -377,6 +390,9 @@ export default function AdminDashboard() {
     // Reset form & state
     (document.getElementById("ud_form") as HTMLFormElement)?.reset();
     setNewEntryItems([{ ornament: "", weight: "" }]);
+    setNewEntryAmount("");
+    setNewEntryDiscount("");
+    setNewEntryPaid("");
     alert("🎉 Udhaar Entry with multiple products added successfully to the notebook!");
   };
 
@@ -400,10 +416,13 @@ export default function AdminDashboard() {
     const updated = udhaarRecords.map(r => {
       if (r.id === id) {
         const currentDues = parseFloat(r.dues || "0");
+        const currentPaid = parseFloat(r.paid || "0");
         const newDues = Math.max(0, currentDues - amt);
+        const newPaid = currentPaid + amt;
         return {
           ...r,
           dues: newDues.toString(),
+          paid: newPaid.toString(),
           notes: newDues === 0 ? "Fully Paid" : `${r.notes || ""}. Received payment ₹${amt} on ${new Date().toISOString().split("T")[0]}`
         };
       }
@@ -1938,26 +1957,58 @@ export default function AdminDashboard() {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
-                          Total Value (₹) *
+                          Total Bill Value (₹) *
                         </label>
                         <input
                           type="number"
                           required
                           id="ud_amount"
-                          placeholder="Total Price"
+                          value={newEntryAmount}
+                          onChange={(e) => setNewEntryAmount(e.target.value)}
+                          placeholder="e.g. 50000"
                           className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs font-mono"
                         />
                       </div>
                       <div>
                         <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
-                          Pending Udhaar (₹) *
+                          Discount Given (₹)
+                        </label>
+                        <input
+                          type="number"
+                          id="ud_discount"
+                          value={newEntryDiscount}
+                          onChange={(e) => setNewEntryDiscount(e.target.value)}
+                          placeholder="e.g. 2000"
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs font-mono"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                          Amount Given / Paid (₹) *
                         </label>
                         <input
                           type="number"
                           required
-                          id="ud_dues"
-                          placeholder="Udhaar Amount"
+                          id="ud_paid"
+                          value={newEntryPaid}
+                          onChange={(e) => setNewEntryPaid(e.target.value)}
+                          placeholder="e.g. 30000"
                           className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs font-mono"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                          Pending Dues (₹) (Auto-calculated)
+                        </label>
+                        <input
+                          type="number"
+                          readOnly
+                          id="ud_dues"
+                          value={Math.max(0, parseFloat(newEntryAmount || "0") - parseFloat(newEntryDiscount || "0") - parseFloat(newEntryPaid || "0"))}
+                          className="w-full bg-neutral-900 border border-neutral-800 text-[#dfba73] focus:outline-none py-2 px-3 text-xs font-mono font-bold cursor-not-allowed"
                         />
                       </div>
                     </div>
@@ -2079,13 +2130,15 @@ export default function AdminDashboard() {
                                       {rec.date}
                                     </div>
                                   </td>
-                                  <td className="py-4 px-4 text-right">
+                                  <td className="py-4 px-4 text-right space-y-0.5">
                                     <div className="font-mono text-neutral-400 text-[10px]">Total: ₹{parseFloat(rec.amount || "0").toLocaleString()}</div>
-                                    <div className={`font-mono text-sm font-extrabold mt-1 ${hasDues ? "text-red-400" : "text-green-400"}`}>
+                                    <div className="font-mono text-neutral-400 text-[10px]">Discount: ₹{parseFloat(rec.discount || "0").toLocaleString()}</div>
+                                    <div className="font-mono text-neutral-400 text-[10px]">Gave: ₹{parseFloat(rec.paid || "0").toLocaleString()}</div>
+                                    <div className={`font-mono text-xs font-extrabold pt-1 border-t border-neutral-800/60 ${hasDues ? "text-red-400" : "text-green-400"}`}>
                                       {hasDues ? `Dues: ₹${parseFloat(rec.dues).toLocaleString()}` : "✓ Fully Paid"}
                                     </div>
                                     {rec.notes && (
-                                      <div className="text-[9px] text-neutral-500 max-w-[150px] truncate mt-1" title={rec.notes}>
+                                      <div className="text-[9px] text-neutral-500 max-w-[150px] truncate pt-0.5" title={rec.notes}>
                                         {rec.notes}
                                       </div>
                                     )}
