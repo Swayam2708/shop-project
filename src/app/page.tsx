@@ -561,12 +561,12 @@ export default function Home() {
       <div className="absolute top-2/3 right-[-10%] w-[600px] h-[600px] bg-amber-500/5 blur-[180px] rounded-full animate-gold-glow pointer-events-none z-0" style={{ animationDelay: "-3s" }} />
 
       {/* 1. HERO SECTION */}
-      <section id="home" className="relative min-h-[600px] lg:h-[100dvh] flex items-center justify-center overflow-hidden pt-[220px] md:pt-[160px] lg:pt-[140px]">
+      <section id="home" className="relative min-h-[600px] lg:h-[100dvh] flex items-center justify-center overflow-hidden pt-[160px] pb-12 md:pt-[180px] lg:pt-[140px]">
         {/* Beautiful Decorative Corner Scrolls */}
-        <GoldCorner className="absolute top-[150px] left-6 w-12 h-12 pointer-events-none z-20" />
-        <GoldCorner className="absolute top-[150px] right-6 w-12 h-12 pointer-events-none z-20" flipX />
-        <GoldCorner className="absolute bottom-6 left-6 w-12 h-12 pointer-events-none z-20" flipY />
-        <GoldCorner className="absolute bottom-6 right-6 w-12 h-12 pointer-events-none z-20" flipX flipY />
+        <GoldCorner className="absolute top-[130px] md:top-[170px] left-4 md:left-6 w-8 h-8 md:w-12 md:h-12 pointer-events-none z-20" />
+        <GoldCorner className="absolute top-[130px] md:top-[170px] right-4 md:right-6 w-8 h-8 md:w-12 md:h-12 pointer-events-none z-20" flipX />
+        <GoldCorner className="absolute bottom-4 md:bottom-6 left-4 md:left-6 w-8 h-8 md:w-12 md:h-12 pointer-events-none z-20" flipY />
+        <GoldCorner className="absolute bottom-4 md:bottom-6 right-4 md:right-6 w-8 h-8 md:w-12 md:h-12 pointer-events-none z-20" flipX flipY />
 
 
 
@@ -715,8 +715,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* TODAY'S SHOWROOM METAL RATES WIDGET */}
-      <section className="py-12 md:py-20 px-4 md:px-12 max-w-7xl mx-auto z-10 relative">
+      <section className="py-14 md:py-24 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto z-10 relative">
         <div className="bg-white/40 dark:bg-[#0F0E0B]/40 border border-[#dfba73]/15 p-8 md:p-12 rounded-sm shadow-luxury-glow backdrop-blur-md relative overflow-hidden">
           {/* Filigree Corner Accents */}
           <GoldCorner className="absolute top-2 left-2 w-8 h-8 pointer-events-none opacity-30" />
@@ -800,7 +799,7 @@ export default function Home() {
       </section>
 
       {/* EXCLUSIVE TANISHQ-STYLE FESTIVE OFFER SECTION */}
-      <section className="py-16 md:py-24 px-4 md:px-12 max-w-7xl mx-auto z-10 relative">
+      <section className="py-14 md:py-24 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto z-10 relative">
         <div className="bg-gradient-to-br from-[#1a1105] via-neutral-950 to-[#1a1105] border border-gold/25 p-8 md:p-16 rounded-sm shadow-luxury-glow relative overflow-hidden flex flex-col lg:flex-row items-center gap-12">
           {/* Subtle background textures */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(223,186,115,0.05)_0%,transparent_70%)] pointer-events-none" />
@@ -954,18 +953,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 1.5 PURE STERLING SILVER COLLECTION (Silver Dominant) */}
       <motion.section
         initial={{ opacity: 0, y: 60 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="silver-collection"
-        className="py-10 md:py-20 px-4 md:px-12 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
+        className="py-14 md:py-24 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
       >
-        {/* Cute Cartoon corner ornaments for Silver collection */}
-        <CuteCoinCorner className="absolute top-4 left-4 w-12 h-12 pointer-events-none opacity-40 animate-pulse" />
-        <CuteGaneshaCorner className="absolute top-4 right-4 w-12 h-12 pointer-events-none opacity-40 animate-bounce" flipX />
 
         <div className="text-center mb-16">
           <span 
@@ -1087,7 +1082,7 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="new-arrivals"
-        className="py-10 md:py-20 px-4 md:px-12 max-w-7xl mx-auto z-10 relative"
+        className="py-14 md:py-24 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto z-10 relative"
       >
         <div className="text-center mb-16">
           <span 
@@ -1153,7 +1148,7 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="best-sellers"
-        className="bg-white/5 dark:bg-neutral-950/15 border-y border-[#dfba73]/10 py-10 md:py-20 px-4 md:px-12 z-10 relative"
+        className="bg-white/5 dark:bg-neutral-950/15 border-y border-[#dfba73]/10 py-14 md:py-24 px-4 sm:px-6 md:px-12 z-10 relative"
       >
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-16">
@@ -1220,7 +1215,7 @@ export default function Home() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8 }}
-        className="py-10 md:py-16 px-6 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
+        className="py-14 md:py-24 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
       >
         <div className="text-center mb-12">
           <span className="font-sans text-xs text-[#dfba73] tracking-[0.3em] uppercase font-bold">
@@ -1292,9 +1287,9 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="bridal"
-        className="relative py-10 md:py-20 overflow-hidden z-10"
+        className="relative py-14 md:py-24 px-4 sm:px-6 md:px-12 overflow-hidden z-10"
       >
-        <div className="max-w-7xl mx-auto px-4 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-5">
             <span 
               contentEditable={isDesignMode}
@@ -1456,7 +1451,7 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="daily-wear"
-        className="py-10 md:py-20 px-4 md:px-12 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
+        className="py-14 md:py-24 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
       >
         <div className="text-center mb-16">
           <span 
@@ -1516,9 +1511,9 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="about"
-        className="bg-[#dfba73]/3 dark:bg-neutral-950/10 py-16 md:py-36 border-y border-[#dfba73]/10 z-10 relative"
+        className="bg-[#dfba73]/3 dark:bg-neutral-950/10 py-14 md:py-32 px-4 sm:px-6 md:px-12 border-y border-[#dfba73]/10 z-10 relative"
       >
-        <div className="max-w-7xl mx-auto px-4 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="relative aspect-square border border-[#dfba73]/25 overflow-hidden">
             <img
               src={customAboutImage}
@@ -1649,7 +1644,7 @@ export default function Home() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="py-24 px-6 max-w-7xl mx-auto z-10 relative border-b border-[#dfba73]/10"
+        className="py-14 md:py-24 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto z-10 relative border-b border-[#dfba73]/10"
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Large portrait frame */}
@@ -1766,7 +1761,7 @@ export default function Home() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="flex overflow-x-auto md:grid md:grid-cols-3 gap-6 md:gap-8 scrollbar-none snap-x snap-mandatory pb-4 w-full">
           {[
             {
               name: "Amara K.",
@@ -1794,7 +1789,7 @@ export default function Home() {
               whileHover={{ y: -6 }}
               transition={{ duration: 0.3 }}
               key={i}
-              className="bg-white/40 dark:bg-[#0F0E0B]/40 border border-[#dfba73]/10 p-8 flex flex-col justify-between hover:border-[#dfba73] transition-all duration-300 relative group shadow-sm rounded-sm overflow-hidden"
+              className="w-[290px] sm:w-[340px] md:w-auto shrink-0 snap-center bg-white/40 dark:bg-[#0F0E0B]/40 border border-[#dfba73]/10 p-8 flex flex-col justify-between hover:border-[#dfba73] transition-all duration-300 relative group shadow-sm rounded-sm overflow-hidden"
             >
               {/* Corner Accents on Card */}
               <GoldCorner className="absolute top-1 left-1 w-6 h-6 pointer-events-none opacity-40" />
@@ -1872,7 +1867,7 @@ export default function Home() {
       </motion.section>
 
       {/* 8. INSTAGRAM-STYLE GALLERY */}
-      <section id="gallery" className="py-16 md:py-36 border-t border-[#dfba73]/10 bg-white/5 dark:bg-neutral-950/10 z-10 relative">
+      <section id="gallery" className="py-14 md:py-32 px-4 sm:px-6 md:px-12 border-t border-[#dfba73]/10 bg-white/5 dark:bg-neutral-950/10 z-10 relative">
         <div className="text-center mb-16">
           <span 
             contentEditable={isDesignMode}
@@ -1902,7 +1897,7 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
             "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=500&auto=format&fit=crop",
             "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=500&auto=format&fit=crop",
@@ -1920,6 +1915,7 @@ export default function Home() {
               <img
                 src={customizedImages[`gallery_${idx}`] || imgUrl}
                 alt="Gold jewellery details"
+                loading="lazy"
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
 
@@ -1960,7 +1956,7 @@ export default function Home() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         id="contact"
-        className="py-16 md:py-36 px-4 md:px-12 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
+        className="py-14 md:py-32 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           <div>
@@ -2234,7 +2230,7 @@ export default function Home() {
       </motion.section>
 
       {/* 10. FOOTER */}
-      <footer className="bg-neutral-950 text-neutral-100 border-t border-[#dfba73]/15 py-16 px-6 z-10 relative">
+      <footer className="bg-neutral-950 text-neutral-100 border-t border-[#dfba73]/15 py-14 md:py-24 px-4 sm:px-6 md:px-12 z-10 relative">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
           {/* Col 1: Brand Info */}
           <div>
@@ -2381,7 +2377,7 @@ export default function Home() {
 
         <button
           onClick={handleToggleDesignMode}
-          className={`px-5 py-3 rounded-full shadow-2xl font-sans text-xs font-bold tracking-widest uppercase transition-all duration-300 flex items-center gap-2 border ${
+          className={`px-4 py-2.5 md:px-5 md:py-3 rounded-full shadow-2xl font-sans text-[10px] md:text-xs font-bold tracking-widest uppercase transition-all duration-300 flex items-center gap-2 border active:scale-[0.98] cursor-pointer ${
             isDesignMode
               ? "bg-red-600 border-red-500 text-white hover:bg-red-700 scale-105"
               : "bg-[#dfba73] border-[#dfba73] text-neutral-950 hover:bg-[#c5a059] hover:scale-105"
@@ -2400,38 +2396,38 @@ export default function Home() {
             </>
           )}
         </button>
-
-        {/* Floating Sitar Ambient Music Player */}
-        <button
-          onClick={() => {
-            if (isSitarPlaying) {
-              sitarAudioRef.current?.pause();
-            } else {
-              sitarAudioRef.current?.play().catch((err) => console.log("Audio play blocked by browser:", err));
-            }
-            setIsSitarPlaying(!isSitarPlaying);
-          }}
-          className="fixed bottom-6 left-6 z-40 bg-neutral-950/95 border border-[#dfba73]/30 hover:border-[#dfba73] text-[#dfba73] px-4 py-2.5 rounded-full shadow-2xl flex items-center gap-2.5 transition-all text-[10px] uppercase tracking-widest font-bold font-sans hover:scale-105"
-          title={isSitarPlaying ? "Mute Ambient Sitar" : "Play Ambient Sitar"}
-        >
-          <div className="flex gap-0.5 items-end h-3 w-4">
-            {isSitarPlaying ? (
-              <>
-                <div className="w-[2.5px] bg-[#dfba73] animate-eq-bar-1 h-3" />
-                <div className="w-[2.5px] bg-[#dfba73] animate-eq-bar-2 h-1.5" />
-                <div className="w-[2.5px] bg-[#dfba73] animate-eq-bar-3 h-2" />
-              </>
-            ) : (
-              <>
-                <div className="w-[2.5px] bg-[#dfba73]/50 h-1" />
-                <div className="w-[2.5px] bg-[#dfba73]/50 h-1" />
-                <div className="w-[2.5px] bg-[#dfba73]/50 h-1" />
-              </>
-            )}
-          </div>
-          <span>{isSitarPlaying ? "Mute Sitar Ambient" : "Play Sitar Ambient"}</span>
-        </button>
       </div>
+
+      {/* Floating Sitar Ambient Music Player */}
+      <button
+        onClick={() => {
+          if (isSitarPlaying) {
+            sitarAudioRef.current?.pause();
+          } else {
+            sitarAudioRef.current?.play().catch((err) => console.log("Audio play blocked by browser:", err));
+          }
+          setIsSitarPlaying(!isSitarPlaying);
+        }}
+        className="fixed bottom-6 left-6 z-40 bg-neutral-950/95 border border-[#dfba73]/30 hover:border-[#dfba73] text-[#dfba73] px-3.5 py-2 md:px-4 md:py-2.5 rounded-full shadow-2xl flex items-center gap-2 transition-all text-[9px] md:text-[10px] uppercase tracking-widest font-bold font-sans hover:scale-105 active:scale-[0.98] cursor-pointer"
+        title={isSitarPlaying ? "Mute Ambient Sitar" : "Play Ambient Sitar"}
+      >
+        <div className="flex gap-0.5 items-end h-3 w-4">
+          {isSitarPlaying ? (
+            <>
+              <div className="w-[2.5px] bg-[#dfba73] animate-eq-bar-1 h-3" />
+              <div className="w-[2.5px] bg-[#dfba73] animate-eq-bar-2 h-1.5" />
+              <div className="w-[2.5px] bg-[#dfba73] animate-eq-bar-3 h-2" />
+            </>
+          ) : (
+            <>
+              <div className="w-[2.5px] bg-[#dfba73]/50 h-1" />
+              <div className="w-[2.5px] bg-[#dfba73]/50 h-1" />
+              <div className="w-[2.5px] bg-[#dfba73]/50 h-1" />
+            </>
+          )}
+        </div>
+        <span>{isSitarPlaying ? "Mute Sitar Ambient" : "Play Sitar Ambient"}</span>
+      </button>
 
       <QuickViewModal
         product={selectedProduct}

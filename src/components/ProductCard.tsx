@@ -59,6 +59,7 @@ export default function ProductCard({
         <img
           src={product.image}
           alt={product.name}
+          loading="lazy"
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
 
@@ -121,62 +122,67 @@ export default function ProductCard({
         )}
       </div>
 
-      <div>
-        <p 
-          contentEditable={isDesignMode}
-          suppressContentEditableWarning
-          onBlur={(e) => onEditText && onEditText(`prod_subcat_${product.id}`, e.currentTarget.textContent || "")}
-          className={`font-sans text-[10px] text-gold tracking-widest uppercase font-semibold inline-block ${
-            isDesignMode ? "border border-dashed border-amber-500/40 px-1 rounded-sm cursor-text" : ""
-          }`}
-        >
-          {displaySubCat}
-        </p>
-        <h4 
-          contentEditable={isDesignMode}
-          suppressContentEditableWarning
-          onBlur={(e) => onEditText && onEditText(`prod_name_${product.id}`, e.currentTarget.textContent || "")}
-          className={`font-serif text-base text-neutral-900 dark:text-neutral-100 mt-1 group-hover:text-gold transition-colors truncate ${
-            isDesignMode ? "border border-dashed border-amber-500/40 px-1 rounded-sm cursor-text" : ""
-          }`}
-        >
-          {displayName}
-        </h4>
-        <div className="flex items-center justify-between mt-3 pt-2 border-t border-gold/10">
+      <div className="flex-grow flex flex-col justify-between mt-3">
+        <div>
           <p 
             contentEditable={isDesignMode}
             suppressContentEditableWarning
-            onBlur={(e) => onEditText && onEditText(`prod_price_${product.id}`, e.currentTarget.textContent || "")}
-            className={`font-sans text-sm font-bold text-neutral-900 dark:text-neutral-100 ${
+            onBlur={(e) => onEditText && onEditText(`prod_subcat_${product.id}`, e.currentTarget.textContent || "")}
+            className={`font-sans text-[10px] text-gold tracking-widest uppercase font-semibold inline-block ${
               isDesignMode ? "border border-dashed border-amber-500/40 px-1 rounded-sm cursor-text" : ""
             }`}
           >
-            {displayPrice}
+            {displaySubCat}
           </p>
-          <div className="flex items-center gap-1">
-            <span className="text-gold text-xs">★</span>
-            <span className="font-sans text-xs text-neutral-600 dark:text-neutral-400">
-              {product.rating}
-            </span>
-          </div>
+          <h4 
+            contentEditable={isDesignMode}
+            suppressContentEditableWarning
+            onBlur={(e) => onEditText && onEditText(`prod_name_${product.id}`, e.currentTarget.textContent || "")}
+            className={`font-serif text-base text-neutral-900 dark:text-neutral-100 mt-1 group-hover:text-gold transition-colors truncate ${
+              isDesignMode ? "border border-dashed border-amber-500/40 px-1 rounded-sm cursor-text" : ""
+            }`}
+          >
+            {displayName}
+          </h4>
         </div>
+        
+        <div className="mt-4">
+          <div className="flex items-center justify-between pt-2 border-t border-gold/10">
+            <p 
+              contentEditable={isDesignMode}
+              suppressContentEditableWarning
+              onBlur={(e) => onEditText && onEditText(`prod_price_${product.id}`, e.currentTarget.textContent || "")}
+              className={`font-sans text-sm font-bold text-neutral-900 dark:text-neutral-100 ${
+                isDesignMode ? "border border-dashed border-amber-500/40 px-1 rounded-sm cursor-text" : ""
+              }`}
+            >
+              {displayPrice}
+            </p>
+            <div className="flex items-center gap-1">
+              <span className="text-gold text-xs">★</span>
+              <span className="font-sans text-xs text-neutral-600 dark:text-neutral-400">
+                {product.rating}
+              </span>
+            </div>
+          </div>
 
-        {/* Mobile Action Buttons */}
-        <div className="flex gap-2 mt-4 md:hidden">
-          <button
-            onClick={() => onQuickView(product)}
-            className="flex-1 py-2 border border-gold/30 hover:border-gold/60 text-neutral-900 dark:text-neutral-200 hover:bg-gold hover:text-neutral-950 font-sans text-[10px] font-bold tracking-widest uppercase transition-colors flex items-center justify-center gap-1 rounded-sm"
-          >
-            <Eye className="w-3.5 h-3.5" />
-            Quick View
-          </button>
-          <button
-            onClick={() => onAddToCart(product)}
-            className="py-2 px-3 bg-gold text-neutral-950 font-sans text-[10px] tracking-widest uppercase hover:bg-amber-600 transition-colors flex items-center justify-center rounded-sm"
-            title="Add to Bag"
-          >
-            <ShoppingBag className="w-3.5 h-3.5" />
-          </button>
+          {/* Mobile Action Buttons */}
+          <div className="flex gap-2 mt-4 md:hidden">
+            <button
+              onClick={() => onQuickView(product)}
+              className="flex-grow py-2 border border-gold/30 hover:border-gold/60 text-neutral-900 dark:text-neutral-200 hover:bg-gold hover:text-neutral-950 font-sans text-[10px] font-bold tracking-widest uppercase transition-all duration-300 flex items-center justify-center gap-1 rounded-sm active:scale-[0.98] cursor-pointer"
+            >
+              <Eye className="w-3.5 h-3.5" />
+              Quick View
+            </button>
+            <button
+              onClick={() => onAddToCart(product)}
+              className="py-2 px-3 bg-gold text-neutral-950 font-sans text-[10px] tracking-widest uppercase hover:bg-amber-600 transition-all duration-300 flex items-center justify-center rounded-sm active:scale-[0.98] cursor-pointer"
+              title="Add to Bag"
+            >
+              <ShoppingBag className="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
       </div>
     </motion.div>

@@ -183,14 +183,14 @@ export default function Navbar({
   return (
     <>
       <nav
-        className={`absolute md:fixed top-0 left-0 w-full z-40 transition-all duration-300 ${
+        className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 ${
           isScrolled
             ? "glass-scrolled shadow-md"
             : "glass"
         }`}
       >
         {/* ॐ Sacred Slogans & Auspicious Blessings Header Bar */}
-        <div className="bg-neutral-950 border-b border-[#dfba73]/25 py-2 px-4 flex justify-between items-center text-[10px] sm:text-xs font-serif text-[#dfba73] tracking-[0.2em] relative uppercase z-50">
+        <div className={`bg-neutral-950 border-b border-[#dfba73]/25 py-2 px-4 flex justify-between items-center text-[10px] sm:text-xs font-serif text-[#dfba73] tracking-[0.2em] relative uppercase z-50 transition-all duration-300 ${isScrolled ? "hidden md:flex" : "flex"}`}>
           <div className="flex items-center gap-1.5 shrink-0">
             <span className="text-sm font-bold animate-pulse text-[#dfba73] font-serif">ॐ</span>
             <span className="hidden md:inline font-sans text-[8px] text-neutral-400 tracking-wider font-semibold">
@@ -209,7 +209,7 @@ export default function Navbar({
         </div>
 
         {/* Live Market Gold & Silver Rates Ticker */}
-        <div className="bg-[#dfba73]/10 border-b border-[#dfba73]/20 py-1.5 px-4 text-[9px] sm:text-xs font-sans tracking-wider text-neutral-800 dark:text-neutral-200 relative select-none overflow-hidden z-50">
+        <div className={`bg-[#dfba73]/10 border-b border-[#dfba73]/20 py-1.5 px-4 text-[9px] sm:text-xs font-sans tracking-wider text-neutral-800 dark:text-neutral-200 relative select-none overflow-hidden z-50 transition-all duration-300 ${isScrolled ? "hidden md:flex" : "flex"}`}>
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
             <div className="flex items-center gap-1.5 shrink-0">
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 animate-ping shrink-0" />
@@ -405,7 +405,7 @@ export default function Navbar({
         </div>
 
         {/* Tanishq-Style Categories Menu Bar */}
-        <div className="border-t border-[#dfba73]/15 bg-neutral-950/95 py-3 transition-colors duration-300">
+        <div className={`border-t border-[#dfba73]/15 bg-neutral-950/95 py-2 md:py-3 transition-all duration-300 ${isScrolled ? "hidden md:block" : "block"}`}>
           <div className="max-w-7xl mx-auto px-6 flex items-center justify-start md:justify-center gap-6 md:gap-8 overflow-x-auto md:overflow-x-visible whitespace-nowrap scrollbar-none font-sans text-[11px] font-bold uppercase tracking-[0.18em] text-neutral-100/80">
             {[
               { label: "All Jewellery", href: "#new-arrivals", cat: "all" },
