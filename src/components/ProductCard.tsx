@@ -52,7 +52,7 @@ export default function ProductCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.6 }}
-      className="group relative bg-white/70 dark:bg-neutral-900/60 border border-gold/10 hover:border-gold/40 p-4 transition-all duration-500 flex flex-col justify-between hover:shadow-xl hover:shadow-gold/5"
+      className="group relative bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 hover:border-[#dfba73] dark:hover:border-[#dfba73] p-4 transition-all duration-500 flex flex-col justify-between hover:shadow-xl hover:shadow-gold/5"
     >
       <div className="relative overflow-hidden aspect-square border border-gold/10 bg-neutral-950 mb-4">
         {/* Zoom image */}
@@ -100,11 +100,11 @@ export default function ProductCard({
         {/* Wishlist toggle */}
         <button
           onClick={() => onWishlistToggle(product)}
-          className="absolute top-3 right-3 p-2 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm rounded-full text-neutral-900 dark:text-neutral-100 hover:text-gold transition-colors shadow-md z-10"
+          className="absolute top-3 right-3 p-2 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full text-neutral-900 dark:text-neutral-100 hover:text-gold transition-colors shadow-md z-10"
         >
           <Heart
             className={`w-4 h-4 transition-colors ${
-              isWishlisted ? "fill-gold text-gold" : "text-neutral-900/70 dark:text-neutral-100/70"
+              isWishlisted ? "fill-gold text-gold" : "text-neutral-900 dark:text-neutral-100"
             }`}
           />
         </button>
@@ -160,7 +160,7 @@ export default function ProductCard({
             </p>
             <div className="flex items-center gap-1">
               <span className="text-gold text-xs">★</span>
-              <span className="font-sans text-xs text-neutral-600 dark:text-neutral-400">
+              <span className="font-sans text-xs text-neutral-800 dark:text-neutral-200 font-semibold">
                 {product.rating}
               </span>
             </div>

@@ -193,7 +193,7 @@ export default function Navbar({
         <div className={`bg-neutral-950 border-b border-[#dfba73]/25 py-2 px-4 flex justify-between items-center text-[10px] sm:text-xs font-serif text-[#dfba73] tracking-[0.2em] relative uppercase z-50 transition-all duration-300 ${isScrolled ? "hidden md:flex" : "flex"}`}>
           <div className="flex items-center gap-1.5 shrink-0">
             <span className="text-sm font-bold animate-pulse text-[#dfba73] font-serif">ॐ</span>
-            <span className="hidden md:inline font-sans text-[8px] text-neutral-400 tracking-wider font-semibold">
+            <span className="hidden md:inline font-sans text-[8px] text-neutral-200 tracking-wider font-semibold">
               {customText["nav_left_txt"] || "SHAHABAD HARDOI CHOWK"}
             </span>
           </div>
@@ -201,7 +201,7 @@ export default function Navbar({
             <span>{customText["nav_blessings"] || "ॐ श्री गणेशाय नमः • ॐ नमः शिवाय • शुभ लाभ"}</span>
           </div>
           <div className="flex items-center gap-1.5 shrink-0">
-            <span className="hidden md:inline font-sans text-[8px] text-neutral-400 tracking-wider font-semibold">
+            <span className="hidden md:inline font-sans text-[8px] text-neutral-200 tracking-wider font-semibold">
               {customText["nav_right_txt"] || "100% BIS HALLMARKED PURE GOLD"}
             </span>
             <span className="text-sm font-bold animate-pulse text-[#dfba73] font-serif">ॐ</span>
@@ -271,7 +271,7 @@ export default function Navbar({
           {/* Centered Search Pill (Tanishq Style) */}
           <div className="hidden md:flex flex-1 max-w-md mx-8 relative items-center">
             <div className="relative w-full">
-              <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-neutral-400">
+              <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-neutral-500">
                 <Search className="w-4 h-4" />
               </span>
               <input
@@ -287,7 +287,7 @@ export default function Navbar({
                   }
                 }}
                 placeholder="Search for gold, diamonds, rings..."
-                className="w-full bg-[#FAF9F5]/40 dark:bg-neutral-900/40 border border-neutral-200 dark:border-neutral-800 focus:border-gold hover:border-neutral-300 dark:hover:border-neutral-700 outline-none rounded-full py-2 pl-11 pr-24 text-xs font-sans text-neutral-900 dark:text-neutral-100 transition-all shadow-xs"
+                className="w-full bg-[#FAF9F5] dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 focus:border-gold hover:border-neutral-400 dark:hover:border-neutral-600 outline-none rounded-full py-2 pl-11 pr-24 text-xs font-sans text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-500 dark:placeholder:text-neutral-400 transition-all shadow-sm"
               />
               {searchQuery && (
                 <button
@@ -359,7 +359,7 @@ export default function Navbar({
         {/* Mobile Search Bar Row */}
         <div className="block md:hidden px-6 pb-4">
           <div className="relative w-full">
-            <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400">
+            <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-500">
               <Search className="w-3.5 h-3.5" />
             </span>
             <input
@@ -375,7 +375,7 @@ export default function Navbar({
                 }
               }}
               placeholder="Search gold, silver, rings..."
-              className="w-full bg-[#FAF9F5]/60 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 focus:border-gold outline-none rounded-full py-1.5 pl-9 pr-20 text-xs font-sans text-neutral-900 dark:text-neutral-100 transition-all shadow-xs"
+              className="w-full bg-[#FAF9F5] dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 focus:border-gold outline-none rounded-full py-1.5 pl-9 pr-20 text-xs font-sans text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-500 dark:placeholder:text-neutral-400 transition-all shadow-sm"
             />
             {searchQuery && (
               <button

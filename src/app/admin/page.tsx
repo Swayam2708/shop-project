@@ -20,8 +20,28 @@ import {
   Mail,
   Clock,
   Upload,
+  Search,
+  BookOpen,
+  Calendar,
+  DollarSign,
+  UserCheck,
 } from "lucide-react";
 import { products as initialProducts, Product } from "@/data/products";
+
+interface UdhaarRecord {
+  id: string;
+  name: string;
+  sonOf: string;
+  phone: string;
+  village: string;
+  ornament: string; // for compatibility
+  weight: string;   // for compatibility
+  ornaments?: { name: string; weight: string }[]; // multiple products support!
+  amount: string;
+  dues: string;
+  date: string;
+  notes?: string;
+}
 
 export default function AdminDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -37,12 +57,17 @@ export default function AdminDashboard() {
   const [whatsAppNumber, setWhatsAppNumber] = useState("9936488845");
   const [addressText, setAddressText] = useState("Chowk, Shahabad, Hardoi, Uttar Pradesh, India");
 
+  // Udhaar Notebook state
+  const [udhaarRecords, setUdhaarRecords] = useState<UdhaarRecord[]>([]);
+  const [udhaarSearchQuery, setUdhaarSearchQuery] = useState("");
+  const [newEntryItems, setNewEntryItems] = useState<{ ornament: string; weight: string }[]>([{ ornament: "", weight: "" }]);
+
   // Baseline market rate settings inputs
   const [rate24kInput, setRate24kInput] = useState("7650");
   const [rate22kInput, setRate22kInput] = useState("7015");
   const [rate18kInput, setRate18kInput] = useState("5740");
   const [rateSilverInput, setRateSilverInput] = useState("92");
-  const [activeTab, setActiveTab] = useState<"inquiries" | "products" | "logs" | "settings">("inquiries");
+  const [activeTab, setActiveTab] = useState<"inquiries" | "products" | "logs" | "settings" | "udhaar">("inquiries");
 
   // Mock visitor log feed
   const [visitorLogs, setVisitorLogs] = useState<any[]>([]);
@@ -79,6 +104,70 @@ export default function AdminDashboard() {
   }, []);
 
   const loadDashboardData = async () => {
+    // Load Udhaar Ledger Notebook
+    const savedUdhaar = localStorage.getItem("oj_udhaar_records");
+    if (savedUdhaar) {
+      try {
+        setUdhaarRecords(JSON.parse(savedUdhaar));
+      } catch (e) {
+        setUdhaarRecords([]);
+      }
+      const initialUdhaar: UdhaarRecord[] = [
+        { 
+          id: "1", 
+          name: "Ramesh Kumar", 
+          sonOf: "Shri Lal Chand", 
+          phone: "9876543210", 
+          village: "Shahabad", 
+          ornament: "Gold Kada", 
+          weight: "12.4g", 
+          ornaments: [
+            { name: "Gold Kada", weight: "12.4g" },
+            { name: "Gold Ring", weight: "5.8g" }
+          ],
+          amount: "127000", 
+          dues: "45000", 
+          date: "2026-07-10", 
+          notes: "Promised to clear by next crop cycle" 
+        },
+        { 
+          id: "2", 
+          name: "Suresh Gupta", 
+          sonOf: "Shri Ram Gupta", 
+          phone: "9451234567", 
+          village: "Todorpur", 
+          ornament: "Silver Payal Set", 
+          weight: "120g", 
+          ornaments: [
+            { name: "Silver Payal Set", weight: "120g" }
+          ],
+          amount: "9500", 
+          dues: "0", 
+          date: "2026-07-08", 
+          notes: "Fully Paid" 
+        },
+        { 
+          id: "3", 
+          name: "Rajesh Singh", 
+          sonOf: "Shri Pratap Singh", 
+          phone: "8877665544", 
+          village: "Chowk", 
+          ornament: "Gold Ring", 
+          weight: "5.8g", 
+          ornaments: [
+            { name: "Gold Ring", weight: "5.8g" },
+            { name: "Gold Chain", weight: "10.5g" }
+          ],
+          amount: "105000", 
+          dues: "12000", 
+          date: "2026-07-12", 
+          notes: "Dues pending" 
+        }
+      ];
+      setUdhaarRecords(initialUdhaar);
+      localStorage.setItem("oj_udhaar_records", JSON.stringify(initialUdhaar));
+    }
+
     // Load contact form inquiries
     const savedInquiries = localStorage.getItem("oj_form_submissions");
     if (savedInquiries) {
@@ -249,6 +338,83 @@ export default function AdminDashboard() {
     setNewPin("");
   };
 
+  // Udhaar Notebook Handlers
+  const handleAddUdhaar = (e: React.FormEvent) => {
+    e.preventDefault();
+    const nameInput = (document.getElementById("ud_name") as HTMLInputElement)?.value || "";
+    const sonOfInput = (document.getElementById("ud_sonOf") as HTMLInputElement)?.value || "";
+    const phoneInput = (document.getElementById("ud_phone") as HTMLInputElement)?.value || "";
+    const villageInput = (document.getElementById("ud_village") as HTMLInputElement)?.value || "";
+    const amountInput = (document.getElementById("ud_amount") as HTMLInputElement)?.value || "";
+    const duesInput = (document.getElementById("ud_dues") as HTMLInputElement)?.value || "";
+    const notesInput = (document.getElementById("ud_notes") as HTMLTextAreaElement)?.value || "";
+
+    const activeOrnaments = newEntryItems.filter(item => item.ornament.trim() !== "");
+    if (activeOrnaments.length === 0) {
+      alert("❌ Please add at least one product and weight in the form!");
+      return;
+    }
+
+    const newRecord: UdhaarRecord = {
+      id: Date.now().toString(),
+      name: nameInput,
+      sonOf: sonOfInput,
+      phone: phoneInput,
+      village: villageInput,
+      ornament: activeOrnaments[0].ornament, // fallback compatibility
+      weight: activeOrnaments[0].weight,     // fallback compatibility
+      ornaments: activeOrnaments,
+      amount: amountInput,
+      dues: duesInput,
+      date: new Date().toISOString().split("T")[0],
+      notes: notesInput
+    };
+
+    const updated = [...udhaarRecords, newRecord];
+    setUdhaarRecords(updated);
+    localStorage.setItem("oj_udhaar_records", JSON.stringify(updated));
+
+    // Reset form & state
+    (document.getElementById("ud_form") as HTMLFormElement)?.reset();
+    setNewEntryItems([{ ornament: "", weight: "" }]);
+    alert("🎉 Udhaar Entry with multiple products added successfully to the notebook!");
+  };
+
+  const handleDeleteUdhaar = (id: string) => {
+    if (window.confirm("Are you sure you want to permanently delete this Udhaar record?")) {
+      const updated = udhaarRecords.filter(r => r.id !== id);
+      setUdhaarRecords(updated);
+      localStorage.setItem("oj_udhaar_records", JSON.stringify(updated));
+    }
+  };
+
+  const handleRecordPayment = (id: string) => {
+    const payAmount = window.prompt("Enter payment amount received (in ₹):");
+    if (payAmount === null) return;
+    const amt = parseFloat(payAmount);
+    if (isNaN(amt) || amt <= 0) {
+      alert("Invalid payment amount entered.");
+      return;
+    }
+
+    const updated = udhaarRecords.map(r => {
+      if (r.id === id) {
+        const currentDues = parseFloat(r.dues || "0");
+        const newDues = Math.max(0, currentDues - amt);
+        return {
+          ...r,
+          dues: newDues.toString(),
+          notes: newDues === 0 ? "Fully Paid" : `${r.notes || ""}. Received payment ₹${amt} on ${new Date().toISOString().split("T")[0]}`
+        };
+      }
+      return r;
+    });
+
+    setUdhaarRecords(updated);
+    localStorage.setItem("oj_udhaar_records", JSON.stringify(updated));
+    alert("💸 Payment recorded successfully! Dues updated.");
+  };
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-neutral-950 flex flex-col items-center justify-center p-6 text-neutral-100 font-sans">
@@ -390,6 +556,25 @@ export default function AdminDashboard() {
               >
                 <Settings className="w-4 h-4" />
                 Owner Settings
+              </button>
+
+              <button
+                onClick={() => setActiveTab("udhaar")}
+                className={`w-full py-3 px-4 rounded-md text-left transition-colors flex items-center gap-3 ${
+                  activeTab === "udhaar"
+                    ? "bg-amber-500 text-neutral-950"
+                    : "hover:bg-white/5 text-neutral-400 hover:text-white"
+                }`}
+              >
+                <BookOpen className="w-4 h-4" />
+                Udhaar Notebook
+                {udhaarRecords.filter(r => parseFloat(r.dues || "0") > 0).length > 0 && (
+                  <span className={`ml-auto w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                    activeTab === "udhaar" ? "bg-neutral-950 text-amber-500" : "bg-red-500 text-white"
+                  }`}>
+                    {udhaarRecords.filter(r => parseFloat(r.dues || "0") > 0).length}
+                  </span>
+                )}
               </button>
             </nav>
           </div>
@@ -1593,6 +1778,364 @@ export default function AdminDashboard() {
                     Save Boutique Content
                   </button>
                 </form>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 5: UDHAAR NOTEBOOK */}
+          {activeTab === "udhaar" && (
+            <div className="space-y-6 animate-fade-in">
+              <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-amber-500/15 pb-4 gap-4">
+                <div>
+                  <span className="font-sans text-[10px] text-amber-500 tracking-[0.3em] uppercase font-bold block">
+                    Ledger Registry
+                  </span>
+                  <h2 className="font-serif text-3xl font-light text-white mt-1">
+                    Udhaar Notebook (खाता बही)
+                  </h2>
+                  <p className="font-sans text-xs text-neutral-400 mt-1">
+                    Track customer credits, village-wise accounts, gold weights, and record credit payments.
+                  </p>
+                </div>
+
+                {/* Quick Stats Panel */}
+                <div className="flex gap-4">
+                  <div className="bg-neutral-900 border border-neutral-800 p-4 rounded-sm min-w-[120px] text-center">
+                    <span className="text-[9px] uppercase tracking-wider text-neutral-400 font-bold block">Total Accounts</span>
+                    <span className="font-serif text-xl text-white font-semibold block mt-1">{udhaarRecords.length}</span>
+                  </div>
+                  <div className="bg-neutral-900 border border-red-500/25 p-4 rounded-sm min-w-[140px] text-center">
+                    <span className="text-[9px] uppercase tracking-wider text-red-400 font-bold block">Total Dues</span>
+                    <span className="font-serif text-xl text-red-400 font-semibold block mt-1">
+                      ₹{udhaarRecords.reduce((sum, r) => sum + parseFloat(r.dues || "0"), 0).toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                {/* Left: Add New Entry Form */}
+                <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-sm space-y-6">
+                  <h3 className="font-serif text-lg text-[#dfba73] border-b border-neutral-800 pb-2 flex items-center gap-2">
+                    <Plus className="w-4 h-4 text-[#dfba73]" />
+                    New Ledger Entry
+                  </h3>
+                  
+                  <form id="ud_form" onSubmit={handleAddUdhaar} className="space-y-4 font-sans text-xs text-neutral-300">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                          Customer Name *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="ud_name"
+                          placeholder="e.g. Ramesh Kumar"
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                          S/O or Husband *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="ud_sonOf"
+                          placeholder="Father / Husband Name"
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                          Phone Number *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="ud_phone"
+                          placeholder="Phone Number"
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs font-mono"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                          Village / Address *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="ud_village"
+                          placeholder="e.g. Todorpur, Shahabad"
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Multiple Products and Weights Fields */}
+                    <div className="space-y-3 pt-2 border-t border-neutral-800/60">
+                      <div className="flex items-center justify-between">
+                        <label className="block text-[9px] uppercase tracking-wider text-amber-500 font-bold">
+                          Products & Weights List *
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => setNewEntryItems([...newEntryItems, { ornament: "", weight: "" }])}
+                          className="text-[9px] uppercase tracking-wider bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 py-1 px-2.5 rounded border border-amber-500/25 font-bold transition-all flex items-center gap-1 cursor-pointer"
+                        >
+                          <Plus className="w-3 h-3" /> Add Product
+                        </button>
+                      </div>
+
+                      {newEntryItems.map((item, idx) => (
+                        <div key={idx} className="flex gap-2 items-end bg-neutral-950/60 p-2.5 rounded border border-neutral-800/40 relative group/row">
+                          <div className="flex-1 space-y-1.5">
+                            <input
+                              type="text"
+                              required
+                              value={item.ornament}
+                              onChange={(e) => {
+                                const updated = [...newEntryItems];
+                                updated[idx].ornament = e.target.value;
+                                setNewEntryItems(updated);
+                              }}
+                              placeholder="Product name (e.g. Gold Ring)"
+                              className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-1.5 px-2.5 text-white text-xs"
+                            />
+                          </div>
+                          <div className="w-24 space-y-1.5">
+                            <input
+                              type="text"
+                              required
+                              value={item.weight}
+                              onChange={(e) => {
+                                const updated = [...newEntryItems];
+                                updated[idx].weight = e.target.value;
+                                setNewEntryItems(updated);
+                              }}
+                              placeholder="Weight (e.g. 5.4g)"
+                              className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-1.5 px-2.5 text-white text-xs font-mono"
+                            />
+                          </div>
+                          {newEntryItems.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => setNewEntryItems(newEntryItems.filter((_, i) => i !== idx))}
+                              className="p-1.5 bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 rounded transition-colors"
+                              title="Remove item"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                          Total Value (₹) *
+                        </label>
+                        <input
+                          type="number"
+                          required
+                          id="ud_amount"
+                          placeholder="Total Price"
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs font-mono"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                          Pending Udhaar (₹) *
+                        </label>
+                        <input
+                          type="number"
+                          required
+                          id="ud_dues"
+                          placeholder="Udhaar Amount"
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs font-mono"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                        Internal Ledger Notes
+                      </label>
+                      <textarea
+                        id="ud_notes"
+                        rows={2}
+                        placeholder="e.g. Promised to clear on Diwali"
+                        className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs resize-none"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-neutral-950 font-sans text-[10px] font-bold tracking-widest uppercase transition-colors rounded-sm flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <Plus className="w-4 h-4" />
+                      Add to Notebook
+                    </button>
+                  </form>
+                </div>
+
+                {/* Right: Search & Table */}
+                <div className="lg:col-span-2 space-y-4">
+                  {/* Search bar */}
+                  <div className="relative w-full">
+                    <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-500">
+                      <Search className="w-4 h-4" />
+                    </span>
+                    <input
+                      type="text"
+                      value={udhaarSearchQuery}
+                      onChange={(e) => setUdhaarSearchQuery(e.target.value)}
+                      placeholder="Search ledger by Name, S/O Name, Phone, Village, Ornament or Date..."
+                      className="w-full bg-neutral-900 border border-neutral-800 focus:border-amber-500 hover:border-neutral-700 outline-none rounded-md py-3 pl-11 pr-6 text-xs font-sans text-white transition-all shadow-md"
+                    />
+                    {udhaarSearchQuery && (
+                      <button
+                        onClick={() => setUdhaarSearchQuery("")}
+                        className="absolute inset-y-0 right-4 flex items-center text-neutral-500 hover:text-white text-[10px] uppercase font-bold font-sans"
+                      >
+                        Clear
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Ledger Table */}
+                  <div className="bg-neutral-900 border border-neutral-800 rounded-sm overflow-hidden">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left font-sans text-xs border-collapse">
+                        <thead>
+                          <tr className="border-b border-neutral-800 bg-neutral-950 text-neutral-400 font-bold uppercase tracking-wider text-[9px]">
+                            <th className="py-4 px-4 text-center">S.No</th>
+                            <th className="py-4 px-4">Customer Details</th>
+                            <th className="py-4 px-4">Village</th>
+                            <th className="py-4 px-4">Purchase details</th>
+                            <th className="py-4 px-4 text-right">Financials (₹)</th>
+                            <th className="py-4 px-4 text-center">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-neutral-800/50">
+                          {udhaarRecords
+                            .filter((rec) => {
+                              const query = udhaarSearchQuery.toLowerCase();
+                              const matchesName = rec.name.toLowerCase().includes(query);
+                              const matchesSonOf = rec.sonOf.toLowerCase().includes(query);
+                              const matchesPhone = rec.phone.toLowerCase().includes(query);
+                              const matchesVillage = rec.village.toLowerCase().includes(query);
+                              const matchesDate = rec.date.toLowerCase().includes(query);
+                              const matchesOrnament = rec.ornament.toLowerCase().includes(query) || 
+                                (rec.ornaments && rec.ornaments.some(o => o.name.toLowerCase().includes(query)));
+                              
+                              return matchesName || matchesSonOf || matchesPhone || matchesVillage || matchesDate || matchesOrnament;
+                            })
+                            .map((rec, index) => {
+                              const hasDues = parseFloat(rec.dues || "0") > 0;
+                              return (
+                                <tr key={rec.id} className="hover:bg-white/3 transition-colors">
+                                  <td className="py-4 px-4 text-center font-mono text-neutral-500">
+                                    {index + 1}
+                                  </td>
+                                  <td className="py-4 px-4">
+                                    <div className="font-bold text-white text-sm">{rec.name}</div>
+                                    <div className="text-neutral-400 text-[10px] mt-0.5">S/O: {rec.sonOf}</div>
+                                    <div className="text-neutral-500 text-[10px] mt-0.5 font-mono">{rec.phone}</div>
+                                  </td>
+                                  <td className="py-4 px-4 text-neutral-300 font-medium">
+                                    <div className="flex items-center gap-1">
+                                      <MapPin className="w-3.5 h-3.5 text-amber-500/60" />
+                                      {rec.village}
+                                    </div>
+                                  </td>
+                                  <td className="py-4 px-4">
+                                    {rec.ornaments && rec.ornaments.length > 0 ? (
+                                      <div className="space-y-2">
+                                        {rec.ornaments.map((item, idx) => (
+                                          <div key={idx} className="border-b border-neutral-800/40 pb-1.5 last:border-0 last:pb-0">
+                                            <div className="font-bold text-[#dfba73]">{item.name}</div>
+                                            <div className="text-[10px] text-neutral-400 mt-0.5 font-sans">
+                                              Weight: <span className="font-mono bg-neutral-950 px-1.5 py-0.5 rounded-sm border border-neutral-800/60 text-white font-bold">{item.weight}</span>
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    ) : (
+                                      <>
+                                        <div className="font-bold text-[#dfba73]">{rec.ornament}</div>
+                                        <div className="text-[10px] text-neutral-400 mt-0.5">
+                                          Weight: <span className="font-mono bg-neutral-950 px-1.5 py-0.5 rounded-sm border border-neutral-800/60 text-white font-bold">{rec.weight}</span>
+                                        </div>
+                                      </>
+                                    )}
+                                    <div className="text-[9px] text-neutral-500 mt-2 flex items-center gap-1 font-mono">
+                                      <Calendar className="w-3 h-3" />
+                                      {rec.date}
+                                    </div>
+                                  </td>
+                                  <td className="py-4 px-4 text-right">
+                                    <div className="font-mono text-neutral-400 text-[10px]">Total: ₹{parseFloat(rec.amount || "0").toLocaleString()}</div>
+                                    <div className={`font-mono text-sm font-extrabold mt-1 ${hasDues ? "text-red-400" : "text-green-400"}`}>
+                                      {hasDues ? `Dues: ₹${parseFloat(rec.dues).toLocaleString()}` : "✓ Fully Paid"}
+                                    </div>
+                                    {rec.notes && (
+                                      <div className="text-[9px] text-neutral-500 max-w-[150px] truncate mt-1" title={rec.notes}>
+                                        {rec.notes}
+                                      </div>
+                                    )}
+                                  </td>
+                                  <td className="py-4 px-4 text-center">
+                                    <div className="flex items-center justify-center gap-2">
+                                      {hasDues && (
+                                        <button
+                                          onClick={() => handleRecordPayment(rec.id)}
+                                          className="p-1.5 bg-green-500/10 border border-green-500/20 text-green-400 hover:bg-green-500/20 rounded transition-colors"
+                                          title="Record credit payment"
+                                        >
+                                          <DollarSign className="w-3.5 h-3.5" />
+                                        </button>
+                                      )}
+                                      <button
+                                        onClick={() => handleDeleteUdhaar(rec.id)}
+                                        className="p-1.5 bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 rounded transition-colors"
+                                        title="Delete entry"
+                                      >
+                                        <Trash2 className="w-3.5 h-3.5" />
+                                      </button>
+                                    </div>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          {udhaarRecords.filter((rec) => {
+                            const query = udhaarSearchQuery.toLowerCase();
+                            const matchesName = rec.name.toLowerCase().includes(query);
+                            const matchesSonOf = rec.sonOf.toLowerCase().includes(query);
+                            const matchesPhone = rec.phone.toLowerCase().includes(query);
+                            const matchesVillage = rec.village.toLowerCase().includes(query);
+                            const matchesDate = rec.date.toLowerCase().includes(query);
+                            const matchesOrnament = rec.ornament.toLowerCase().includes(query) || 
+                              (rec.ornaments && rec.ornaments.some(o => o.name.toLowerCase().includes(query)));
+                            
+                            return matchesName || matchesSonOf || matchesPhone || matchesVillage || matchesDate || matchesOrnament;
+                          }).length === 0 && (
+                            <tr>
+                              <td colSpan={6} className="py-12 px-4 text-center text-neutral-500">
+                                No ledger records found matching your search.
+                              </td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           )}

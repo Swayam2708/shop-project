@@ -2139,7 +2139,7 @@ export default function Home() {
           </div>
 
           <div>
-            <div className="bg-white/30 dark:bg-neutral-900/30 border border-[#dfba73]/15 p-8 rounded-sm">
+            <div className="bg-white dark:bg-neutral-900 border border-[#dfba73]/30 p-8 rounded-sm shadow-xl">
               <h3 
                 contentEditable={isDesignMode}
                 suppressContentEditableWarning
@@ -2154,7 +2154,7 @@ export default function Home() {
               
               <form onSubmit={handleContactSubmit} className="space-y-6">
                 <div>
-                  <label className="block font-sans text-xs tracking-wider uppercase text-neutral-500 dark:text-neutral-400 mb-2 font-semibold">
+                  <label className="block font-sans text-xs tracking-wider uppercase text-neutral-600 dark:text-neutral-300 mb-2 font-bold">
                     Your Name
                   </label>
                   <input
@@ -2162,12 +2162,12 @@ export default function Home() {
                     required
                     value={formState.name}
                     onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-                    className="w-full bg-white dark:bg-neutral-900 border border-gold/20 focus:border-[#dfba73] py-3 px-4 outline-none font-sans text-sm text-neutral-900 dark:text-neutral-100 transition-colors rounded-sm"
+                    className="w-full bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 focus:border-[#dfba73] py-3 px-4 outline-none font-sans text-sm text-neutral-900 dark:text-neutral-100 transition-colors rounded-sm placeholder:text-neutral-500"
                     placeholder="Enter name"
                   />
                 </div>
                 <div>
-                  <label className="block font-sans text-xs tracking-wider uppercase text-neutral-500 dark:text-neutral-400 mb-2 font-semibold">
+                  <label className="block font-sans text-xs tracking-wider uppercase text-neutral-600 dark:text-neutral-300 mb-2 font-bold">
                     Email Address
                   </label>
                   <input
@@ -2175,12 +2175,12 @@ export default function Home() {
                     required
                     value={formState.email}
                     onChange={(e) => setFormState({ ...formState, email: e.target.value })}
-                    className="w-full bg-white dark:bg-neutral-900 border border-gold/20 focus:border-[#dfba73] py-3 px-4 outline-none font-sans text-sm text-neutral-900 dark:text-neutral-100 transition-colors rounded-sm"
+                    className="w-full bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 focus:border-[#dfba73] py-3 px-4 outline-none font-sans text-sm text-neutral-900 dark:text-neutral-100 transition-colors rounded-sm placeholder:text-neutral-500"
                     placeholder="Enter email"
                   />
                 </div>
                 <div>
-                  <label className="block font-sans text-xs tracking-wider uppercase text-neutral-500 dark:text-neutral-400 mb-2 font-semibold">
+                  <label className="block font-sans text-xs tracking-wider uppercase text-neutral-600 dark:text-neutral-300 mb-2 font-bold">
                     Phone / WhatsApp Number
                   </label>
                   <input
@@ -2188,12 +2188,12 @@ export default function Home() {
                     required
                     value={formState.phone}
                     onChange={(e) => setFormState({ ...formState, phone: e.target.value })}
-                    className="w-full bg-white dark:bg-neutral-900 border border-gold/20 focus:border-[#dfba73] py-3 px-4 outline-none font-sans text-sm text-neutral-900 dark:text-neutral-100 transition-colors rounded-sm"
+                    className="w-full bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 focus:border-[#dfba73] py-3 px-4 outline-none font-sans text-sm text-neutral-900 dark:text-neutral-100 transition-colors rounded-sm placeholder:text-neutral-500"
                     placeholder="Enter Phone/WhatsApp (e.g. +91 99364 88845)"
                   />
                 </div>
                 <div>
-                  <label className="block font-sans text-xs tracking-wider uppercase text-neutral-500 dark:text-neutral-400 mb-2 font-semibold">
+                  <label className="block font-sans text-xs tracking-wider uppercase text-neutral-600 dark:text-neutral-300 mb-2 font-bold">
                     Custom Requests & Details
                   </label>
                   <textarea
@@ -2201,7 +2201,7 @@ export default function Home() {
                     required
                     value={formState.message}
                     onChange={(e) => setFormState({ ...formState, message: e.target.value })}
-                    className="w-full bg-white dark:bg-neutral-900 border border-gold/20 focus:border-[#dfba73] py-3 px-4 outline-none font-sans text-sm text-neutral-900 dark:text-neutral-100 transition-colors rounded-sm resize-none"
+                    className="w-full bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 focus:border-[#dfba73] py-3 px-4 outline-none font-sans text-sm text-neutral-900 dark:text-neutral-100 transition-colors rounded-sm resize-none placeholder:text-neutral-500"
                     placeholder="Describe custom sizes, carat requirements, or catalog questions..."
                   />
                 </div>
