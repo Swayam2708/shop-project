@@ -1866,6 +1866,111 @@ export default function Home() {
         </div>
       </motion.section>
 
+      {/* 7.5. SHOWROOM SHOP GALLERY */}
+      <motion.section
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        id="showroom"
+        className="py-14 md:py-32 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto border-t border-[#dfba73]/10 z-10 relative"
+      >
+        <div className="text-center mb-16">
+          <span 
+            contentEditable={isDesignMode}
+            suppressContentEditableWarning
+            onBlur={(e) => handleTextChange("showroom_sub", e.currentTarget.textContent || "")}
+            className={`font-sans text-xs text-[#dfba73] tracking-[0.3em] uppercase font-bold inline-block ${editOutlineClass}`}
+          >
+            {customText["showroom_sub"] || "Visit Our Showroom"}
+          </span>
+          <h2 
+            contentEditable={isDesignMode}
+            suppressContentEditableWarning
+            onBlur={(e) => handleTextChange("showroom_title", e.currentTarget.textContent || "")}
+            className={`font-serif text-3xl md:text-5xl font-light text-neutral-900 dark:text-neutral-100 mt-2 ${editOutlineClass}`}
+          >
+            {customText["showroom_title"] || "Shahabad Chowk Showroom"}
+          </h2>
+          <p className="font-sans text-xs md:text-sm text-neutral-500 dark:text-neutral-400 mt-2">
+            <span
+              contentEditable={isDesignMode}
+              suppressContentEditableWarning
+              onBlur={(e) => handleTextChange("showroom_desc", e.currentTarget.textContent || "")}
+              className={editOutlineClass}
+            >
+              {customText["showroom_desc"] || "Experience the grandeur of traditional gold craftsmanship in our luxury physical boutique."}
+            </span>
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          {[
+            {
+              id: "shop_photo_1",
+              fallback: "https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=600&auto=format&fit=crop",
+              label: "Showroom Entrance"
+            },
+            {
+              id: "shop_photo_2",
+              fallback: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=600&auto=format&fit=crop",
+              label: "Gold Ornaments Lounge"
+            },
+            {
+              id: "shop_photo_3",
+              fallback: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=600&auto=format&fit=crop",
+              label: "Bridal Suite"
+            }
+          ].map((item) => (
+            <div
+              key={item.id}
+              className="relative group aspect-4/3 md:aspect-[3/2] overflow-hidden border border-[#dfba73]/15 bg-neutral-950 rounded-sm shadow-md"
+            >
+              <img
+                src={customizedImages[item.id] || item.fallback}
+                alt={item.label}
+                loading="lazy"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-6">
+                <span 
+                  contentEditable={isDesignMode}
+                  suppressContentEditableWarning
+                  onBlur={(e) => handleTextChange(`showroom_label_${item.id}`, e.currentTarget.textContent || "")}
+                  className={`font-serif text-lg text-white font-medium ${editOutlineClass}`}
+                >
+                  {customText[`showroom_label_${item.id}`] || item.label}
+                </span>
+              </div>
+
+              {isDesignMode && (
+                <label className="absolute inset-0 bg-neutral-900/80 backdrop-blur-xs flex flex-col items-center justify-center text-[#dfba73] cursor-pointer z-20">
+                  <Upload className="w-6 h-6 mb-1 animate-bounce" />
+                  <span className="font-sans text-[10px] tracking-widest uppercase font-bold text-center px-4">
+                    Replace Shop Photo
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const r = new FileReader();
+                        r.onloadend = () => {
+                          if (typeof r.result === "string") handleUploadImage(item.id, r.result);
+                        };
+                        r.readAsDataURL(file);
+                      }
+                    }}
+                  />
+                </label>
+              )}
+            </div>
+          ))}
+        </div>
+      </motion.section>
+
       {/* 8. INSTAGRAM-STYLE GALLERY */}
       <section id="gallery" className="py-14 md:py-32 px-4 sm:px-6 md:px-12 border-t border-[#dfba73]/10 bg-white/5 dark:bg-neutral-950/10 z-10 relative">
         <div className="text-center mb-16">
