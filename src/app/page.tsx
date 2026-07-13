@@ -715,7 +715,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="live-rates" className="py-14 md:py-24 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto z-10 relative">
+      <section className="py-14 md:py-24 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto z-10 relative">
         <div className="bg-white/40 dark:bg-[#0F0E0B]/40 border border-[#dfba73]/15 p-8 md:p-12 rounded-sm shadow-luxury-glow backdrop-blur-md relative overflow-hidden">
           {/* Filigree Corner Accents */}
           <GoldCorner className="absolute top-2 left-2 w-8 h-8 pointer-events-none opacity-30" />
@@ -1014,7 +1014,7 @@ export default function Home() {
                   className={`flex flex-col items-center p-3 rounded-xl border transition-all duration-500 shrink-0 w-28 sm:w-32 group/card text-center cursor-pointer ${
                     isActive
                       ? "bg-[#dfba73]/15 border-[#dfba73] shadow-md shadow-[#dfba73]/5 scale-105"
-                      : "bg-[#FAF9F5] dark:bg-white/5 border-neutral-300 dark:border-neutral-800 hover:border-[#dfba73]"
+                      : "bg-white/5 border-neutral-200/10 hover:border-[#dfba73]/40"
                   }`}
                 >
                   <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border border-[#dfba73]/20 mb-3 group-hover/card:border-[#dfba73] transition-colors relative shadow-sm">
@@ -1179,7 +1179,7 @@ export default function Home() {
                   className={`px-5 py-2.5 border rounded-none tracking-widest uppercase transition-all duration-500 font-sans text-[10px] ${
                     activeCategory === category
                       ? "bg-[#dfba73] border-[#dfba73] text-neutral-950 font-bold"
-                      : "border-neutral-300 dark:border-neutral-800 hover:border-[#dfba73] text-neutral-900 dark:text-neutral-200 hover:bg-[#dfba73]/5"
+                      : "border-[#dfba73]/15 hover:border-[#dfba73] text-neutral-800 dark:text-neutral-200 hover:bg-[#dfba73]/5"
                   }`}
                 >
                   {category}

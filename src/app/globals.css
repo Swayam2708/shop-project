@@ -260,17 +260,17 @@ html, body {
 /* Responsive root font-size overrides to make all devices look clean and compact like laptop view */
 @media (max-width: 480px) {
   html {
-    font-size: 13.5px !important;
+    font-size: 11px !important;
   }
 }
 @media (min-width: 481px) and (max-width: 767px) {
   html {
-    font-size: 14.5px !important;
+    font-size: 12.5px !important;
   }
 }
 @media (min-width: 768px) and (max-width: 1024px) {
   html {
-    font-size: 15px !important;
+    font-size: 13.5px !important;
   }
 }
 @media (min-width: 1025px) and (max-width: 1280px) {
@@ -284,82 +284,192 @@ html, body {
   }
 }
 
-/* Mobile Visibility and WCAG AA Accessibility Overrides (320px - 768px) */
+/* ==========================================
+   ACCESSIBILITY & MOBILE LUXURY REDESIGN
+   CARTIER / BVLGARI / TANISHQ DESIGN SYSTEM
+   ========================================== */
 @media (max-width: 767px) {
-  /* 1. Body Background lock */
-  body {
-    background-color: #18090a !important;
-    color: #F5F5F5 !important;
+  /* 1. Global Backgrounds & Containers */
+  :root {
+    --background: #111111 !important; /* Luxury Black */
+    --foreground: #FAFAFA !important; /* Soft White */
+  }
+  
+  body, 
+  .bg-neutral-950, 
+  .bg-black, 
+  .bg-neutral-900, 
+  .dark\:bg-\[\#0F0E0B\] {
+    background-color: #111111 !important;
+    color: #FAFAFA !important;
   }
 
-  /* 2. Headings contrast lock (white / premium soft gold) */
+  /* 2. Typography & Contrast Overrides */
   h1, h2, h3, h4, h5, h6,
-  .font-serif {
-    color: #FFF4D6 !important;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9) !important;
+  .font-serif,
+  h2 span {
+    color: #FFF9F0 !important; /* Warm Ivory for headings */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9) !important;
+    font-weight: 600 !important;
   }
 
-  /* 3. Global text and labels contrast enhancement on dark maroon background */
-  p, span, label,
-  .text-neutral-900,
-  .text-neutral-800,
-  .text-neutral-700,
-  .text-neutral-600,
+  p, 
+  span, 
+  li, 
+  a, 
+  div,
+  label {
+    color: #FAFAFA !important; /* Soft White for body text */
+  }
+
+  /* Keep grey captions/subtext highly visible (WCAG AA Compliant) */
+  .text-neutral-300,
+  .text-neutral-400,
   .text-neutral-500,
-  .text-neutral-400 {
-    color: #F5F5F5 !important;
+  .text-neutral-600,
+  .text-neutral-700,
+  .text-gray-400,
+  .text-gray-500 {
+    color: #E2E2E2 !important; /* High contrast bright grey */
+    font-weight: 500 !important;
   }
 
-  /* Exceptions: preserve visibility inside light modal boxes, inputs, active button wrappers, or custom forms */
-  .bg-white p, .bg-white span, .bg-white label, .bg-white h2, .bg-white h3, .bg-white h4,
-  .bg-\[\#FAF9F5\] p, .bg-\[\#FAF9F5\] span, .bg-\[\#FAF9F5\] label, .bg-\[\#FAF9F5\] h2, .bg-\[\#FAF9F5\] h3, .bg-\[\#FAF9F5\] h4,
-  #ud_form p, #ud_form label, #ud_form span,
-  .glass p, .glass label, .glass span,
-  .glass-scrolled p, .glass-scrolled label, .glass-scrolled span,
-  input, select, textarea {
-    color: inherit;
-  }
-
-  /* Force light-colored placeholders and fields inside standard forms */
-  input[type="text"], input[type="number"], input[type="tel"], textarea, select {
-    color: #ffffff !important;
-    background-color: #050505 !important;
-    border-color: #444444 !important;
-  }
-
-  /* 4. Active category tabs colors */
-  button.bg-\[\#dfba73\],
-  .bg-gold {
-    background-color: #dfba73 !important;
-    color: #18090a !important;
+  /* 3. Gold Text & Accents (Luxury Champagne Gold) */
+  .text-gold, 
+  .text-\[\#dfba73\], 
+  .text-gold-400,
+  .text-amber-500,
+  .metallic-gold-shine {
+    color: #F5E6C8 !important; /* Luxury Champagne Gold */
+    -webkit-text-fill-color: #F5E6C8 !important; /* Override gradient transparent fills */
     font-weight: 700 !important;
   }
 
-  /* 5. Inactive category and button borders visibility */
-  button.border-neutral-300,
-  button.border-neutral-800,
-  button.border-neutral-200 {
-    color: #F5F5F5 !important;
-    border-color: rgba(223, 186, 115, 0.4) !important;
-    background-color: rgba(255, 255, 255, 0.05) !important;
+  /* 4. Luxury Cards & Form Containers (Dark Charcoal) */
+  .bg-white\/30,
+  .bg-white\/40,
+  .dark\:bg-\[\#0F0E0B\]\/40,
+  .bg-neutral-900\/60,
+  .bg-white,
+  .bg-neutral-50\/40,
+  .dark\:bg-neutral-900\/10,
+  .bg-white\/5,
+  .dark\:bg-neutral-950\/10 {
+    background-color: #1F1F1F !important; /* Dark Charcoal card background */
+    border: 1px solid #B98C2D !important; /* Premium Bronze Border */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5) !important;
   }
 
-  /* 6. Solid contrast-rich icon strokes and colors (Menu, Cart, Wishlist, Profile) */
-  nav svg,
-  button svg,
-  a svg,
-  .text-gold svg {
-    color: #dfba73 !important;
-    stroke: #dfba73 !important;
+  /* 5. Borders & Dividers */
+  .border,
+  .border-t,
+  .border-b,
+  .border-l,
+  .border-r,
+  .border-neutral-200,
+  .dark\:border-neutral-800,
+  .border-gold\/10,
+  .border-\[\#dfba73\]\/10,
+  .border-\[\#dfba73\]\/15,
+  .border-\[\#dfba73\]\/20,
+  .border-neutral-800,
+  .border-neutral-800\/50 {
+    border-color: #B98C2D !important; /* Premium Bronze Border */
+  }
+
+  /* 6. Form Fields & Inputs */
+  input, 
+  textarea, 
+  select {
+    background-color: #111111 !important;
+    color: #FAFAFA !important;
+    border: 1.5px solid #B98C2D !important;
+    font-weight: 500 !important;
+  }
+
+  input::placeholder, 
+  textarea::placeholder {
+    color: #A0A0A0 !important;
     opacity: 1 !important;
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8)) !important;
   }
 
-  /* Ratings stars visibility */
-  .text-amber-400,
-  .text-gold,
-  .text-\[\#dfba73\] {
-    color: #F8E7B5 !important;
+  /* 7. Buttons (Gold Backgrounds with Rich Dark Text) */
+  .bg-\[\#dfba73\],
+  .bg-gold,
+  .bg-amber-500 {
+    background-color: #D4AF37 !important; /* Primary Gold background */
+    color: #111111 !important; /* Dark text for readability */
+    font-weight: 800 !important;
+    border: 1px solid #B98C2D !important;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25) !important;
+    opacity: 1 !important;
+  }
+
+  .bg-\[\#dfba73\]:hover,
+  .bg-gold:hover,
+  .bg-amber-500:hover {
+    background-color: #F5E6C8 !important; /* Light Gold hover */
+    color: #111111 !important;
+  }
+
+  /* Outline or Dark Luxury buttons (Rich Burgundy / Wine) */
+  .border-gold\/30,
+  .border-\[\#dfba73\]\/30,
+  .bg-neutral-950\/95,
+  .dark\:bg-neutral-100\/90 {
+    background-color: #5A0F17 !important; /* Rich Burgundy background */
+    color: #FAFAFA !important;
+    border: 1.5px solid #B98C2D !important;
+    font-weight: 700 !important;
+  }
+
+  /* 8. Active/Inactive Category Tabs in Navbar */
+  .border-t.border-\[\#dfba73\]\/15.bg-neutral-950\/95 a {
+    color: #FAFAFA !important; /* Soft White */
+    opacity: 0.8 !important;
+  }
+  .border-t.border-\[\#dfba73\]\/15.bg-neutral-950\/95 a.text-gold,
+  .border-t.border-\[\#dfba73\]\/15.bg-neutral-950\/95 a:hover {
+    color: #D4AF37 !important; /* Primary Gold */
+    opacity: 1 !important;
+    border-bottom: 2px solid #D4AF37 !important;
+  }
+
+  /* 9. Header Ticker & Top bar overrides */
+  /* Rates ticker block: Deep Wine background */
+  .bg-\[\#dfba73\]\/10 {
+    background-color: #3B0A10 !important; /* Deep Wine background */
+    border-bottom: 1.5px solid #B98C2D !important;
+  }
+  .bg-\[\#dfba73\]\/10 span {
+    color: #FFF9F0 !important; /* Warm Ivory gold text */
+  }
+
+  /* Blessings bar: Luxury Black background */
+  .bg-neutral-950 {
+    background-color: #111111 !important;
+  }
+
+  /* 10. SVGs & Icon Visibility */
+  svg {
+    stroke: currentColor !important;
+    stroke-width: 2.2px !important; /* Thicker lines for maximum accessibility */
+    opacity: 1 !important;
+  }
+
+  /* Badges */
+  .bg-gold\/90,
+  .bg-neutral-950\/90,
+  .bg-green-500\/5,
+  .bg-red-500\/10 {
+    background-color: #5A0F17 !important; /* Rich Burgundy badge */
+    color: #FAFAFA !important;
+    border: 1px solid #B98C2D !important;
+  }
+
+  /* Wishlist toggle active state */
+  svg.fill-gold {
+    fill: #D4AF37 !important;
+    stroke: #D4AF37 !important;
   }
 }
-
