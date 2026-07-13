@@ -260,17 +260,17 @@ html, body {
 /* Responsive root font-size overrides to make all devices look clean and compact like laptop view */
 @media (max-width: 480px) {
   html {
-    font-size: 11px !important;
+    font-size: 13.5px !important;
   }
 }
 @media (min-width: 481px) and (max-width: 767px) {
   html {
-    font-size: 12.5px !important;
+    font-size: 14.5px !important;
   }
 }
 @media (min-width: 768px) and (max-width: 1024px) {
   html {
-    font-size: 13.5px !important;
+    font-size: 15px !important;
   }
 }
 @media (min-width: 1025px) and (max-width: 1280px) {
