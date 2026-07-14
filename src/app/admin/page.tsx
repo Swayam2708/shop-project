@@ -105,7 +105,7 @@ export default function AdminDashboard() {
     loadDashboardData();
 
     // Verify database connectivity
-    fetch("/api/db-check")
+    fetch("/api/db-check", { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
         if (data.connected) {
@@ -205,7 +205,7 @@ export default function AdminDashboard() {
 
     try {
       // Fetch custom content overrides
-      const ccRes = await fetch("/api/custom-content");
+      const ccRes = await fetch("/api/custom-content", { cache: "no-store" });
       const ccData = await ccRes.json();
       if (ccData.success && ccData.content) {
         const loadedTexts: Record<string, string> = {};
@@ -247,7 +247,7 @@ export default function AdminDashboard() {
 
     try {
       // Fetch products catalog from server
-      const prodRes = await fetch("/api/products");
+      const prodRes = await fetch("/api/products", { cache: "no-store" });
       const prodData = await prodRes.json();
       if (prodData.success && prodData.products) {
         setProducts(prodData.products);

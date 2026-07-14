@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { products as defaultProducts } from "@/data/products";
 
+export const dynamic = "force-dynamic";
+
 // GET all products (seeds defaults if DB is empty)
 export async function GET() {
   try {

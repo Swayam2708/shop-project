@@ -216,7 +216,7 @@ export default function Home() {
   // Load all customizations from database on mount
   useEffect(() => {
     // Fetch products catalog from database
-    fetch("/api/products")
+    fetch("/api/products", { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
         if (data.success && data.products) {
@@ -226,7 +226,7 @@ export default function Home() {
       .catch((err) => console.error("Failed to load products from server:", err));
 
     // Fetch custom content overrides
-    fetch("/api/custom-content")
+    fetch("/api/custom-content", { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
         if (data.success && data.content) {
@@ -261,7 +261,7 @@ export default function Home() {
             }));
           } else {
             // Fetch live rates from our new MCX-linked API route
-            fetch("/api/mcx-rates")
+            fetch("/api/mcx-rates", { cache: "no-store" })
               .then((res) => res.json())
               .then((data) => {
                 if (data.success && data.rates) {
