@@ -25,6 +25,8 @@ import {
   Calendar,
   DollarSign,
   UserCheck,
+  Lock,
+  CheckSquare,
 } from "lucide-react";
 import { products as initialProducts, Product } from "@/data/products";
 
@@ -42,6 +44,44 @@ async function hashPasscode(input: string): Promise<string> {
   return hashHex;
 }
 
+// Live Simple & Compound Interest Calculator for Girvi
+function calculateGirviInterest(record: GirviRecord) {
+  const principal = parseFloat(record.amount || "0");
+  const rate = parseFloat(record.interestRate || "0");
+  const pledgedDate = new Date(record.date);
+  const today = new Date();
+  
+  const timeDiff = today.getTime() - pledgedDate.getTime();
+  const daysElapsed = Math.max(0, Math.floor(timeDiff / (1000 * 3600 * 24)));
+  
+  const monthsElapsed = daysElapsed / 30.4368;
+  const yearsElapsed = daysElapsed / 365.2425;
+
+  let interest = 0;
+  
+  if (record.interestType === "simple") {
+    if (record.interestPeriod === "monthly") {
+      interest = principal * (rate / 100) * monthsElapsed;
+    } else {
+      interest = principal * (rate / 100) * yearsElapsed;
+    }
+  } else {
+    if (record.interestPeriod === "monthly") {
+      interest = principal * (Math.pow(1 + rate / 100, monthsElapsed) - 1);
+    } else {
+      interest = principal * (Math.pow(1 + rate / 100, yearsElapsed) - 1);
+    }
+  }
+
+  return {
+    days: daysElapsed,
+    months: Math.floor(monthsElapsed),
+    extraDays: Math.floor(daysElapsed % 30.4368),
+    interest: Math.round(interest),
+    total: Math.round(principal + interest),
+  };
+}
+
 interface UdhaarRecord {
   id: string;
   name: string;
@@ -52,8 +92,27 @@ interface UdhaarRecord {
   weight: string;   // for compatibility
   ornaments?: { name: string; weight: string }[]; // multiple products support!
   amount: string;
+  discount?: string;
+  paid?: string;
   dues: string;
   date: string;
+  notes?: string;
+}
+
+interface GirviRecord {
+  id: string;
+  name: string;
+  sonOf: string;
+  phone: string;
+  village: string;
+  ornaments: { name: string; weight: string }[];
+  amount: string;       // Loan Given
+  interestRate: string; // Interest Rate (%)
+  interestPeriod: "monthly" | "yearly";
+  interestType: "simple" | "compound";
+  date: string;         // Pledged Date
+  status: "active" | "released";
+  releasedDate?: string;
   notes?: string;
 }
 
@@ -81,12 +140,19 @@ export default function AdminDashboard() {
   const [newEntryPaid, setNewEntryPaid] = useState("");
   const [selectedUdhaar, setSelectedUdhaar] = useState<UdhaarRecord | null>(null);
 
+  // Girvi state
+  const [girviRecords, setGirviRecords] = useState<GirviRecord[]>([]);
+  const [girviSearchQuery, setGirviSearchQuery] = useState("");
+  const [girviHistorySearchQuery, setGirviHistorySearchQuery] = useState("");
+  const [newGirviItems, setNewGirviItems] = useState<{ ornament: string; weight: string }[]>([{ ornament: "", weight: "" }]);
+  const [selectedGirvi, setSelectedGirvi] = useState<GirviRecord | null>(null);
+
   // Baseline market rate settings inputs
   const [rate24kInput, setRate24kInput] = useState("7650");
   const [rate22kInput, setRate22kInput] = useState("7015");
   const [rate18kInput, setRate18kInput] = useState("5740");
   const [rateSilverInput, setRateSilverInput] = useState("92");
-  const [activeTab, setActiveTab] = useState<"inquiries" | "products" | "logs" | "settings" | "udhaar">("inquiries");
+  const [activeTab, setActiveTab] = useState<"inquiries" | "products" | "logs" | "settings" | "udhaar" | "girvi">("inquiries");
 
   // Mock visitor log feed
   const [visitorLogs, setVisitorLogs] = useState<any[]>([]);
@@ -192,6 +258,57 @@ export default function AdminDashboard() {
       ];
       setUdhaarRecords(initialUdhaar);
       localStorage.setItem("oj_udhaar_records", JSON.stringify(initialUdhaar));
+    }
+
+    // Load Girvi Ledger Notebook
+    const savedGirvi = localStorage.getItem("oj_girvi_records");
+    if (savedGirvi) {
+      try {
+        setGirviRecords(JSON.parse(savedGirvi));
+      } catch (e) {
+        setGirviRecords([]);
+      }
+    } else {
+      const initialGirvi: GirviRecord[] = [
+        {
+          id: "g1",
+          name: "Ramesh Chand",
+          sonOf: "Shri Tek Ram",
+          phone: "9911223344",
+          village: "Shahabad",
+          ornaments: [
+            { name: "Gold Chain", weight: "15.4g" },
+            { name: "Gold Ring", weight: "6.2g" }
+          ],
+          amount: "50000",
+          interestRate: "2.0",
+          interestPeriod: "monthly",
+          interestType: "simple",
+          date: "2026-04-14",
+          status: "active",
+          notes: "Pledged for crop seeds"
+        },
+        {
+          id: "g2",
+          name: "Prem Singh",
+          sonOf: "Shri Hardev Singh",
+          phone: "9455667788",
+          village: "Todorpur",
+          ornaments: [
+            { name: "Silver Payal Set", weight: "250g" }
+          ],
+          amount: "10000",
+          interestRate: "3.0",
+          interestPeriod: "monthly",
+          interestType: "compound",
+          date: "2026-02-14",
+          status: "released",
+          releasedDate: "2026-07-14",
+          notes: "Released after clearing dues."
+        }
+      ];
+      setGirviRecords(initialGirvi);
+      localStorage.setItem("oj_girvi_records", JSON.stringify(initialGirvi));
     }
 
     // Load contact form inquiries
@@ -475,6 +592,79 @@ export default function AdminDashboard() {
     alert("💸 Payment recorded successfully! Dues updated.");
   };
 
+  // Girvi Handlers
+  const handleAddGirvi = (e: React.FormEvent) => {
+    e.preventDefault();
+    const nameVal = (document.getElementById("girvi_name") as HTMLInputElement)?.value || "";
+    const sonOfVal = (document.getElementById("girvi_sonOf") as HTMLInputElement)?.value || "";
+    const phoneVal = (document.getElementById("girvi_phone") as HTMLInputElement)?.value || "";
+    const villageVal = (document.getElementById("girvi_village") as HTMLInputElement)?.value || "";
+    const amountVal = (document.getElementById("girvi_amount") as HTMLInputElement)?.value || "0";
+    const rateVal = (document.getElementById("girvi_rate") as HTMLInputElement)?.value || "0";
+    const periodVal = (document.getElementById("girvi_period") as HTMLSelectElement)?.value as "monthly" | "yearly";
+    const typeVal = (document.getElementById("girvi_type") as HTMLSelectElement)?.value as "simple" | "compound";
+    const dateVal = (document.getElementById("girvi_date") as HTMLInputElement)?.value || new Date().toISOString().split("T")[0];
+    const notesVal = (document.getElementById("girvi_notes") as HTMLTextAreaElement)?.value || "";
+
+    const activeOrnaments = newGirviItems.filter(item => item.ornament.trim() !== "");
+    if (activeOrnaments.length === 0) {
+      alert("❌ Please add at least one ornament with weight!");
+      return;
+    }
+
+    const newRecord: GirviRecord = {
+      id: Date.now().toString(),
+      name: nameVal,
+      sonOf: sonOfVal,
+      phone: phoneVal,
+      village: villageVal,
+      ornaments: activeOrnaments,
+      amount: amountVal,
+      interestRate: rateVal,
+      interestPeriod: periodVal,
+      interestType: typeVal,
+      date: dateVal,
+      status: "active",
+      notes: notesVal
+    };
+
+    const updated = [...girviRecords, newRecord];
+    setGirviRecords(updated);
+    localStorage.setItem("oj_girvi_records", JSON.stringify(updated));
+
+    // Reset Form
+    (document.getElementById("girvi_form") as HTMLFormElement)?.reset();
+    setNewGirviItems([{ ornament: "", weight: "" }]);
+    alert("🎉 Girvi gold pledging entry added successfully!");
+  };
+
+  const handleReleaseGirvi = (id: string) => {
+    if (window.confirm("Close this Girvi entry? This will move it to the History log archive.")) {
+      const updated = girviRecords.map(r => {
+        if (r.id === id) {
+          return {
+            ...r,
+            status: "released" as const,
+            releasedDate: new Date().toISOString().split("T")[0],
+            notes: `${r.notes || ""}. Released and cleared on ${new Date().toISOString().split("T")[0]}`
+          };
+        }
+        return r;
+      });
+      setGirviRecords(updated);
+      localStorage.setItem("oj_girvi_records", JSON.stringify(updated));
+      alert("🔒 Girvi released and successfully archived in History!");
+    }
+  };
+
+  const handleDeleteGirviHistory = (id: string) => {
+    if (window.confirm("Are you sure you want to permanently delete this record from History?")) {
+      const updated = girviRecords.filter(r => r.id !== id);
+      setGirviRecords(updated);
+      localStorage.setItem("oj_girvi_records", JSON.stringify(updated));
+    }
+  };
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-neutral-950 flex flex-col items-center justify-center p-6 text-neutral-100 font-sans">
@@ -633,6 +823,25 @@ export default function AdminDashboard() {
                     activeTab === "udhaar" ? "bg-neutral-950 text-amber-500" : "bg-red-500 text-white"
                   }`}>
                     {udhaarRecords.filter(r => parseFloat(r.dues || "0") > 0).length}
+                  </span>
+                )}
+              </button>
+
+              <button
+                onClick={() => setActiveTab("girvi")}
+                className={`w-full py-3 px-4 rounded-md text-left transition-colors flex items-center gap-3 ${
+                  activeTab === "girvi"
+                    ? "bg-amber-500 text-neutral-950"
+                    : "hover:bg-white/5 text-neutral-400 hover:text-white"
+                }`}
+              >
+                <UserCheck className="w-4 h-4" />
+                Girvi Ledger (गिरवी)
+                {girviRecords.filter(r => r.status === "active").length > 0 && (
+                  <span className={`ml-auto w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                    activeTab === "girvi" ? "bg-neutral-950 text-amber-500" : "bg-amber-500/20 text-amber-400 border border-amber-500/30"
+                  }`}>
+                    {girviRecords.filter(r => r.status === "active").length}
                   </span>
                 )}
               </button>
@@ -2276,6 +2485,506 @@ export default function AdminDashboard() {
               </div>
             </div>
           )}
+
+          {/* TAB 6: GIRVI LEDGER */}
+          {activeTab === "girvi" && (
+            <div className="space-y-6 animate-fade-in font-sans text-xs">
+              <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-amber-500/15 pb-4 gap-4">
+                <div>
+                  <span className="text-[10px] text-amber-500 tracking-[0.3em] uppercase font-bold block">
+                    Pledging Registry
+                  </span>
+                  <h2 className="font-serif text-3xl font-light text-white mt-1">
+                    Girvi Ledger (गिरवी बही)
+                  </h2>
+                  <p className="text-neutral-400 mt-1">
+                    Manage cash loans given against gold & silver ornaments, calculate live compound and simple interest, and archive closed cases.
+                  </p>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="bg-neutral-900 border border-neutral-800 p-4 rounded-sm min-w-[120px] text-center">
+                    <span className="text-[9px] uppercase tracking-wider text-neutral-400 font-bold block">Active Loans</span>
+                    <span className="font-serif text-xl text-white font-semibold block mt-1">
+                      {girviRecords.filter(r => r.status === "active").length}
+                    </span>
+                  </div>
+                  <div className="bg-neutral-900 border border-amber-500/25 p-4 rounded-sm min-w-[150px] text-center">
+                    <span className="text-[9px] uppercase tracking-wider text-amber-500 font-bold block">Total Outflow</span>
+                    <span className="font-serif text-xl text-amber-500 font-semibold block mt-1">
+                      ₹{girviRecords.filter(r => r.status === "active").reduce((sum, r) => sum + parseFloat(r.amount || "0"), 0).toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                {/* Left: Pledging Form */}
+                <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-sm space-y-6">
+                  <h3 className="font-serif text-lg text-[#dfba73] border-b border-neutral-800 pb-2 flex items-center gap-2">
+                    <Lock className="w-4 h-4 text-[#dfba73]" />
+                    Pledge Ornaments (गिरवी रखें)
+                  </h3>
+
+                  <form id="girvi_form" onSubmit={handleAddGirvi} className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                          Customer Name *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="girvi_name"
+                          placeholder="Name"
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                          S/O / Husband Name *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="girvi_sonOf"
+                          placeholder="Parentage"
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                          Phone Number
+                        </label>
+                        <input
+                          type="text"
+                          id="girvi_phone"
+                          placeholder="Mobile"
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs font-mono"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                          Village / Town *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="girvi_village"
+                          placeholder="Location"
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2 border-t border-b border-neutral-800/60 py-4">
+                      <label className="block text-[9px] uppercase tracking-widest text-[#dfba73] font-bold">
+                        Pledged Ornaments & Weights *
+                      </label>
+                      <div className="space-y-2">
+                        {newGirviItems.map((item, idx) => (
+                          <div key={idx} className="flex gap-2 items-center">
+                            <div className="flex-1">
+                              <input
+                                type="text"
+                                required
+                                value={item.ornament}
+                                onChange={(e) => {
+                                  const updated = [...newGirviItems];
+                                  updated[idx].ornament = e.target.value;
+                                  setNewGirviItems(updated);
+                                }}
+                                placeholder="Ornament (e.g. Gold Jhumka)"
+                                className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-1.5 px-2.5 text-white text-xs"
+                              />
+                            </div>
+                            <div className="w-24">
+                              <input
+                                type="text"
+                                required
+                                value={item.weight}
+                                onChange={(e) => {
+                                  const updated = [...newGirviItems];
+                                  updated[idx].weight = e.target.value;
+                                  setNewGirviItems(updated);
+                                }}
+                                placeholder="Weight (e.g. 10.2g)"
+                                className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-1.5 px-2.5 text-white text-xs font-mono"
+                              />
+                            </div>
+                            {newGirviItems.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => setNewGirviItems(newGirviItems.filter((_, i) => i !== idx))}
+                                className="p-1.5 bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 rounded transition-colors"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setNewGirviItems([...newGirviItems, { ornament: "", weight: "" }])}
+                        className="w-full py-1.5 border border-dashed border-neutral-800 hover:border-amber-500/50 text-neutral-400 hover:text-amber-500 rounded text-[9px] uppercase font-bold tracking-wider transition-colors flex items-center justify-center gap-1.5"
+                      >
+                        <Plus className="w-3.5 h-3.5" /> Add Another Ornament
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                          Loan Money Given (₹) *
+                        </label>
+                        <input
+                          type="number"
+                          required
+                          id="girvi_amount"
+                          placeholder="Principal loan value"
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs font-mono"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                          Interest Rate (% value) *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="girvi_rate"
+                          placeholder="e.g. 2.0"
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs font-mono"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                          Interest Period
+                        </label>
+                        <select
+                          id="girvi_period"
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs"
+                        >
+                          <option value="monthly">Per Month (मासिक)</option>
+                          <option value="yearly">Per Year (वार्षिक)</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                          Interest Type
+                        </label>
+                        <select
+                          id="girvi_type"
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs"
+                        >
+                          <option value="simple">Simple Interest (साधारण ब्याज)</option>
+                          <option value="compound">Compound Interest (चक्रवृद्धि ब्याज)</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-4">
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                          Pledged Date *
+                        </label>
+                        <input
+                          type="date"
+                          required
+                          id="girvi_date"
+                          defaultValue={new Date().toISOString().split("T")[0]}
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs font-mono"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                        Internal Ledger Notes
+                      </label>
+                      <textarea
+                        id="girvi_notes"
+                        rows={2}
+                        placeholder="Additional terms or comments"
+                        className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs resize-none"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-neutral-950 font-sans text-[10px] font-bold tracking-widest uppercase transition-colors rounded-sm flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <Plus className="w-4 h-4" />
+                      Add Girvi Entry
+                    </button>
+                  </form>
+                </div>
+
+                {/* Right: Search & Tables */}
+                <div className="lg:col-span-2 space-y-6">
+                  {/* Tab active entries registry */}
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-serif text-lg text-white">Active Pledges Log (गिरवी चालू खाते)</h4>
+                    </div>
+
+                    <div className="relative w-full">
+                      <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-500">
+                        <Search className="w-4 h-4" />
+                      </span>
+                      <input
+                        type="text"
+                        value={girviSearchQuery}
+                        onChange={(e) => setGirviSearchQuery(e.target.value)}
+                        placeholder="Search active pledges by Name, S/O Name, Phone, Village, Ornament..."
+                        className="w-full bg-neutral-900 border border-neutral-800 focus:border-amber-500 hover:border-neutral-700 outline-none rounded-md py-3 pl-11 pr-6 text-xs text-white transition-all shadow-md"
+                      />
+                      {girviSearchQuery && (
+                        <button
+                          onClick={() => setGirviSearchQuery("")}
+                          className="absolute inset-y-0 right-4 flex items-center text-neutral-500 hover:text-white text-[10px] uppercase font-bold"
+                        >
+                          Clear
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="bg-neutral-900 border border-neutral-800 rounded-sm overflow-hidden">
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-left font-sans text-xs border-collapse">
+                          <thead>
+                            <tr className="border-b border-neutral-800 bg-neutral-950 text-neutral-400 font-bold uppercase tracking-wider text-[9px]">
+                              <th className="py-4 px-4 text-center">S.No</th>
+                              <th className="py-4 px-4">Customer details</th>
+                              <th className="py-4 px-4">Village</th>
+                              <th className="py-4 px-4">Pledged Ornaments</th>
+                              <th className="py-4 px-4 text-right">Loan & Interest</th>
+                              <th className="py-4 px-4 text-center">Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-neutral-800/50">
+                            {girviRecords
+                              .filter(r => r.status === "active")
+                              .filter((rec) => {
+                                const q = girviSearchQuery.toLowerCase();
+                                const nameM = rec.name.toLowerCase().includes(q);
+                                const parentM = rec.sonOf.toLowerCase().includes(q);
+                                const phoneM = rec.phone.toLowerCase().includes(q);
+                                const villageM = rec.village.toLowerCase().includes(q);
+                                const ornamentsM = rec.ornaments.some(o => o.name.toLowerCase().includes(q));
+                                return nameM || parentM || phoneM || villageM || ornamentsM;
+                              })
+                              .map((rec, index) => {
+                                const calc = calculateGirviInterest(rec);
+                                return (
+                                  <tr key={rec.id} className="hover:bg-white/3 transition-colors">
+                                    <td className="py-4 px-4 text-center font-mono text-neutral-500">
+                                      {index + 1}
+                                    </td>
+                                    <td className="py-4 px-4">
+                                      <div className="font-bold text-white text-sm">{rec.name}</div>
+                                      <div className="text-neutral-400 text-[10px] mt-0.5">S/O: {rec.sonOf}</div>
+                                      <div className="text-neutral-500 text-[10px] mt-0.5 font-mono">{rec.phone}</div>
+                                    </td>
+                                    <td className="py-4 px-4 text-neutral-300 font-medium">
+                                      <div className="flex items-center gap-1">
+                                        <MapPin className="w-3.5 h-3.5 text-amber-500/60" />
+                                        {rec.village}
+                                      </div>
+                                    </td>
+                                    <td className="py-4 px-4">
+                                      <div className="space-y-1.5">
+                                        {rec.ornaments.map((item, idx) => (
+                                          <div key={idx} className="flex items-center gap-1.5">
+                                            <span className="font-bold text-[#dfba73]">{item.name}</span>
+                                            <span className="text-[9px] font-mono bg-neutral-950 px-1 py-0.2 rounded border border-neutral-800 text-neutral-300">{item.weight}</span>
+                                          </div>
+                                        ))}
+                                      </div>
+                                      <div className="text-[9px] text-neutral-500 mt-2 flex items-center gap-1 font-mono">
+                                        <Calendar className="w-3 h-3" />
+                                        {rec.date}
+                                      </div>
+                                    </td>
+                                    <td className="py-4 px-4 text-right space-y-0.5">
+                                      <div className="font-mono text-neutral-400 text-[10px]">Loan: ₹{parseFloat(rec.amount).toLocaleString()}</div>
+                                      <div className="font-mono text-neutral-500 text-[9px]">Rate: {rec.interestRate}% ({rec.interestPeriod === "monthly" ? "mo" : "yr"})</div>
+                                      <div className="font-mono text-amber-500 font-bold text-[10px]">Interest: ₹{calc.interest.toLocaleString()}</div>
+                                      <div className="font-mono text-xs font-extrabold text-green-400 pt-1 border-t border-neutral-800/60">
+                                        Total: ₹{calc.total.toLocaleString()}
+                                      </div>
+                                    </td>
+                                    <td className="py-4 px-4 text-center">
+                                      <div className="flex items-center justify-center gap-2">
+                                        <button
+                                          onClick={() => setSelectedGirvi(rec)}
+                                          className="p-1.5 bg-blue-500/10 border border-blue-500/20 text-blue-400 hover:bg-blue-500/20 rounded transition-colors"
+                                          title="View Pledged Details & Live Interest"
+                                        >
+                                          <Eye className="w-3.5 h-3.5" />
+                                        </button>
+                                        <button
+                                          onClick={() => handleReleaseGirvi(rec.id)}
+                                          className="p-1.5 bg-amber-500/10 border border-amber-500/20 text-amber-400 hover:bg-amber-500/20 rounded transition-colors"
+                                          title="Close Loan (Move to History)"
+                                        >
+                                          <CheckSquare className="w-3.5 h-3.5" />
+                                        </button>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                            {girviRecords.filter(r => r.status === "active").filter((rec) => {
+                              const q = girviSearchQuery.toLowerCase();
+                              const nameM = rec.name.toLowerCase().includes(q);
+                              const parentM = rec.sonOf.toLowerCase().includes(q);
+                              const phoneM = rec.phone.toLowerCase().includes(q);
+                              const villageM = rec.village.toLowerCase().includes(q);
+                              const ornamentsM = rec.ornaments.some(o => o.name.toLowerCase().includes(q));
+                              return nameM || parentM || phoneM || villageM || ornamentsM;
+                            }).length === 0 && (
+                              <tr>
+                                <td colSpan={6} className="py-12 px-4 text-center text-neutral-500">
+                                  No active pledged records found.
+                                </td>
+                              </tr>
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* History tab archive */}
+                  <div className="space-y-4 pt-4 border-t border-neutral-800">
+                    <div>
+                      <h4 className="font-serif text-lg text-neutral-400">Closed Pledges History (गिरवी बंद खाते इतिहास)</h4>
+                      <p className="text-[10px] text-neutral-500">History record log of closed or released gold pledges.</p>
+                    </div>
+
+                    <div className="relative w-full">
+                      <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-500">
+                        <Search className="w-4 h-4" />
+                      </span>
+                      <input
+                        type="text"
+                        value={girviHistorySearchQuery}
+                        onChange={(e) => setGirviHistorySearchQuery(e.target.value)}
+                        placeholder="Search closed pledges history log..."
+                        className="w-full bg-neutral-900 border border-neutral-850 focus:border-neutral-700 outline-none rounded-md py-2.5 pl-11 pr-6 text-xs text-neutral-300 transition-all"
+                      />
+                      {girviHistorySearchQuery && (
+                        <button
+                          onClick={() => setGirviHistorySearchQuery("")}
+                          className="absolute inset-y-0 right-4 flex items-center text-neutral-500 hover:text-white text-[10px] uppercase font-bold"
+                        >
+                          Clear
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="bg-neutral-900/60 border border-neutral-850 rounded-sm overflow-hidden">
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-left font-sans text-xs border-collapse">
+                          <thead>
+                            <tr className="border-b border-neutral-800 bg-neutral-950/60 text-neutral-500 font-bold uppercase tracking-wider text-[9px]">
+                              <th className="py-3 px-4 text-center">S.No</th>
+                              <th className="py-3 px-4">Customer</th>
+                              <th className="py-3 px-4">Village</th>
+                              <th className="py-3 px-4">Ornaments</th>
+                              <th className="py-3 px-4 text-right">Loan Value</th>
+                              <th className="py-3 px-4 text-center">Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-neutral-800/40 text-neutral-400">
+                            {girviRecords
+                              .filter(r => r.status === "released")
+                              .filter((rec) => {
+                                const q = girviHistorySearchQuery.toLowerCase();
+                                const nameM = rec.name.toLowerCase().includes(q);
+                                const parentM = rec.sonOf.toLowerCase().includes(q);
+                                const phoneM = rec.phone.toLowerCase().includes(q);
+                                const villageM = rec.village.toLowerCase().includes(q);
+                                const ornamentsM = rec.ornaments.some(o => o.name.toLowerCase().includes(q));
+                                return nameM || parentM || phoneM || villageM || ornamentsM;
+                              })
+                              .map((rec, index) => (
+                                <tr key={rec.id} className="hover:bg-white/2 transition-colors">
+                                  <td className="py-3 px-4 text-center font-mono text-neutral-600">
+                                    {index + 1}
+                                  </td>
+                                  <td className="py-3 px-4">
+                                    <div className="font-bold text-neutral-300">{rec.name}</div>
+                                    <div className="text-[9px] text-neutral-500">S/O: {rec.sonOf}</div>
+                                  </td>
+                                  <td className="py-3 px-4 text-neutral-400">
+                                    {rec.village}
+                                  </td>
+                                  <td className="py-3 px-4">
+                                    <div className="flex flex-wrap gap-1">
+                                      {rec.ornaments.map((o, i) => (
+                                        <span key={i} className="text-[10px] text-neutral-400 bg-neutral-950 px-1.5 py-0.5 rounded border border-neutral-800/50">
+                                          {o.name} ({o.weight})
+                                        </span>
+                                      ))}
+                                    </div>
+                                    <div className="text-[8px] text-neutral-500 font-mono mt-1">Closed on: {rec.releasedDate}</div>
+                                  </td>
+                                  <td className="py-3 px-4 text-right font-mono text-neutral-300">
+                                    ₹{parseFloat(rec.amount).toLocaleString()}
+                                  </td>
+                                  <td className="py-3 px-4 text-center">
+                                    <div className="flex items-center justify-center gap-2">
+                                      <button
+                                        onClick={() => setSelectedGirvi(rec)}
+                                        className="p-1 text-neutral-400 hover:text-white transition-colors"
+                                        title="View historical log details"
+                                      >
+                                        <Eye className="w-3.5 h-3.5" />
+                                      </button>
+                                      <button
+                                        onClick={() => handleDeleteGirviHistory(rec.id)}
+                                        className="p-1 text-red-500/60 hover:text-red-400 transition-colors"
+                                        title="Permanently Delete History Entry"
+                                      >
+                                        <Trash2 className="w-3.5 h-3.5" />
+                                      </button>
+                                    </div>
+                                  </td>
+                                </tr>
+                              ))}
+                            {girviRecords.filter(r => r.status === "released").filter((rec) => {
+                              const q = girviHistorySearchQuery.toLowerCase();
+                              const nameM = rec.name.toLowerCase().includes(q);
+                              const parentM = rec.sonOf.toLowerCase().includes(q);
+                              const phoneM = rec.phone.toLowerCase().includes(q);
+                              const villageM = rec.village.toLowerCase().includes(q);
+                              const ornamentsM = rec.ornaments.some(o => o.name.toLowerCase().includes(q));
+                              return nameM || parentM || phoneM || villageM || ornamentsM;
+                            }).length === 0 && (
+                              <tr>
+                                <td colSpan={6} className="py-8 px-4 text-center text-neutral-600">
+                                  No closed history archives found matching search.
+                                </td>
+                              </tr>
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           {/* Detailed Udhaar Record View Modal */}
           {selectedUdhaar && (
             <div className="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in font-sans">
@@ -2427,6 +3136,171 @@ export default function AdminDashboard() {
               </div>
             </div>
           )}
+          {/* Detailed Girvi Record View Modal with Live Interest Calculator */}
+          {selectedGirvi && (() => {
+            const calc = calculateGirviInterest(selectedGirvi);
+            return (
+              <div className="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in font-sans">
+                <div className="bg-neutral-900 border border-amber-500/30 rounded-lg max-w-lg w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+                  {/* Modal Header */}
+                  <div className="bg-neutral-950 px-6 py-4 border-b border-neutral-800 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Lock className="w-5 h-5 text-amber-500" />
+                      <h3 className="text-white text-sm font-serif font-semibold tracking-wide">
+                        Detailed Girvi Loan Account & Live Interest
+                      </h3>
+                    </div>
+                    <button
+                      onClick={() => setSelectedGirvi(null)}
+                      className="text-neutral-400 hover:text-white transition-colors text-xs font-mono uppercase tracking-wider bg-neutral-900 px-2.5 py-1 border border-neutral-800 rounded hover:border-neutral-700 cursor-pointer"
+                    >
+                      Close
+                    </button>
+                  </div>
+
+                  {/* Modal Content Scrollable Area */}
+                  <div className="p-6 overflow-y-auto space-y-5 text-xs text-neutral-300">
+                    {/* Customer Details Grid */}
+                    <div className="grid grid-cols-2 gap-4 bg-neutral-950/60 p-4 rounded border border-neutral-800/40">
+                      <div>
+                        <span className="text-[9px] uppercase tracking-wider text-neutral-500 font-bold block mb-0.5">
+                          Customer Name
+                        </span>
+                        <span className="text-white text-sm font-bold block">{selectedGirvi.name}</span>
+                      </div>
+                      <div>
+                        <span className="text-[9px] uppercase tracking-wider text-neutral-500 font-bold block mb-0.5">
+                          Parentage (S/O or Husband)
+                        </span>
+                        <span className="text-neutral-200 font-medium block">{selectedGirvi.sonOf || "N/A"}</span>
+                      </div>
+                      <div>
+                        <span className="text-[9px] uppercase tracking-wider text-neutral-500 font-bold block mb-0.5">
+                          Phone Number
+                        </span>
+                        <span className="text-neutral-200 font-mono block">{selectedGirvi.phone || "N/A"}</span>
+                      </div>
+                      <div>
+                        <span className="text-[9px] uppercase tracking-wider text-neutral-500 font-bold block mb-0.5">
+                          Village / Address
+                        </span>
+                        <span className="text-neutral-200 font-medium block">{selectedGirvi.village}</span>
+                      </div>
+                    </div>
+
+                    {/* Pledged Ornaments Details */}
+                    <div className="space-y-2">
+                      <h4 className="text-[9px] uppercase tracking-widest text-[#dfba73] font-extrabold flex items-center gap-1.5">
+                        <Package className="w-3.5 h-3.5" /> Pledged Gold/Silver Assets
+                      </h4>
+                      <div className="border border-neutral-800 rounded overflow-hidden">
+                        <table className="w-full text-left border-collapse text-[11px]">
+                          <thead>
+                            <tr className="bg-neutral-950 border-b border-neutral-800 text-neutral-400 font-bold text-[9px] uppercase tracking-wider">
+                              <th className="py-2.5 px-3">Ornament Name</th>
+                              <th className="py-2.5 px-3 text-right">Ornament Weight</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-neutral-800/50 bg-neutral-950/20">
+                            {selectedGirvi.ornaments.map((item, i) => (
+                              <tr key={i} className="hover:bg-white/2">
+                                <td className="py-2 px-3 text-white font-medium">{item.name}</td>
+                                <td className="py-2 px-3 text-right font-mono text-[#dfba73] font-bold">{item.weight}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    {/* Loan & Interest Calculation Sheet */}
+                    <div className="space-y-2">
+                      <h4 className="text-[9px] uppercase tracking-widest text-[#dfba73] font-extrabold flex items-center gap-1.5">
+                        <TrendingUp className="w-3.5 h-3.5" /> Live Interest Calculations (ब्याज की गणना)
+                      </h4>
+                      <div className="bg-neutral-950/60 p-4 rounded border border-neutral-800/40 space-y-3.5">
+                        <div className="grid grid-cols-2 gap-4 text-[11px] border-b border-neutral-800 pb-2">
+                          <div>
+                            <span className="text-neutral-500 font-bold uppercase text-[8px] block">Loan Given</span>
+                            <span className="text-white font-bold text-sm font-mono">₹{parseFloat(selectedGirvi.amount).toLocaleString()}</span>
+                          </div>
+                          <div>
+                            <span className="text-neutral-500 font-bold uppercase text-[8px] block">Pledge Date</span>
+                            <span className="text-white font-mono">{selectedGirvi.date}</span>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-2 text-center text-[10px]">
+                          <div className="bg-neutral-900 border border-neutral-850 p-2 rounded">
+                            <span className="text-neutral-500 font-bold block text-[8px] uppercase">Time Elapsed</span>
+                            <span className="text-neutral-200 font-semibold block mt-0.5">{calc.months} mo, {calc.extraDays} days</span>
+                          </div>
+                          <div className="bg-neutral-900 border border-neutral-850 p-2 rounded">
+                            <span className="text-neutral-500 font-bold block text-[8px] uppercase">Interest Rate</span>
+                            <span className="text-neutral-200 font-semibold block mt-0.5">{selectedGirvi.interestRate}% ({selectedGirvi.interestPeriod === "monthly" ? "Month" : "Year"})</span>
+                          </div>
+                          <div className="bg-neutral-900 border border-neutral-850 p-2 rounded">
+                            <span className="text-neutral-500 font-bold block text-[8px] uppercase">Calculation Type</span>
+                            <span className="text-neutral-200 font-semibold block mt-0.5 capitalize">{selectedGirvi.interestType}</span>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4 pt-2 border-t border-neutral-800 text-[11px]">
+                          <div>
+                            <span className="text-[#dfba73] font-bold block text-[9px] uppercase">Accumulated Interest</span>
+                            <span className="text-amber-500 font-extrabold text-sm font-mono">₹{calc.interest.toLocaleString()}</span>
+                          </div>
+                          <div>
+                            <span className="text-green-400 font-bold block text-[9px] uppercase">Total to Release</span>
+                            <span className="text-green-400 font-extrabold text-sm font-mono">₹{calc.total.toLocaleString()}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Historical Status Logs */}
+                    <div className="space-y-2">
+                      <h4 className="text-[9px] uppercase tracking-widest text-neutral-400 font-extrabold flex items-center gap-1.5">
+                        <Calendar className="w-3.5 h-3.5" /> Ledger Status & Notes
+                      </h4>
+                      <div className="bg-neutral-950/60 p-4 rounded border border-neutral-800/40 space-y-2">
+                        <div className="flex justify-between items-center text-[10px] text-neutral-500 border-b border-neutral-800 pb-1.5">
+                          <span>Account Status:</span>
+                          <span className={`font-bold uppercase ${selectedGirvi.status === "active" ? "text-amber-500" : "text-neutral-400"}`}>
+                            {selectedGirvi.status === "active" ? "● Active Loan" : "✓ Released / Closed"}
+                          </span>
+                        </div>
+                        {selectedGirvi.releasedDate && (
+                          <div className="flex justify-between items-center text-[10px] text-neutral-500 border-b border-neutral-800 pb-1.5">
+                            <span>Release Date:</span>
+                            <span className="font-mono text-white">{selectedGirvi.releasedDate}</span>
+                          </div>
+                        )}
+                        <div>
+                          <span className="text-[8px] uppercase tracking-wider text-neutral-500 font-bold block mb-1">
+                            Ledger Notes:
+                          </span>
+                          <p className="text-[11px] leading-relaxed text-neutral-300 whitespace-pre-line font-sans">
+                            {selectedGirvi.notes || "No notes logged for this account."}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Modal Footer */}
+                  <div className="bg-neutral-950 px-6 py-3 border-t border-neutral-800 flex justify-end">
+                    <button
+                      onClick={() => setSelectedGirvi(null)}
+                      className="py-1.5 px-4 bg-amber-500 hover:bg-amber-600 text-neutral-950 font-sans text-[9px] font-bold tracking-widest uppercase transition-colors rounded-sm cursor-pointer"
+                    >
+                      Done
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
         </main>
       </div>
     </div>
