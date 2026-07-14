@@ -1817,17 +1817,53 @@ export default function AdminDashboard() {
                   {/* Ambient Music Source */}
                   <div>
                     <h5 className="font-serif text-sm text-[#dfba73] mb-3">Ambient Sound settings</h5>
-                    <div>
-                      <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
-                        Background Sitar/Flute Music Audio URL (Direct MP3 link)
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        id="inp_audio_url"
-                        defaultValue={customText["audio_url"] || "https://archive.org/download/ICCR-474-AC/ICCR-474-AC.mp3"}
-                        className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2.5 px-4 text-white text-xs font-mono"
-                      />
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-[9px] uppercase tracking-widest text-neutral-400 font-bold mb-1.5">
+                          Background Sitar/Flute Music Audio URL (Direct MP3 link)
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          id="inp_audio_url"
+                          defaultValue={customText["audio_url"] || "https://archive.org/download/ICCR-474-AC/ICCR-474-AC.mp3"}
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2.5 px-4 text-white text-xs font-mono"
+                        />
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-neutral-500 font-sans text-[10px] tracking-wide uppercase font-bold">
+                          Or upload audio file:
+                        </span>
+                        <label className="bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 border border-amber-500/30 px-3.5 py-1.5 rounded text-[10px] uppercase font-bold tracking-widest cursor-pointer transition-all flex items-center gap-1.5">
+                          <Upload className="w-3.5 h-3.5" /> Choose Audio File
+                          <input
+                            type="file"
+                            accept="audio/*"
+                            className="hidden"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                // Check file size limit (limit to 10MB to avoid database bloat)
+                                if (file.size > 10 * 1024 * 1024) {
+                                  alert("❌ Audio file must be smaller than 10MB to avoid upload issues.");
+                                  return;
+                                }
+                                const r = new FileReader();
+                                r.onloadend = () => {
+                                  if (typeof r.result === "string") {
+                                    const input = document.getElementById("inp_audio_url") as HTMLInputElement;
+                                    if (input) {
+                                      input.value = r.result;
+                                      alert("🎵 Audio file loaded successfully as Base64 data! Click 'Save Boutique Content' below to permanently save it to the database.");
+                                    }
+                                  }
+                                };
+                                r.readAsDataURL(file);
+                              }
+                            }}
+                          />
+                        </label>
+                      </div>
                     </div>
                   </div>
 
