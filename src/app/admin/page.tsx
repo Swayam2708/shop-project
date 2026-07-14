@@ -2799,7 +2799,7 @@ export default function AdminDashboard() {
                                 const parentM = rec.sonOf.toLowerCase().includes(q);
                                 const phoneM = rec.phone.toLowerCase().includes(q);
                                 const villageM = rec.village.toLowerCase().includes(q);
-                                const ornamentsM = rec.ornaments.some(o => o.name.toLowerCase().includes(q));
+                                const ornamentsM = rec.ornaments && rec.ornaments.some(o => o.name.toLowerCase().includes(q));
                                 return nameM || parentM || phoneM || villageM || ornamentsM;
                               })
                               .map((rec, index) => {
@@ -2822,7 +2822,7 @@ export default function AdminDashboard() {
                                     </td>
                                     <td className="py-4 px-4">
                                       <div className="space-y-1.5">
-                                        {rec.ornaments.map((item, idx) => (
+                                        {rec.ornaments && rec.ornaments.map((item, idx) => (
                                           <div key={idx} className="flex items-center gap-1.5">
                                             <span className="font-bold text-[#dfba73]">{item.name}</span>
                                             <span className="text-[9px] font-mono bg-neutral-950 px-1 py-0.2 rounded border border-neutral-800 text-neutral-300">{item.weight}</span>
@@ -2869,7 +2869,7 @@ export default function AdminDashboard() {
                               const parentM = rec.sonOf.toLowerCase().includes(q);
                               const phoneM = rec.phone.toLowerCase().includes(q);
                               const villageM = rec.village.toLowerCase().includes(q);
-                              const ornamentsM = rec.ornaments.some(o => o.name.toLowerCase().includes(q));
+                              const ornamentsM = rec.ornaments && rec.ornaments.some(o => o.name.toLowerCase().includes(q));
                               return nameM || parentM || phoneM || villageM || ornamentsM;
                             }).length === 0 && (
                               <tr>
@@ -2934,7 +2934,7 @@ export default function AdminDashboard() {
                                 const parentM = rec.sonOf.toLowerCase().includes(q);
                                 const phoneM = rec.phone.toLowerCase().includes(q);
                                 const villageM = rec.village.toLowerCase().includes(q);
-                                const ornamentsM = rec.ornaments.some(o => o.name.toLowerCase().includes(q));
+                                const ornamentsM = rec.ornaments && rec.ornaments.some(o => o.name.toLowerCase().includes(q));
                                 return nameM || parentM || phoneM || villageM || ornamentsM;
                               })
                               .map((rec, index) => (
@@ -2951,7 +2951,7 @@ export default function AdminDashboard() {
                                   </td>
                                   <td className="py-3 px-4">
                                     <div className="flex flex-wrap gap-1">
-                                      {rec.ornaments.map((o, i) => (
+                                      {rec.ornaments && rec.ornaments.map((o, i) => (
                                         <span key={i} className="text-[10px] text-neutral-400 bg-neutral-950 px-1.5 py-0.5 rounded border border-neutral-800/50">
                                           {o.name} ({o.weight})
                                         </span>
@@ -2988,7 +2988,7 @@ export default function AdminDashboard() {
                               const parentM = rec.sonOf.toLowerCase().includes(q);
                               const phoneM = rec.phone.toLowerCase().includes(q);
                               const villageM = rec.village.toLowerCase().includes(q);
-                              const ornamentsM = rec.ornaments.some(o => o.name.toLowerCase().includes(q));
+                              const ornamentsM = rec.ornaments && rec.ornaments.some(o => o.name.toLowerCase().includes(q));
                               return nameM || parentM || phoneM || villageM || ornamentsM;
                             }).length === 0 && (
                               <tr>
