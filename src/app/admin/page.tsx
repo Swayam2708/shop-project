@@ -214,7 +214,31 @@ export default function AdminDashboard() {
     const savedUdhaar = localStorage.getItem("oj_udhaar_records");
     if (savedUdhaar) {
       try {
-        setUdhaarRecords(JSON.parse(savedUdhaar));
+        const parsed = JSON.parse(savedUdhaar);
+        if (Array.isArray(parsed)) {
+          const repaired = parsed.map((r: any) => {
+            const ornaments = r.ornaments || (r.ornament ? [{ name: r.ornament, weight: r.weight || "0g" }] : []);
+            return {
+              id: r.id || Date.now().toString() + Math.random().toString(),
+              name: r.name || "Unknown Customer",
+              sonOf: r.sonOf || "",
+              phone: r.phone || "",
+              village: r.village || "",
+              ornament: r.ornament || "",
+              weight: r.weight || "",
+              ornaments: ornaments,
+              amount: r.amount || "0",
+              discount: r.discount || "0",
+              paid: r.paid || "0",
+              dues: r.dues || "0",
+              date: r.date || new Date().toISOString().split("T")[0],
+              notes: r.notes || ""
+            };
+          });
+          setUdhaarRecords(repaired);
+        } else {
+          setUdhaarRecords([]);
+        }
       } catch (e) {
         setUdhaarRecords([]);
       }
@@ -285,7 +309,31 @@ export default function AdminDashboard() {
     const savedGirvi = localStorage.getItem("oj_girvi_records");
     if (savedGirvi) {
       try {
-        setGirviRecords(JSON.parse(savedGirvi));
+        const parsed = JSON.parse(savedGirvi);
+        if (Array.isArray(parsed)) {
+          const repaired = parsed.map((r: any) => {
+            const ornaments = r.ornaments || (r.ornament ? [{ name: r.ornament, weight: r.weight || "0g" }] : []);
+            return {
+              id: r.id || Date.now().toString() + Math.random().toString(),
+              name: r.name || "Unknown Customer",
+              sonOf: r.sonOf || "",
+              phone: r.phone || "",
+              village: r.village || "",
+              ornaments: ornaments,
+              amount: r.amount || "0",
+              interestRate: r.interestRate || "0",
+              interestPeriod: r.interestPeriod || "monthly",
+              interestType: r.interestType || "simple",
+              date: r.date || new Date().toISOString().split("T")[0],
+              status: r.status || "active",
+              releasedDate: r.releasedDate,
+              notes: r.notes || ""
+            };
+          });
+          setGirviRecords(repaired);
+        } else {
+          setGirviRecords([]);
+        }
       } catch (e) {
         setGirviRecords([]);
       }
@@ -2442,7 +2490,7 @@ export default function AdminDashboard() {
                                     <div className="font-mono text-neutral-400 text-[10px]">Discount: ₹{parseFloat(rec.discount || "0").toLocaleString()}</div>
                                     <div className="font-mono text-neutral-400 text-[10px]">Gave: ₹{parseFloat(rec.paid || "0").toLocaleString()}</div>
                                     <div className={`font-mono text-xs font-extrabold pt-1 border-t border-neutral-800/60 ${hasDues ? "text-red-400" : "text-green-400"}`}>
-                                      {hasDues ? `Dues: ₹${parseFloat(rec.dues).toLocaleString()}` : "✓ Fully Paid"}
+                                      {hasDues ? `Dues: ₹${(parseFloat(rec.dues || "0") || 0).toLocaleString()}` : "✓ Fully Paid"}
                                     </div>
                                     {rec.notes && (
                                       <div className="text-[9px] text-neutral-500 max-w-[150px] truncate pt-0.5" title={rec.notes}>
@@ -2835,11 +2883,11 @@ export default function AdminDashboard() {
                                       </div>
                                     </td>
                                     <td className="py-4 px-4 text-right space-y-0.5">
-                                      <div className="font-mono text-neutral-400 text-[10px]">Loan: ₹{parseFloat(rec.amount).toLocaleString()}</div>
-                                      <div className="font-mono text-neutral-500 text-[9px]">Rate: {rec.interestRate}% ({rec.interestPeriod === "monthly" ? "mo" : "yr"})</div>
-                                      <div className="font-mono text-amber-500 font-bold text-[10px]">Interest: ₹{calc.interest.toLocaleString()}</div>
+                                      <div className="font-mono text-neutral-400 text-[10px]">Loan: ₹{(parseFloat(rec.amount || "0") || 0).toLocaleString()}</div>
+                                      <div className="font-mono text-neutral-500 text-[9px]">Rate: {rec.interestRate || "0"}% ({rec.interestPeriod === "monthly" ? "mo" : "yr"})</div>
+                                      <div className="font-mono text-amber-500 font-bold text-[10px]">Interest: ₹{(calc.interest || 0).toLocaleString()}</div>
                                       <div className="font-mono text-xs font-extrabold text-green-400 pt-1 border-t border-neutral-800/60">
-                                        Total: ₹{calc.total.toLocaleString()}
+                                        Total: ₹{(calc.total || 0).toLocaleString()}
                                       </div>
                                     </td>
                                     <td className="py-4 px-4 text-center">
@@ -2960,7 +3008,7 @@ export default function AdminDashboard() {
                                     <div className="text-[8px] text-neutral-500 font-mono mt-1">Closed on: {rec.releasedDate}</div>
                                   </td>
                                   <td className="py-3 px-4 text-right font-mono text-neutral-300">
-                                    ₹{parseFloat(rec.amount).toLocaleString()}
+                                    ₹{(parseFloat(rec.amount || "0") || 0).toLocaleString()}
                                   </td>
                                   <td className="py-3 px-4 text-center">
                                     <div className="flex items-center justify-center gap-2">
@@ -3269,7 +3317,7 @@ export default function AdminDashboard() {
                         <div className="grid grid-cols-2 gap-4 text-[11px] border-b border-neutral-800 pb-2">
                           <div>
                             <span className="text-neutral-500 font-bold uppercase text-[8px] block">Loan Given</span>
-                            <span className="text-white font-bold text-sm font-mono">₹{parseFloat(selectedGirvi.amount).toLocaleString()}</span>
+                            <span className="text-white font-bold text-sm font-mono">₹{(parseFloat(selectedGirvi.amount || "0") || 0).toLocaleString()}</span>
                           </div>
                           <div>
                             <span className="text-neutral-500 font-bold uppercase text-[8px] block">Original Pledge Date</span>
