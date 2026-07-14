@@ -46,6 +46,7 @@ interface UdhaarRecord {
 export default function AdminDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passcode, setPasscode] = useState("");
+  const [dbPasscode, setDbPasscode] = useState("OJ2026");
   const [authError, setAuthError] = useState("");
 
   // Dashboard state
@@ -195,6 +196,9 @@ export default function AdminDashboard() {
         const loadedTexts: Record<string, string> = {};
         const loadedImages: Record<string, string> = {};
         
+        const savedPasscode = ccData.content["oj_admin_passcode"];
+        if (savedPasscode) setDbPasscode(savedPasscode);
+
         const savedWhatsApp = ccData.content["oj_custom_whatsapp"] || "9936488845";
         setWhatsAppNumber(savedWhatsApp);
 
@@ -253,7 +257,7 @@ export default function AdminDashboard() {
   // Authenticate Admin
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    const correctPasscode = localStorage.getItem("oj_admin_passcode") || "OJ2026";
+    const correctPasscode = dbPasscode || localStorage.getItem("oj_admin_passcode") || "OJ2026";
     if (passcode === correctPasscode) {
       setIsAuthenticated(true);
       sessionStorage.setItem("oj_admin_auth", "true");
@@ -336,15 +340,30 @@ export default function AdminDashboard() {
 
   // Change Admin Passcode
   const [newPin, setNewPin] = useState("");
-  const handleUpdatePasscode = (e: React.FormEvent) => {
+  const handleUpdatePasscode = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newPin.length < 4) {
       alert("Passcode must be at least 4 characters long.");
       return;
     }
-    localStorage.setItem("oj_admin_passcode", newPin);
-    alert(`Passcode successfully changed to: ${newPin}. Use this code for next logins.`);
-    setNewPin("");
+    try {
+      const res = await fetch("/api/custom-content", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: "oj_admin_passcode", value: newPin }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setDbPasscode(newPin);
+        localStorage.setItem("oj_admin_passcode", newPin);
+        alert(`Passcode successfully changed to: ${newPin}. This is now permanent across all devices!`);
+        setNewPin("");
+      } else {
+        alert("Failed to update passcode in database: " + data.error);
+      }
+    } catch (err: any) {
+      alert("Error updating passcode: " + err.message);
+    }
   };
 
   // Udhaar Notebook Handlers
