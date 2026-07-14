@@ -35,6 +35,7 @@ export async function trackActivity(payload: TrackPayload) {
   const sessionId = getSessionId().substring(0, 8);
   const target = payload.productName || payload.pageName || window.location.pathname;
 
+
   // Render a beautiful, premium console log mimicking high-end telemetry
   console.log(
     `%c👑 OJ Live Analytics %c[Session: ${sessionId}] %c${payload.eventType}%c → ${target}`,
