@@ -79,6 +79,7 @@ export default function AdminDashboard() {
   const [newEntryAmount, setNewEntryAmount] = useState("");
   const [newEntryDiscount, setNewEntryDiscount] = useState("");
   const [newEntryPaid, setNewEntryPaid] = useState("");
+  const [selectedUdhaar, setSelectedUdhaar] = useState<UdhaarRecord | null>(null);
 
   // Baseline market rate settings inputs
   const [rate24kInput, setRate24kInput] = useState("7650");
@@ -2185,6 +2186,13 @@ export default function AdminDashboard() {
                                   </td>
                                   <td className="py-4 px-4 text-center">
                                     <div className="flex items-center justify-center gap-2">
+                                      <button
+                                        onClick={() => setSelectedUdhaar(rec)}
+                                        className="p-1.5 bg-blue-500/10 border border-blue-500/20 text-blue-400 hover:bg-blue-500/20 rounded transition-colors"
+                                        title="View Descriptive Ledger Entry"
+                                      >
+                                        <Eye className="w-3.5 h-3.5" />
+                                      </button>
                                       {hasDues && (
                                         <button
                                           onClick={() => handleRecordPayment(rec.id)}
@@ -2228,6 +2236,157 @@ export default function AdminDashboard() {
                       </table>
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+          )}
+          {/* Detailed Udhaar Record View Modal */}
+          {selectedUdhaar && (
+            <div className="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in font-sans">
+              <div className="bg-neutral-900 border border-amber-500/30 rounded-lg max-w-lg w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+                {/* Modal Header */}
+                <div className="bg-neutral-950 px-6 py-4 border-b border-neutral-800 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <BookOpen className="w-5 h-5 text-amber-500" />
+                    <h3 className="text-white text-sm font-serif font-semibold tracking-wide">
+                      Detailed Customer Ledger Entry
+                    </h3>
+                  </div>
+                  <button
+                    onClick={() => setSelectedUdhaar(null)}
+                    className="text-neutral-400 hover:text-white transition-colors text-xs font-mono uppercase tracking-wider bg-neutral-900 px-2.5 py-1 border border-neutral-800 rounded hover:border-neutral-700 cursor-pointer"
+                  >
+                    Close
+                  </button>
+                </div>
+
+                {/* Modal Content Scrollable Area */}
+                <div className="p-6 overflow-y-auto space-y-5 text-xs text-neutral-300">
+                  {/* Customer Details Grid */}
+                  <div className="grid grid-cols-2 gap-4 bg-neutral-950/60 p-4 rounded border border-neutral-800/40">
+                    <div>
+                      <span className="text-[9px] uppercase tracking-wider text-neutral-500 font-bold block mb-0.5">
+                        Customer Name
+                      </span>
+                      <span className="text-white text-sm font-bold block">{selectedUdhaar.name}</span>
+                    </div>
+                    <div>
+                      <span className="text-[9px] uppercase tracking-wider text-neutral-500 font-bold block mb-0.5">
+                        Parentage (S/O or Husband)
+                      </span>
+                      <span className="text-neutral-200 font-medium block">{selectedUdhaar.sonOf || "N/A"}</span>
+                    </div>
+                    <div>
+                      <span className="text-[9px] uppercase tracking-wider text-neutral-500 font-bold block mb-0.5">
+                        Phone Number
+                      </span>
+                      <span className="text-neutral-200 font-mono block">{selectedUdhaar.phone || "N/A"}</span>
+                    </div>
+                    <div>
+                      <span className="text-[9px] uppercase tracking-wider text-neutral-500 font-bold block mb-0.5">
+                        Village / Address
+                      </span>
+                      <span className="text-neutral-200 font-medium block">{selectedUdhaar.village}</span>
+                    </div>
+                  </div>
+
+                  {/* Ornaments Bought Details */}
+                  <div className="space-y-2">
+                    <h4 className="text-[9px] uppercase tracking-widest text-[#dfba73] font-extrabold flex items-center gap-1.5">
+                      <Package className="w-3.5 h-3.5" /> Items & Weights Listing
+                    </h4>
+                    <div className="border border-neutral-800 rounded overflow-hidden">
+                      <table className="w-full text-left border-collapse text-[11px]">
+                        <thead>
+                          <tr className="bg-neutral-950 border-b border-neutral-800 text-neutral-400 font-bold text-[9px] uppercase tracking-wider">
+                            <th className="py-2.5 px-3">Product Name</th>
+                            <th className="py-2.5 px-3 text-right">Ornament Weight</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-neutral-800/50 bg-neutral-950/20">
+                          {selectedUdhaar.ornaments && selectedUdhaar.ornaments.length > 0 ? (
+                            selectedUdhaar.ornaments.map((item, i) => (
+                              <tr key={i} className="hover:bg-white/2">
+                                <td className="py-2 px-3 text-white font-medium">{item.name}</td>
+                                <td className="py-2 px-3 text-right font-mono text-[#dfba73] font-bold">{item.weight}</td>
+                              </tr>
+                            ))
+                          ) : (
+                            <tr>
+                              <td className="py-2 px-3 text-white font-medium">{selectedUdhaar.ornament}</td>
+                              <td className="py-2 px-3 text-right font-mono text-[#dfba73] font-bold">{selectedUdhaar.weight}</td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {/* Financial Sheet Grid */}
+                  <div className="space-y-2">
+                    <h4 className="text-[9px] uppercase tracking-widest text-[#dfba73] font-extrabold flex items-center gap-1.5">
+                      <DollarSign className="w-3.5 h-3.5" /> Ledger Financial Sheet
+                    </h4>
+                    <div className="grid grid-cols-4 gap-2 bg-neutral-950/40 p-3.5 rounded border border-neutral-800/40 text-center font-mono">
+                      <div className="border-r border-neutral-800/60 pr-1">
+                        <span className="text-[8px] uppercase tracking-wider text-neutral-500 font-bold block mb-1">
+                          Total Bill
+                        </span>
+                        <span className="text-white text-xs font-bold">₹{parseFloat(selectedUdhaar.amount || "0").toLocaleString()}</span>
+                      </div>
+                      <div className="border-r border-neutral-800/60 px-1">
+                        <span className="text-[8px] uppercase tracking-wider text-neutral-500 font-bold block mb-1">
+                          Discount
+                        </span>
+                        <span className="text-neutral-400 text-xs">₹{parseFloat(selectedUdhaar.discount || "0").toLocaleString()}</span>
+                      </div>
+                      <div className="border-r border-neutral-800/60 px-1">
+                        <span className="text-[8px] uppercase tracking-wider text-neutral-500 font-bold block mb-1">
+                          Gave (Paid)
+                        </span>
+                        <span className="text-neutral-400 text-xs">₹{parseFloat(selectedUdhaar.paid || "0").toLocaleString()}</span>
+                      </div>
+                      <div className="pl-1">
+                        <span className="text-[8px] uppercase tracking-wider text-neutral-500 font-bold block mb-1">
+                          Outstanding
+                        </span>
+                        <span className={`text-xs font-extrabold ${parseFloat(selectedUdhaar.dues || "0") > 0 ? "text-red-400" : "text-green-400"}`}>
+                          ₹{parseFloat(selectedUdhaar.dues || "0").toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Logs & Transaction Notes */}
+                  <div className="space-y-2">
+                    <h4 className="text-[9px] uppercase tracking-widest text-neutral-400 font-extrabold flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5" /> Entry Date & Internal Ledger Logs
+                    </h4>
+                    <div className="bg-neutral-950/60 p-4 rounded border border-neutral-800/40 space-y-2">
+                      <div className="flex justify-between items-center text-[10px] text-neutral-500 border-b border-neutral-800 pb-1.5">
+                        <span>Original Purchase Date:</span>
+                        <span className="font-mono text-white">{selectedUdhaar.date}</span>
+                      </div>
+                      <div>
+                        <span className="text-[8px] uppercase tracking-wider text-neutral-500 font-bold block mb-1">
+                          Logs & Transaction Notes:
+                        </span>
+                        <p className="text-[11px] leading-relaxed text-neutral-300 whitespace-pre-line font-sans">
+                          {selectedUdhaar.notes || "No notes logged for this credit entry."}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Modal Footer */}
+                <div className="bg-neutral-950 px-6 py-3 border-t border-neutral-800 flex justify-end">
+                  <button
+                    onClick={() => setSelectedUdhaar(null)}
+                    className="py-1.5 px-4 bg-amber-500 hover:bg-amber-600 text-neutral-950 font-sans text-[9px] font-bold tracking-widest uppercase transition-colors rounded-sm cursor-pointer"
+                  >
+                    Done
+                  </button>
                 </div>
               </div>
             </div>
