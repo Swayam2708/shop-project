@@ -45,13 +45,25 @@ async function hashPasscode(input: string): Promise<string> {
 }
 
 // Live Simple & Compound Interest Calculator for Girvi
-function calculateGirviInterest(record: GirviRecord) {
+function calculateGirviInterest(record: GirviRecord, customFrom?: string, customTo?: string) {
   const principal = parseFloat(record.amount || "0");
   const rate = parseFloat(record.interestRate || "0");
-  const pledgedDate = new Date(record.date);
-  const today = new Date();
   
-  const timeDiff = today.getTime() - pledgedDate.getTime();
+  if (isNaN(principal) || isNaN(rate)) {
+    return { days: 0, months: 0, extraDays: 0, interest: 0, total: isNaN(principal) ? 0 : principal };
+  }
+
+  const fromDateStr = customFrom || record.date;
+  const toDateStr = customTo || new Date().toISOString().split("T")[0];
+
+  const pledgedDate = new Date(fromDateStr);
+  const targetDate = new Date(toDateStr);
+  
+  if (isNaN(pledgedDate.getTime()) || isNaN(targetDate.getTime())) {
+    return { days: 0, months: 0, extraDays: 0, interest: 0, total: principal };
+  }
+  
+  const timeDiff = targetDate.getTime() - pledgedDate.getTime();
   const daysElapsed = Math.max(0, Math.floor(timeDiff / (1000 * 3600 * 24)));
   
   const monthsElapsed = daysElapsed / 30.4368;
@@ -77,8 +89,8 @@ function calculateGirviInterest(record: GirviRecord) {
     days: daysElapsed,
     months: Math.floor(monthsElapsed),
     extraDays: Math.floor(daysElapsed % 30.4368),
-    interest: Math.round(interest),
-    total: Math.round(principal + interest),
+    interest: isNaN(interest) ? 0 : Math.round(interest),
+    total: isNaN(interest) ? principal : Math.round(principal + interest),
   };
 }
 
@@ -146,6 +158,8 @@ export default function AdminDashboard() {
   const [girviHistorySearchQuery, setGirviHistorySearchQuery] = useState("");
   const [newGirviItems, setNewGirviItems] = useState<{ ornament: string; weight: string }[]>([{ ornament: "", weight: "" }]);
   const [selectedGirvi, setSelectedGirvi] = useState<GirviRecord | null>(null);
+  const [calcFromDate, setCalcFromDate] = useState("");
+  const [calcToDate, setCalcToDate] = useState("");
 
   // Baseline market rate settings inputs
   const [rate24kInput, setRate24kInput] = useState("7650");
@@ -187,6 +201,13 @@ export default function AdminDashboard() {
         setDbError(err.message || "Failed to call status API.");
       });
   }, []);
+
+  useEffect(() => {
+    if (selectedGirvi) {
+      setCalcFromDate(selectedGirvi.date);
+      setCalcToDate(new Date().toISOString().split("T")[0]);
+    }
+  }, [selectedGirvi]);
 
   const loadDashboardData = async () => {
     // Load Udhaar Ledger Notebook
@@ -3138,7 +3159,7 @@ export default function AdminDashboard() {
           )}
           {/* Detailed Girvi Record View Modal with Live Interest Calculator */}
           {selectedGirvi && (() => {
-            const calc = calculateGirviInterest(selectedGirvi);
+            const calc = calculateGirviInterest(selectedGirvi, calcFromDate, calcToDate);
             return (
               <div className="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in font-sans">
                 <div className="bg-neutral-900 border border-amber-500/30 rounded-lg max-w-lg w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
@@ -3219,13 +3240,39 @@ export default function AdminDashboard() {
                         <TrendingUp className="w-3.5 h-3.5" /> Live Interest Calculations (ब्याज की गणना)
                       </h4>
                       <div className="bg-neutral-950/60 p-4 rounded border border-neutral-800/40 space-y-3.5">
+                        {/* Custom Date Range Selector */}
+                        <div className="grid grid-cols-2 gap-4 text-[10px] bg-neutral-900/50 p-2.5 rounded border border-neutral-800/80 mb-1">
+                          <div>
+                            <label className="block text-[8px] uppercase tracking-wider text-neutral-500 font-bold mb-1">
+                              From Date (ब्याज प्रारंभ तिथि)
+                            </label>
+                            <input
+                              type="date"
+                              value={calcFromDate}
+                              onChange={(e) => setCalcFromDate(e.target.value)}
+                              className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-1.5 px-2 text-white font-mono text-xs rounded"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[8px] uppercase tracking-wider text-neutral-500 font-bold mb-1">
+                              To Date (ब्याज समाप्ति तिथि)
+                            </label>
+                            <input
+                              type="date"
+                              value={calcToDate}
+                              onChange={(e) => setCalcToDate(e.target.value)}
+                              className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-1.5 px-2 text-white font-mono text-xs rounded"
+                            />
+                          </div>
+                        </div>
+
                         <div className="grid grid-cols-2 gap-4 text-[11px] border-b border-neutral-800 pb-2">
                           <div>
                             <span className="text-neutral-500 font-bold uppercase text-[8px] block">Loan Given</span>
                             <span className="text-white font-bold text-sm font-mono">₹{parseFloat(selectedGirvi.amount).toLocaleString()}</span>
                           </div>
                           <div>
-                            <span className="text-neutral-500 font-bold uppercase text-[8px] block">Pledge Date</span>
+                            <span className="text-neutral-500 font-bold uppercase text-[8px] block">Original Pledge Date</span>
                             <span className="text-white font-mono">{selectedGirvi.date}</span>
                           </div>
                         </div>
