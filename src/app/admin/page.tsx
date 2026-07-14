@@ -28,6 +28,20 @@ import {
 } from "lucide-react";
 import { products as initialProducts, Product } from "@/data/products";
 
+// Secure SHA-256 Client-Side Hashing Utility
+async function hashPasscode(input: string): Promise<string> {
+  if (typeof window === "undefined" || !window.crypto || !window.crypto.subtle) {
+    // Fallback if environment doesn't support subtle crypto (e.g. server rendering)
+    return input;
+  }
+  const encoder = new TextEncoder();
+  const data = encoder.encode(input);
+  const hashBuffer = await window.crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+  return hashHex;
+}
+
 interface UdhaarRecord {
   id: string;
   name: string;
@@ -116,6 +130,7 @@ export default function AdminDashboard() {
       } catch (e) {
         setUdhaarRecords([]);
       }
+    } else {
       const initialUdhaar: UdhaarRecord[] = [
         { 
           id: "1", 
@@ -255,10 +270,15 @@ export default function AdminDashboard() {
   };
 
   // Authenticate Admin
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const correctPasscode = dbPasscode || localStorage.getItem("oj_admin_passcode") || "OJ2026";
-    if (passcode === correctPasscode) {
+    const typedHash = await hashPasscode(passcode);
+    const defaultHash = await hashPasscode("OJ2026");
+    const correctHash = dbPasscode.length === 64 
+      ? dbPasscode 
+      : (dbPasscode === "OJ2026" ? defaultHash : await hashPasscode(dbPasscode));
+
+    if (typedHash === correctHash) {
       setIsAuthenticated(true);
       sessionStorage.setItem("oj_admin_auth", "true");
       setAuthError("");
@@ -347,16 +367,17 @@ export default function AdminDashboard() {
       return;
     }
     try {
+      const hashedPin = await hashPasscode(newPin);
       const res = await fetch("/api/custom-content", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key: "oj_admin_passcode", value: newPin }),
+        body: JSON.stringify({ key: "oj_admin_passcode", value: hashedPin }),
       });
       const data = await res.json();
       if (data.success) {
-        setDbPasscode(newPin);
-        localStorage.setItem("oj_admin_passcode", newPin);
-        alert(`Passcode successfully changed to: ${newPin}. This is now permanent across all devices!`);
+        setDbPasscode(hashedPin);
+        localStorage.setItem("oj_admin_passcode", hashedPin);
+        alert(`Passcode successfully updated and securely hashed in the database!`);
         setNewPin("");
       } else {
         alert("Failed to update passcode in database: " + data.error);
