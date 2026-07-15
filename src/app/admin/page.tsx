@@ -1149,6 +1149,7 @@ export default function AdminDashboard() {
                 value={passcode}
                 onChange={(e) => setPasscode(e.target.value)}
                 placeholder="••••••"
+                autoComplete="new-password"
                 className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-3.5 px-4 text-center text-lg font-bold tracking-widest text-white rounded-md transition-colors"
               />
             </div>
@@ -1802,6 +1803,7 @@ export default function AdminDashboard() {
                       value={newPin}
                       onChange={(e) => setNewPin(e.target.value)}
                       placeholder="Enter new pin"
+                      autoComplete="new-password"
                       className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2.5 px-4 text-white text-sm"
                     />
                   </div>
