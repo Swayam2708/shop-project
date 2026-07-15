@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   TrendingUp,
   MessageSquare,
@@ -1316,6 +1316,24 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-neutral-800 font-sans flex flex-col">
+      {/* Visual Toast Notification Container */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            className={`fixed top-4 right-4 z-[999] flex items-center gap-3 px-5 py-3.5 rounded shadow-2xl border font-sans text-xs font-semibold ${
+              toast.type === "error"
+                ? "bg-red-50 border-red-200 text-red-700"
+                : "bg-green-50 border-green-200 text-green-700"
+            }`}
+          >
+            <span>{toast.message}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Dashboard Header */}
       <header className="bg-white border-b border-slate-200 py-4 px-6 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
