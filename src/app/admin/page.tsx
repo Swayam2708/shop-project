@@ -830,6 +830,7 @@ export default function AdminDashboard() {
   // Udhaar Notebook Handlers
   const handleAddUdhaar = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("✏️ handleAddUdhaar triggered. Check isSaving state:", isSaving);
     if (isSaving) return;
     setIsSaving(true);
 
@@ -847,24 +848,47 @@ export default function AdminDashboard() {
       const familyLinkVal = (document.getElementById("ud_family_link") as HTMLSelectElement)?.value || "";
       const relationshipInput = (document.getElementById("ud_relationship") as HTMLSelectElement)?.value || "";
 
-      // Validate numeric inputs
-      const amt = parseFloat(amountInput || "0");
-      const disc = parseFloat(discountInput || "0");
-      const paid = parseFloat(paidInput || "0");
+      console.log("📋 Raw Form Input values:", {
+        nameInput,
+        sonOfInput,
+        phoneInput,
+        villageInput,
+        amountInput,
+        discountInput,
+        paidInput,
+        duesInput,
+        notesInput,
+        aadhaarInput,
+        familyLinkVal,
+        relationshipInput
+      });
+
+      // Validate numeric inputs safely
+      const amt = parseFloat(amountInput.trim() || "0") || 0;
+      const disc = parseFloat(discountInput.trim() || "0") || 0;
+      const paid = parseFloat(paidInput.trim() || "0") || 0;
+
+      console.log("🔢 Parsed numeric financials:", { amt, disc, paid });
+
       if (isNaN(amt) || amt < 0 || isNaN(disc) || disc < 0 || isNaN(paid) || paid < 0) {
+        console.warn("⚠️ Numeric validation failed. Negative values or NaN detected.");
         showToast("❌ Dues and amount inputs must be valid positive numbers!", "error");
         setIsSaving(false);
         return;
       }
 
       if (aadhaarInput && !/^\d{12}$/.test(aadhaarInput)) {
+        console.warn("⚠️ Aadhaar validation failed. Aadhaar is not 12 digits:", aadhaarInput);
         showToast("❌ Aadhaar Number must be exactly 12 digits!", "error");
         setIsSaving(false);
         return;
       }
 
       const activeOrnaments = newEntryItems.filter(item => item.ornament.trim() !== "");
+      console.log("💎 Active ornaments identified:", activeOrnaments);
+
       if (activeOrnaments.length === 0) {
+        console.warn("⚠️ Ornaments validation failed. Empty list.");
         showToast("❌ Please add at least one product and weight in the form!", "error");
         setIsSaving(false);
         return;
@@ -873,14 +897,17 @@ export default function AdminDashboard() {
       // Family link resolution
       let resolvedFamilyGroupId = "";
       if (familyLinkVal) {
+        console.log("🔗 Resolving family link grouping for key ID:", familyLinkVal);
         const linkedGirvi = girviRecords.find(r => r.id === familyLinkVal);
         const linkedUdhaar = udhaarRecords.find(r => r.id === familyLinkVal);
         const linkedRecord = linkedGirvi || linkedUdhaar;
         if (linkedRecord) {
           if (linkedRecord.familyGroupId) {
             resolvedFamilyGroupId = linkedRecord.familyGroupId;
+            console.log("🔗 Inherited existing familyGroupId:", resolvedFamilyGroupId);
           } else {
             resolvedFamilyGroupId = "fam_" + Date.now();
+            console.log("🔗 Created new familyGroupId:", resolvedFamilyGroupId);
             linkedRecord.familyGroupId = resolvedFamilyGroupId;
             linkedRecord.familyRelationship = "Self";
 
@@ -911,7 +938,10 @@ export default function AdminDashboard() {
         village: villageInput,
         ornament: activeOrnaments[0].ornament,
         weight: activeOrnaments[0].weight,
-        ornaments: activeOrnaments,
+        ornaments: activeOrnaments.map(item => ({
+          name: item.ornament,
+          weight: item.weight
+        })),
         amount: amountInput,
         discount: discountInput,
         paid: paidInput,
@@ -923,15 +953,20 @@ export default function AdminDashboard() {
         familyRelationship: resolvedFamilyGroupId ? relationshipInput : undefined
       };
 
+      console.log("🚀 Dispatching POST request to /api/udhaar with payload:", newRecord);
+
       const res = await fetch("/api/udhaar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newRecord)
       });
       const data = await res.json();
+      console.log("📡 API endpoint responded:", data);
+
       if (data.success) {
+        console.log("✅ Udhaar record saved successfully. refreshing dashboard records.");
         loadDashboardData();
-        showToast("🎉 Udhaar Entry added successfully to the database!");
+        showToast("Udhaari added successfully.", "success");
         // Reset form & state
         (document.getElementById("ud_form") as HTMLFormElement)?.reset();
         setNewEntryItems([{ ornament: "", weight: "" }]);
@@ -939,13 +974,15 @@ export default function AdminDashboard() {
         setNewEntryDiscount("");
         setNewEntryPaid("");
       } else {
+        console.error("❌ Backend validation/prisma insertion failed:", data.error);
         showToast("❌ Failed to save Udhaar record: " + data.error, "error");
       }
     } catch (err: any) {
-      console.error("Failed to add Udhaar record:", err);
+      console.error("❌ Exception caught inside handleAddUdhaar:", err);
       showToast("❌ Failed to save Udhaar record: " + err.message, "error");
     } finally {
       setIsSaving(false);
+      console.log("🔓 isSaving state reset to false.");
     }
   };
 
@@ -1013,6 +1050,7 @@ export default function AdminDashboard() {
   // Girvi Handlers
   const handleAddGirvi = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("✏️ handleAddGirvi triggered. Check isSaving state:", isSaving);
     if (isSaving) return;
     setIsSaving(true);
 
@@ -1031,23 +1069,47 @@ export default function AdminDashboard() {
       const familyLinkVal = (document.getElementById("girvi_family_link") as HTMLSelectElement)?.value || "";
       const relationshipVal = (document.getElementById("girvi_relationship") as HTMLSelectElement)?.value || "";
 
-      // Validate numeric inputs
-      const amt = parseFloat(amountVal || "0");
-      const rate = parseFloat(rateVal || "0");
+      console.log("📋 Raw Girvi Form Input values:", {
+        nameVal,
+        sonOfVal,
+        phoneVal,
+        villageVal,
+        amountVal,
+        rateVal,
+        periodVal,
+        typeVal,
+        dateVal,
+        notesVal,
+        aadhaarVal,
+        familyLinkVal,
+        relationshipVal
+      });
+
+      // Validate numeric inputs safely
+      const amt = parseFloat(amountVal.trim() || "0") || 0;
+      const rate = parseFloat(rateVal.trim() || "0") || 0;
+
+      console.log("🔢 Parsed numeric financials:", { amt, rate });
+
       if (isNaN(amt) || amt < 0 || isNaN(rate) || rate < 0) {
+        console.warn("⚠️ Numeric validation failed. Negative values or NaN detected.");
         showToast("❌ Principal amount and interest rate must be positive numbers!", "error");
         setIsSaving(false);
         return;
       }
 
       if (aadhaarVal && !/^\d{12}$/.test(aadhaarVal)) {
+        console.warn("⚠️ Aadhaar validation failed. Aadhaar is not 12 digits:", aadhaarVal);
         showToast("❌ Aadhaar Number must be exactly 12 digits!", "error");
         setIsSaving(false);
         return;
       }
 
       const activeOrnaments = newGirviItems.filter(item => item.ornament.trim() !== "");
+      console.log("💎 Active ornaments identified:", activeOrnaments);
+
       if (activeOrnaments.length === 0) {
+        console.warn("⚠️ Ornaments validation failed. Empty list.");
         showToast("❌ Please add at least one ornament with weight!", "error");
         setIsSaving(false);
         return;
@@ -1056,14 +1118,17 @@ export default function AdminDashboard() {
       // Family link resolution
       let resolvedFamilyGroupId = "";
       if (familyLinkVal) {
+        console.log("🔗 Resolving family link grouping for key ID:", familyLinkVal);
         const linkedGirvi = girviRecords.find(r => r.id === familyLinkVal);
         const linkedUdhaar = udhaarRecords.find(r => r.id === familyLinkVal);
         const linkedRecord = linkedGirvi || linkedUdhaar;
         if (linkedRecord) {
           if (linkedRecord.familyGroupId) {
             resolvedFamilyGroupId = linkedRecord.familyGroupId;
+            console.log("🔗 Inherited existing familyGroupId:", resolvedFamilyGroupId);
           } else {
             resolvedFamilyGroupId = "fam_" + Date.now();
+            console.log("🔗 Created new familyGroupId:", resolvedFamilyGroupId);
             linkedRecord.familyGroupId = resolvedFamilyGroupId;
             linkedRecord.familyRelationship = "Self";
 
@@ -1092,7 +1157,10 @@ export default function AdminDashboard() {
         sonOf: sonOfVal,
         phone: phoneVal,
         village: villageVal,
-        ornaments: activeOrnaments,
+        ornaments: activeOrnaments.map(item => ({
+          name: item.ornament,
+          weight: item.weight
+        })),
         amount: amountVal,
         interestRate: rateVal,
         interestPeriod: periodVal,
@@ -1106,26 +1174,33 @@ export default function AdminDashboard() {
         amountAdditions: []
       };
 
+      console.log("🚀 Dispatching POST request to /api/girvi with payload:", newRecord);
+
       const res = await fetch("/api/girvi", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newRecord)
       });
       const data = await res.json();
+      console.log("📡 API endpoint responded:", data);
+
       if (data.success) {
+        console.log("✅ Girvi record saved successfully. refreshing dashboard records.");
         loadDashboardData();
-        showToast("🎉 Girvi gold pledging entry added successfully to the database!");
+        showToast("Girvi added successfully.", "success");
         // Reset Form
         (document.getElementById("girvi_form") as HTMLFormElement)?.reset();
         setNewGirviItems([{ ornament: "", weight: "" }]);
       } else {
+        console.error("❌ Backend validation/prisma insertion failed:", data.error);
         showToast("❌ Failed to save Girvi record: " + data.error, "error");
       }
     } catch (err: any) {
-      console.error("Failed to add Girvi record:", err);
+      console.error("❌ Exception caught inside handleAddGirvi:", err);
       showToast("❌ Failed to save Girvi record: " + err.message, "error");
     } finally {
       setIsSaving(false);
+      console.log("🔓 isSaving state reset to false.");
     }
   };
 
@@ -3230,7 +3305,7 @@ export default function AdminDashboard() {
                                       <div className="space-y-2">
                                         {rec.ornaments.map((item, idx) => (
                                           <div key={idx} className="border-b border-slate-150 pb-1.5 last:border-0 last:pb-0">
-                                            <div className="font-bold text-amber-800">{item.name}</div>
+                                            <div className="font-bold text-amber-800">{item.name || (item as any).ornament}</div>
                                             <div className="text-[10px] text-neutral-500 mt-0.5 font-sans">
                                               Weight: <span className="font-mono bg-slate-100 px-1.5 py-0.5 rounded-sm border border-slate-200 text-neutral-700 font-bold">{item.weight}</span>
                                             </div>
@@ -3681,7 +3756,7 @@ export default function AdminDashboard() {
                                       <div className="space-y-1.5">
                                         {rec.ornaments && rec.ornaments.map((item, idx) => (
                                           <div key={idx} className="flex items-center gap-1.5">
-                                            <span className="font-bold text-amber-800">{item.name}</span>
+                                            <span className="font-bold text-amber-800">{(item as any).name || (item as any).ornament}</span>
                                             <span className="text-[10px] font-mono bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200 text-neutral-600 font-bold">{item.weight}</span>
                                           </div>
                                         ))}
@@ -4707,7 +4782,7 @@ export default function AdminDashboard() {
                           {selectedUdhaar.ornaments && selectedUdhaar.ornaments.length > 0 ? (
                             selectedUdhaar.ornaments.map((item, i) => (
                               <tr key={i} className="hover:bg-white/2">
-                                <td className="py-2 px-3 text-white font-medium">{item.name}</td>
+                                <td className="py-2 px-3 text-white font-medium">{item.name || (item as any).ornament}</td>
                                 <td className="py-2 px-3 text-right font-mono text-[#dfba73] font-bold">{item.weight}</td>
                               </tr>
                             ))
@@ -4859,7 +4934,7 @@ export default function AdminDashboard() {
                           <tbody className="divide-y divide-neutral-800/50 bg-neutral-950/20">
                             {selectedGirvi.ornaments.map((item, i) => (
                               <tr key={i} className="hover:bg-white/2">
-                                <td className="py-2 px-3 text-white font-medium">{item.name}</td>
+                                <td className="py-2 px-3 text-white font-medium">{item.name || (item as any).ornament}</td>
                                 <td className="py-2 px-3 text-right font-mono text-[#dfba73] font-bold">{item.weight}</td>
                               </tr>
                             ))}
