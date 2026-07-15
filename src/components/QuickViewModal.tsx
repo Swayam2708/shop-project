@@ -68,7 +68,7 @@ export default function QuickViewModal({
             animate={{ opacity: 1, scale: 1, rotateX: 0, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, rotateX: -8, y: 15 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="relative w-full max-w-4xl bg-neutral-900 border border-[#dfba73]/25 shadow-2xl overflow-hidden z-10 grid grid-cols-1 md:grid-cols-2 rounded-sm"
+            className="relative w-full max-w-4xl bg-neutral-900 border border-[#dfba73]/25 shadow-2xl overflow-hidden z-10 grid grid-cols-1 md:grid-cols-2 rounded-sm transform-gpu"
           >
             {/* Close Button */}
             <motion.button

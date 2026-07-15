@@ -1649,7 +1649,7 @@ export default function AdminDashboard() {
                             </label>
                             <input
                               type="text"
-                              defaultValue={product.name}
+                              defaultValue={customText[`prod_name_${product.id}`] || product.name}
                               id={`inp_name_${product.id}`}
                               className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 outline-none text-xs text-white"
                             />
@@ -1674,7 +1674,7 @@ export default function AdminDashboard() {
                             </label>
                             <input
                               type="text"
-                              defaultValue={`₹${product.price.toLocaleString()}`}
+                              defaultValue={customText[`prod_price_${product.id}`] || `₹${product.price.toLocaleString()}`}
                               id={`inp_price_${product.id}`}
                               className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 outline-none text-xs text-white"
                             />
