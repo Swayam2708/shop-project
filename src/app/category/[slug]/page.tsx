@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import CategoryPageClient from "./page-client";
-import { products as defaultProducts } from "@/data/products";
+import { products as defaultProducts, type Product } from "@/data/products";
 
 export const dynamic = "force-dynamic";
 
@@ -15,8 +15,9 @@ export default async function Page() {
     // Map DB products to split specs details
     const mappedProducts = dbProducts.map((p) => ({
       ...p,
+      category: p.category as any,
       details: p.details ? p.details.split(" | ") : [],
-    }));
+    })) as Product[];
 
     // Resolve overrides
     const customizedImages: Record<string, string> = {};

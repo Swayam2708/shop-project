@@ -427,16 +427,7 @@ export default function Home(props: {
   // Save WhatsApp number update
   const handleWhatsAppUpdate = async (num: string) => {
     const cleanNum = num.replace(/\s+/g, "").replace(/\+/g, "");
-    setWhatsAppNumber(cleanNum);
-    try {
-      await fetch("/api/custom-content", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key: "oj_custom_whatsapp", value: cleanNum }),
-      });
-    } catch (err) {
-      console.error("Failed to save WhatsApp number to server:", err);
-    }
+    handleTextChange("whats_app_number", cleanNum);
   };
 
   // Reset all uploaded images & edited text to default settings
@@ -451,7 +442,6 @@ export default function Home(props: {
       }
       setCustomizedImages({});
       setCustomText({});
-      setWhatsAppNumber("9936488845");
       setIsDesignMode(false);
       window.location.reload();
     }

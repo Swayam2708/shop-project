@@ -3801,7 +3801,7 @@ export default function AdminDashboard() {
                                           <Settings className="w-3.5 h-3.5" />
                                         </button>
                                         <button
-                                          onClick={() => handleDeleteGirvi(rec.id)}
+                                          onClick={() => handleDeleteGirviHistory(rec.id)}
                                           className="p-1.5 bg-red-50 border border-red-200 text-red-600 hover:bg-red-100 rounded transition-colors"
                                           title="Delete Pledge Entry"
                                         >
