@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { Heart, Eye, ShoppingBag, Upload } from "lucide-react";
+import Link from "next/link";
+import { Eye, ShoppingBag, Heart, Upload } from "lucide-react";
 import { Product } from "@/data/products";
 import { motion } from "framer-motion";
 
@@ -56,12 +57,23 @@ export default function ProductCard({
     >
       <div className="relative overflow-hidden aspect-square border border-gold/10 bg-neutral-950 mb-4">
         {/* Zoom image */}
-        <img
-          src={product.image}
-          alt={product.name}
-          loading="lazy"
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-        />
+        {isDesignMode ? (
+          <img
+            src={product.image}
+            alt={displayName}
+            loading="lazy"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+        ) : (
+          <Link href={`/product/${product.id}`} className="block w-full h-full">
+            <img
+              src={product.image}
+              alt={displayName}
+              loading="lazy"
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+          </Link>
+        )}
 
         {/* Hover overlay icons */}
         <div className="absolute inset-0 bg-neutral-950/40 opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 hidden md:flex items-center justify-center gap-3">
@@ -134,16 +146,22 @@ export default function ProductCard({
           >
             {displaySubCat}
           </p>
-          <h4 
-            contentEditable={isDesignMode}
-            suppressContentEditableWarning
-            onBlur={(e) => onEditText && onEditText(`prod_name_${product.id}`, e.currentTarget.textContent || "")}
-            className={`font-serif text-base text-neutral-900 dark:text-neutral-100 mt-1 group-hover:text-gold transition-colors truncate ${
-              isDesignMode ? "border border-dashed border-amber-500/40 px-1 rounded-sm cursor-text" : ""
-            }`}
-          >
-            {displayName}
-          </h4>
+          {isDesignMode ? (
+            <h4 
+              contentEditable={true}
+              suppressContentEditableWarning
+              onBlur={(e) => onEditText && onEditText(`prod_name_${product.id}`, e.currentTarget.textContent || "")}
+              className="font-serif text-base text-neutral-900 dark:text-neutral-100 mt-1 group-hover:text-gold transition-colors truncate border border-dashed border-amber-500/40 px-1 rounded-sm cursor-text"
+            >
+              {displayName}
+            </h4>
+          ) : (
+            <Link href={`/product/${product.id}`}>
+              <h4 className="font-serif text-base text-neutral-900 dark:text-neutral-100 mt-1 group-hover:text-gold transition-colors truncate cursor-pointer">
+                {displayName}
+              </h4>
+            </Link>
+          )}
         </div>
         
         <div className="mt-4">

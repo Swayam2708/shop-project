@@ -3,6 +3,29 @@ import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
+// GET handler to retrieve a single product
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const p = await prisma.product.findUnique({
+      where: { id },
+    });
+    if (!p) {
+      return NextResponse.json({ success: false, error: "Product not found" }, { status: 404 });
+    }
+    const mapped = {
+      ...p,
+      details: p.details ? p.details.split(" | ") : [],
+    };
+    return NextResponse.json({ success: true, product: mapped });
+  } catch (error: any) {
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  }
+}
+
 // PUT handler to update details of a product
 export async function PUT(
   request: Request,
