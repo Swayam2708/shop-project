@@ -60,3 +60,46 @@ model CustomContent {
   key   String @id
   value String
 }
+
+model UdhaarRecord {
+  id                 String   @id
+  name               String
+  sonOf              String
+  phone              String
+  village            String
+  amount             String
+  discount           String   @default("0")
+  paid               String   @default("0")
+  dues               String
+  date               String
+  notes              String?
+  aadhaar            String?
+  familyGroupId      String?
+  familyRelationship String?
+  ornaments          Json?    // Array of ornaments: [{ornament: string, weight: string}]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model GirviRecord {
+  id                 String   @id
+  name               String
+  sonOf              String
+  phone              String
+  village            String
+  amount             String   // Loan Given
+  interestRate       String   // Interest Rate (%)
+  interestPeriod     String   // "monthly" | "yearly"
+  interestType       String   // "simple" | "compound"
+  date               String   // Pledged Date
+  status             String   // "active" | "released"
+  releasedDate       String?
+  notes              String?
+  aadhaar            String?
+  familyGroupId      String?
+  familyRelationship String?
+  ornaments          Json     // Array of ornaments: [{ornament: string, weight: string}]
+  amountAdditions    Json?    // Array of additions: [{id: string, amount: string, date: string}]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
