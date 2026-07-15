@@ -794,20 +794,20 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100 font-sans flex flex-col">
+    <div className="min-h-screen bg-slate-50 text-neutral-800 font-sans flex flex-col">
       {/* Dashboard Header */}
-      <header className="bg-neutral-900 border-b border-amber-500/15 py-4 px-6 flex items-center justify-between">
+      <header className="bg-white border-b border-slate-200 py-4 px-6 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
-          <span className="font-serif text-xl tracking-[0.2em] font-bold text-white">
+          <span className="font-serif text-xl tracking-[0.2em] font-bold text-neutral-900">
             OMAR JEWELLERS <span className="text-amber-500">OJ</span>
           </span>
-          <span className="text-[9px] tracking-widest text-amber-500 font-sans border border-amber-500/30 px-1.5 py-0.5 rounded uppercase">
+          <span className="text-[9px] tracking-widest text-amber-600 font-sans border border-amber-500/30 bg-amber-50 px-1.5 py-0.5 rounded uppercase font-bold">
             Backside Console
           </span>
         </div>
         <button
           onClick={handleLogout}
-          className="flex items-center gap-2 bg-neutral-950 hover:bg-red-500/10 border border-neutral-800 hover:border-red-500/25 px-4 py-2 rounded-md font-sans text-xs font-bold uppercase tracking-wider text-neutral-400 hover:text-red-400 transition-all"
+          className="flex items-center gap-2 bg-slate-50 hover:bg-red-50 border border-slate-200 hover:border-red-200 px-4 py-2 rounded-md font-sans text-xs font-bold uppercase tracking-wider text-neutral-600 hover:text-red-600 transition-all"
         >
           <LogOut className="w-3.5 h-3.5" />
           Logout
@@ -816,9 +816,9 @@ export default function AdminDashboard() {
 
       <div className="flex-1 flex flex-col md:flex-row">
         {/* Sidebar Nav */}
-        <aside className="w-full md:w-64 bg-neutral-900 border-r border-amber-500/10 p-6 flex flex-col gap-8">
+        <aside className="w-full md:w-64 bg-white border-r border-slate-200 p-6 flex flex-col gap-8 shadow-sm">
           <div>
-            <p className="text-[10px] uppercase tracking-widest text-amber-500/50 font-bold mb-4">
+            <p className="text-[10px] uppercase tracking-widest text-neutral-500 font-bold mb-4">
               Management
             </p>
             <nav className="flex flex-col gap-2 font-sans text-xs font-bold tracking-widest uppercase">
@@ -826,8 +826,8 @@ export default function AdminDashboard() {
                 onClick={() => setActiveTab("inquiries")}
                 className={`w-full py-3 px-4 rounded-md text-left transition-colors flex items-center gap-3 ${
                   activeTab === "inquiries"
-                    ? "bg-amber-500 text-neutral-950"
-                    : "hover:bg-white/5 text-neutral-400 hover:text-white"
+                    ? "bg-amber-500 text-neutral-950 shadow-sm"
+                    : "hover:bg-slate-100 text-neutral-600 hover:text-neutral-950"
                 }`}
               >
                 <MessageSquare className="w-4 h-4" />
@@ -845,8 +845,8 @@ export default function AdminDashboard() {
                 onClick={() => setActiveTab("products")}
                 className={`w-full py-3 px-4 rounded-md text-left transition-colors flex items-center gap-3 ${
                   activeTab === "products"
-                    ? "bg-amber-500 text-neutral-950"
-                    : "hover:bg-white/5 text-neutral-400 hover:text-white"
+                    ? "bg-amber-500 text-neutral-950 shadow-sm"
+                    : "hover:bg-slate-100 text-neutral-600 hover:text-neutral-950"
                 }`}
               >
                 <Package className="w-4 h-4" />
@@ -857,8 +857,8 @@ export default function AdminDashboard() {
                 onClick={() => setActiveTab("logs")}
                 className={`w-full py-3 px-4 rounded-md text-left transition-colors flex items-center gap-3 ${
                   activeTab === "logs"
-                    ? "bg-amber-500 text-neutral-950"
-                    : "hover:bg-white/5 text-neutral-400 hover:text-white"
+                    ? "bg-amber-500 text-neutral-950 shadow-sm"
+                    : "hover:bg-slate-100 text-neutral-600 hover:text-neutral-950"
                 }`}
               >
                 <TrendingUp className="w-4 h-4" />
@@ -869,8 +869,8 @@ export default function AdminDashboard() {
                 onClick={() => setActiveTab("settings")}
                 className={`w-full py-3 px-4 rounded-md text-left transition-colors flex items-center gap-3 ${
                   activeTab === "settings"
-                    ? "bg-amber-500 text-neutral-950"
-                    : "hover:bg-white/5 text-neutral-400 hover:text-white"
+                    ? "bg-amber-500 text-neutral-950 shadow-sm"
+                    : "hover:bg-slate-100 text-neutral-600 hover:text-neutral-950"
                 }`}
               >
                 <Settings className="w-4 h-4" />
@@ -881,8 +881,8 @@ export default function AdminDashboard() {
                 onClick={() => setActiveTab("udhaar")}
                 className={`w-full py-3 px-4 rounded-md text-left transition-colors flex items-center gap-3 ${
                   activeTab === "udhaar"
-                    ? "bg-amber-500 text-neutral-950"
-                    : "hover:bg-white/5 text-neutral-400 hover:text-white"
+                    ? "bg-amber-500 text-neutral-950 shadow-sm"
+                    : "hover:bg-slate-100 text-neutral-600 hover:text-neutral-950"
                 }`}
               >
                 <BookOpen className="w-4 h-4" />
@@ -900,15 +900,15 @@ export default function AdminDashboard() {
                 onClick={() => setActiveTab("girvi")}
                 className={`w-full py-3 px-4 rounded-md text-left transition-colors flex items-center gap-3 ${
                   activeTab === "girvi"
-                    ? "bg-amber-500 text-neutral-950"
-                    : "hover:bg-white/5 text-neutral-400 hover:text-white"
+                    ? "bg-amber-500 text-neutral-950 shadow-sm"
+                    : "hover:bg-slate-100 text-neutral-600 hover:text-neutral-950"
                 }`}
               >
                 <UserCheck className="w-4 h-4" />
                 Girvi Ledger (गिरवी)
                 {girviRecords.filter(r => r.status === "active").length > 0 && (
                   <span className={`ml-auto w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                    activeTab === "girvi" ? "bg-neutral-950 text-amber-500" : "bg-amber-500/20 text-amber-400 border border-amber-500/30"
+                    activeTab === "girvi" ? "bg-neutral-950 text-amber-500" : "bg-amber-500 text-neutral-950"
                   }`}>
                     {girviRecords.filter(r => r.status === "active").length}
                   </span>
@@ -917,10 +917,10 @@ export default function AdminDashboard() {
             </nav>
           </div>
 
-          <div className="mt-auto border-t border-amber-500/10 pt-6">
+          <div className="mt-auto border-t border-slate-100 pt-6">
             <a
               href="/"
-              className="text-[10px] uppercase text-neutral-500 hover:text-amber-500 tracking-wider transition-colors flex items-center gap-2"
+              className="text-[10px] uppercase text-neutral-450 hover:text-amber-500 tracking-wider transition-colors flex items-center gap-2 font-bold"
             >
               ← Visit Live Store
             </a>
@@ -928,7 +928,7 @@ export default function AdminDashboard() {
         </aside>
 
         {/* Main Content Area */}
-        <main className="flex-1 p-6 md:p-10 overflow-y-auto bg-neutral-950">
+        <main className="flex-1 p-6 md:p-10 overflow-y-auto bg-slate-50">
           {/* Database Connectivity Status Alert */}
           {dbConnected === false && (
             <div className="mb-8 p-6 bg-red-500/10 border border-red-500/25 rounded-md flex flex-col md:flex-row md:items-center justify-between gap-4 animate-pulse-subtle">
@@ -2557,30 +2557,30 @@ export default function AdminDashboard() {
 
           {/* TAB 6: GIRVI LEDGER */}
           {activeTab === "girvi" && (
-            <div className="space-y-6 animate-fade-in font-sans text-xs">
-              <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-amber-500/15 pb-4 gap-4">
+            <div className="space-y-6 animate-fade-in font-sans text-sm">
+              <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-200 pb-4 gap-4">
                 <div>
-                  <span className="text-[10px] text-amber-500 tracking-[0.3em] uppercase font-bold block">
+                  <span className="text-[10px] text-amber-600 tracking-[0.3em] uppercase font-bold block">
                     Pledging Registry
                   </span>
-                  <h2 className="font-serif text-3xl font-light text-white mt-1">
+                  <h2 className="font-serif text-3xl font-bold text-neutral-900 mt-1">
                     Girvi Ledger (गिरवी बही)
                   </h2>
-                  <p className="text-neutral-400 mt-1">
+                  <p className="text-neutral-600 mt-1 text-sm">
                     Manage cash loans given against gold & silver ornaments, calculate live compound and simple interest, and archive closed cases.
                   </p>
                 </div>
 
                 <div className="flex gap-4">
-                  <div className="bg-neutral-900 border border-neutral-800 p-4 rounded-sm min-w-[120px] text-center">
-                    <span className="text-[9px] uppercase tracking-wider text-neutral-400 font-bold block">Active Loans</span>
-                    <span className="font-serif text-xl text-white font-semibold block mt-1">
+                  <div className="bg-white border border-slate-200 p-4 rounded-md min-w-[120px] text-center shadow-sm">
+                    <span className="text-[10px] uppercase tracking-wider text-neutral-500 font-bold block">Active Loans</span>
+                    <span className="font-serif text-2xl text-neutral-900 font-extrabold block mt-1">
                       {girviRecords.filter(r => r.status === "active").length}
                     </span>
                   </div>
-                  <div className="bg-neutral-900 border border-amber-500/25 p-4 rounded-sm min-w-[150px] text-center">
-                    <span className="text-[9px] uppercase tracking-wider text-amber-500 font-bold block">Total Outflow</span>
-                    <span className="font-serif text-xl text-amber-500 font-semibold block mt-1">
+                  <div className="bg-white border border-amber-200 p-4 rounded-md min-w-[155px] text-center shadow-sm">
+                    <span className="text-[10px] uppercase tracking-wider text-amber-700 font-bold block">Total Outflow</span>
+                    <span className="font-serif text-2xl text-amber-600 font-extrabold block mt-1">
                       ₹{girviRecords.filter(r => r.status === "active").reduce((sum, r) => sum + parseFloat(r.amount || "0"), 0).toLocaleString()}
                     </span>
                   </div>
@@ -2589,16 +2589,16 @@ export default function AdminDashboard() {
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
                 {/* Left: Pledging Form */}
-                <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-sm space-y-6">
-                  <h3 className="font-serif text-lg text-[#dfba73] border-b border-neutral-800 pb-2 flex items-center gap-2">
-                    <Lock className="w-4 h-4 text-[#dfba73]" />
+                <div className="bg-white border border-slate-200 p-6 rounded-md space-y-6 shadow-sm">
+                  <h3 className="font-serif text-lg text-amber-700 border-b border-slate-200 pb-2 flex items-center gap-2 font-bold">
+                    <Lock className="w-4 h-4 text-amber-600" />
                     Pledge Ornaments (गिरवी रखें)
                   </h3>
 
                   <form id="girvi_form" onSubmit={handleAddGirvi} className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                        <label className="block text-[10px] uppercase tracking-wider text-neutral-600 font-bold mb-1.5">
                           Customer Name *
                         </label>
                         <input
@@ -2606,11 +2606,11 @@ export default function AdminDashboard() {
                           required
                           id="girvi_name"
                           placeholder="Name"
-                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs"
+                          className="w-full bg-white border border-slate-300 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none py-2.5 px-3 text-neutral-900 text-sm rounded-md transition-all shadow-sm"
                         />
                       </div>
                       <div>
-                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                        <label className="block text-[10px] uppercase tracking-wider text-neutral-600 font-bold mb-1.5">
                           S/O / Husband Name *
                         </label>
                         <input
@@ -2618,25 +2618,25 @@ export default function AdminDashboard() {
                           required
                           id="girvi_sonOf"
                           placeholder="Parentage"
-                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs"
+                          className="w-full bg-white border border-slate-300 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none py-2.5 px-3 text-neutral-900 text-sm rounded-md transition-all shadow-sm"
                         />
                       </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                        <label className="block text-[10px] uppercase tracking-wider text-neutral-600 font-bold mb-1.5">
                           Phone Number
                         </label>
                         <input
                           type="text"
                           id="girvi_phone"
                           placeholder="Mobile"
-                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs font-mono"
+                          className="w-full bg-white border border-slate-300 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none py-2.5 px-3 text-neutral-900 text-sm rounded-md transition-all font-mono shadow-sm"
                         />
                       </div>
                       <div>
-                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                        <label className="block text-[10px] uppercase tracking-wider text-neutral-600 font-bold mb-1.5">
                           Village / Town *
                         </label>
                         <input
@@ -2644,13 +2644,13 @@ export default function AdminDashboard() {
                           required
                           id="girvi_village"
                           placeholder="Location"
-                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs"
+                          className="w-full bg-white border border-slate-300 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none py-2.5 px-3 text-neutral-900 text-sm rounded-md transition-all shadow-sm"
                         />
                       </div>
                     </div>
 
-                    <div className="space-y-2 border-t border-b border-neutral-800/60 py-4">
-                      <label className="block text-[9px] uppercase tracking-widest text-[#dfba73] font-bold">
+                    <div className="space-y-2 border-t border-b border-slate-200 py-4">
+                      <label className="block text-[10px] uppercase tracking-widest text-amber-700 font-bold">
                         Pledged Ornaments & Weights *
                       </label>
                       <div className="space-y-2">
@@ -2667,7 +2667,7 @@ export default function AdminDashboard() {
                                   setNewGirviItems(updated);
                                 }}
                                 placeholder="Ornament (e.g. Gold Jhumka)"
-                                className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-1.5 px-2.5 text-white text-xs"
+                                className="w-full bg-white border border-slate-300 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none py-2 px-2.5 text-neutral-900 text-xs rounded-md shadow-sm"
                               />
                             </div>
                             <div className="w-24">
@@ -2681,14 +2681,14 @@ export default function AdminDashboard() {
                                   setNewGirviItems(updated);
                                 }}
                                 placeholder="Weight (e.g. 10.2g)"
-                                className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-1.5 px-2.5 text-white text-xs font-mono"
+                                className="w-full bg-white border border-slate-300 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none py-2 px-2.5 text-neutral-900 text-xs font-mono rounded-md shadow-sm"
                               />
                             </div>
                             {newGirviItems.length > 1 && (
                               <button
                                 type="button"
                                 onClick={() => setNewGirviItems(newGirviItems.filter((_, i) => i !== idx))}
-                                className="p-1.5 bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 rounded transition-colors"
+                                className="p-1.5 bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500/20 rounded transition-colors"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
                               </button>
@@ -2699,7 +2699,7 @@ export default function AdminDashboard() {
                       <button
                         type="button"
                         onClick={() => setNewGirviItems([...newGirviItems, { ornament: "", weight: "" }])}
-                        className="w-full py-1.5 border border-dashed border-neutral-800 hover:border-amber-500/50 text-neutral-400 hover:text-amber-500 rounded text-[9px] uppercase font-bold tracking-wider transition-colors flex items-center justify-center gap-1.5"
+                        className="w-full py-2 border border-dashed border-slate-300 hover:border-amber-500 hover:text-amber-600 text-neutral-600 bg-slate-50 hover:bg-amber-50/20 rounded-md text-[10px] uppercase font-bold tracking-wider transition-colors flex items-center justify-center gap-1.5"
                       >
                         <Plus className="w-3.5 h-3.5" /> Add Another Ornament
                       </button>
@@ -2707,7 +2707,7 @@ export default function AdminDashboard() {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                        <label className="block text-[10px] uppercase tracking-wider text-neutral-600 font-bold mb-1.5">
                           Loan Money Given (₹) *
                         </label>
                         <input
@@ -2715,11 +2715,11 @@ export default function AdminDashboard() {
                           required
                           id="girvi_amount"
                           placeholder="Principal loan value"
-                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs font-mono"
+                          className="w-full bg-white border border-slate-300 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none py-2.5 px-3 text-neutral-900 text-sm rounded-md shadow-sm font-mono"
                         />
                       </div>
                       <div>
-                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                        <label className="block text-[10px] uppercase tracking-wider text-neutral-600 font-bold mb-1.5">
                           Interest Rate (% value) *
                         </label>
                         <input
@@ -2727,31 +2727,31 @@ export default function AdminDashboard() {
                           required
                           id="girvi_rate"
                           placeholder="e.g. 2.0"
-                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs font-mono"
+                          className="w-full bg-white border border-slate-300 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none py-2.5 px-3 text-neutral-900 text-sm rounded-md shadow-sm font-mono"
                         />
                       </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                        <label className="block text-[10px] uppercase tracking-wider text-neutral-600 font-bold mb-1.5">
                           Interest Period
                         </label>
                         <select
                           id="girvi_period"
-                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs"
+                          className="w-full bg-white border border-slate-300 focus:border-amber-500 outline-none py-2.5 px-3 text-neutral-900 text-sm rounded-md shadow-sm"
                         >
                           <option value="monthly">Per Month (मासिक)</option>
                           <option value="yearly">Per Year (वार्षिक)</option>
                         </select>
                       </div>
                       <div>
-                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                        <label className="block text-[10px] uppercase tracking-wider text-neutral-600 font-bold mb-1.5">
                           Interest Type
                         </label>
                         <select
                           id="girvi_type"
-                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs"
+                          className="w-full bg-white border border-slate-300 focus:border-amber-500 outline-none py-2.5 px-3 text-neutral-900 text-sm rounded-md shadow-sm"
                         >
                           <option value="simple">Simple Interest (साधारण ब्याज)</option>
                           <option value="compound">Compound Interest (चक्रवृद्धि ब्याज)</option>
@@ -2761,7 +2761,7 @@ export default function AdminDashboard() {
 
                     <div className="grid grid-cols-1 gap-4">
                       <div>
-                        <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                        <label className="block text-[10px] uppercase tracking-wider text-neutral-600 font-bold mb-1.5">
                           Pledged Date *
                         </label>
                         <input
@@ -2769,26 +2769,26 @@ export default function AdminDashboard() {
                           required
                           id="girvi_date"
                           defaultValue={new Date().toISOString().split("T")[0]}
-                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs font-mono"
+                          className="w-full bg-white border border-slate-300 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none py-2.5 px-3 text-neutral-900 text-sm rounded-md shadow-sm font-mono"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-[9px] uppercase tracking-wider text-neutral-400 font-bold mb-1.5">
+                      <label className="block text-[10px] uppercase tracking-wider text-neutral-600 font-bold mb-1.5">
                         Internal Ledger Notes
                       </label>
                       <textarea
                         id="girvi_notes"
                         rows={2}
                         placeholder="Additional terms or comments"
-                        className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2 px-3 text-white text-xs resize-none"
+                        className="w-full bg-white border border-slate-300 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none py-2 px-3 text-neutral-900 text-xs rounded-md shadow-sm resize-none"
                       />
                     </div>
 
                     <button
                       type="submit"
-                      className="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-neutral-950 font-sans text-[10px] font-bold tracking-widest uppercase transition-colors rounded-sm flex items-center justify-center gap-2 cursor-pointer"
+                      className="w-full py-3 bg-amber-500 hover:bg-amber-600 text-neutral-950 font-sans text-xs font-bold tracking-widest uppercase transition-colors rounded-md flex items-center justify-center gap-2 cursor-pointer shadow-sm"
                     >
                       <Plus className="w-4 h-4" />
                       Add Girvi Entry
@@ -2801,11 +2801,11 @@ export default function AdminDashboard() {
                   {/* Tab active entries registry */}
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <h4 className="font-serif text-lg text-white">Active Pledges Log (गिरवी चालू खाते)</h4>
+                      <h4 className="font-serif text-xl font-bold text-neutral-900">Active Pledges Log (गिरवी चालू खाते)</h4>
                     </div>
 
                     <div className="relative w-full">
-                      <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-500">
+                      <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400">
                         <Search className="w-4 h-4" />
                       </span>
                       <input
@@ -2813,23 +2813,67 @@ export default function AdminDashboard() {
                         value={girviSearchQuery}
                         onChange={(e) => setGirviSearchQuery(e.target.value)}
                         placeholder="Search active pledges by Name, S/O Name, Phone, Village, Ornament..."
-                        className="w-full bg-neutral-900 border border-neutral-800 focus:border-amber-500 hover:border-neutral-700 outline-none rounded-md py-3 pl-11 pr-6 text-xs text-white transition-all shadow-md"
+                        className="w-full bg-white border border-slate-300 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none rounded-md py-3 pl-11 pr-6 text-sm text-neutral-900 transition-all shadow-sm"
                       />
                       {girviSearchQuery && (
                         <button
                           onClick={() => setGirviSearchQuery("")}
-                          className="absolute inset-y-0 right-4 flex items-center text-neutral-500 hover:text-white text-[10px] uppercase font-bold"
+                          className="absolute inset-y-0 right-4 flex items-center text-neutral-400 hover:text-neutral-900 text-[10px] uppercase font-bold"
                         >
                           Clear
                         </button>
                       )}
                     </div>
 
-                    <div className="bg-neutral-900 border border-neutral-800 rounded-sm overflow-hidden">
+                    {/* Found matching Udhaar records alert for name/family search */}
+                    {girviSearchQuery.trim() !== "" && (() => {
+                      const q = girviSearchQuery.toLowerCase();
+                      const matches = udhaarRecords.filter(u => 
+                        (u.name || "").toLowerCase().includes(q) || 
+                        (u.sonOf || "").toLowerCase().includes(q) ||
+                        (u.village || "").toLowerCase().includes(q)
+                      );
+                      if (matches.length === 0) return null;
+                      return (
+                        <div className="bg-red-50 border border-red-200/85 p-4 rounded-md space-y-2 animate-fade-in shadow-sm">
+                          <div className="flex items-center gap-2 text-red-800 font-bold text-xs uppercase tracking-wider">
+                            <BookOpen className="w-4 h-4 shrink-0 text-red-600 animate-pulse" /> 
+                            <span>⚠️ Linked Store Udhaar Accounts Found (उधार खाता मिलान)</span>
+                          </div>
+                          <div className="overflow-x-auto">
+                            <table className="w-full text-left text-xs text-red-950 border-collapse">
+                              <thead>
+                                <tr className="border-b border-red-200 text-red-800 font-bold uppercase tracking-wider text-[10px]">
+                                  <th className="py-2 px-1">Customer Details</th>
+                                  <th className="py-2 px-1">Village</th>
+                                  <th className="py-2 px-1 text-right">Outstanding Dues</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {matches.map(m => (
+                                  <tr key={m.id} className="border-b border-red-100 last:border-0 hover:bg-red-100/30">
+                                    <td className="py-2 px-1 font-bold">
+                                      {m.name}
+                                      <span className="text-[10px] text-red-750 block font-normal mt-0.5">S/O: {m.sonOf} | {m.phone || "N/A"}</span>
+                                    </td>
+                                    <td className="py-2 px-1 text-red-800">{m.village}</td>
+                                    <td className="py-2 px-1 text-right font-bold font-mono text-red-650 text-sm">
+                                      ₹{(parseFloat(m.dues || "0") || 0).toLocaleString()}
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      );
+                    })()}
+
+                    <div className="bg-white border border-slate-200 rounded-md overflow-hidden shadow-sm">
                       <div className="overflow-x-auto">
-                        <table className="w-full text-left font-sans text-xs border-collapse">
+                        <table className="w-full text-left font-sans text-sm border-collapse">
                           <thead>
-                            <tr className="border-b border-neutral-800 bg-neutral-950 text-neutral-400 font-bold uppercase tracking-wider text-[9px]">
+                            <tr className="border-b border-slate-200 bg-slate-50 text-neutral-600 font-bold uppercase tracking-wider text-[10px]">
                               <th className="py-4 px-4 text-center">S.No</th>
                               <th className="py-4 px-4">Customer details</th>
                               <th className="py-4 px-4">Village</th>
@@ -2843,50 +2887,50 @@ export default function AdminDashboard() {
                               .filter(r => r.status === "active")
                               .filter((rec) => {
                                 const q = girviSearchQuery.toLowerCase();
-                                const nameM = rec.name.toLowerCase().includes(q);
-                                const parentM = rec.sonOf.toLowerCase().includes(q);
-                                const phoneM = rec.phone.toLowerCase().includes(q);
-                                const villageM = rec.village.toLowerCase().includes(q);
-                                const ornamentsM = rec.ornaments && rec.ornaments.some(o => o.name.toLowerCase().includes(q));
+                                const nameM = (rec.name || "").toLowerCase().includes(q);
+                                const parentM = (rec.sonOf || "").toLowerCase().includes(q);
+                                const phoneM = (rec.phone || "").toLowerCase().includes(q);
+                                const villageM = (rec.village || "").toLowerCase().includes(q);
+                                const ornamentsM = rec.ornaments && rec.ornaments.some(o => (o.name || "").toLowerCase().includes(q));
                                 return nameM || parentM || phoneM || villageM || ornamentsM;
                               })
                               .map((rec, index) => {
                                 const calc = calculateGirviInterest(rec);
                                 return (
-                                  <tr key={rec.id} className="hover:bg-white/3 transition-colors">
-                                    <td className="py-4 px-4 text-center font-mono text-neutral-500">
+                                  <tr key={rec.id} className="hover:bg-slate-50 border-b border-slate-100 transition-colors text-neutral-800">
+                                    <td className="py-4 px-4 text-center font-mono text-neutral-400">
                                       {index + 1}
                                     </td>
                                     <td className="py-4 px-4">
-                                      <div className="font-bold text-white text-sm">{rec.name}</div>
-                                      <div className="text-neutral-400 text-[10px] mt-0.5">S/O: {rec.sonOf}</div>
-                                      <div className="text-neutral-500 text-[10px] mt-0.5 font-mono">{rec.phone}</div>
+                                      <div className="font-bold text-neutral-900 text-sm">{rec.name}</div>
+                                      <div className="text-neutral-500 text-xs mt-0.5">S/O: {rec.sonOf}</div>
+                                      <div className="text-neutral-500 text-xs mt-0.5 font-mono">{rec.phone}</div>
                                     </td>
-                                    <td className="py-4 px-4 text-neutral-300 font-medium">
+                                    <td className="py-4 px-4 text-neutral-700 font-medium">
                                       <div className="flex items-center gap-1">
                                         <MapPin className="w-3.5 h-3.5 text-amber-500/60" />
                                         {rec.village}
                                       </div>
                                     </td>
-                                    <td className="py-4 px-4">
+                                    <td className="py-4 px-4 text-neutral-700">
                                       <div className="space-y-1.5">
                                         {rec.ornaments && rec.ornaments.map((item, idx) => (
                                           <div key={idx} className="flex items-center gap-1.5">
-                                            <span className="font-bold text-[#dfba73]">{item.name}</span>
-                                            <span className="text-[9px] font-mono bg-neutral-950 px-1 py-0.2 rounded border border-neutral-800 text-neutral-300">{item.weight}</span>
+                                            <span className="font-bold text-amber-800">{item.name}</span>
+                                            <span className="text-[10px] font-mono bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200 text-neutral-600 font-bold">{item.weight}</span>
                                           </div>
                                         ))}
                                       </div>
-                                      <div className="text-[9px] text-neutral-500 mt-2 flex items-center gap-1 font-mono">
+                                      <div className="text-[10px] text-neutral-500 mt-2 flex items-center gap-1 font-mono">
                                         <Calendar className="w-3 h-3" />
                                         {rec.date}
                                       </div>
                                     </td>
                                     <td className="py-4 px-4 text-right space-y-0.5">
-                                      <div className="font-mono text-neutral-400 text-[10px]">Loan: ₹{(parseFloat(rec.amount || "0") || 0).toLocaleString()}</div>
-                                      <div className="font-mono text-neutral-500 text-[9px]">Rate: {rec.interestRate || "0"}% ({rec.interestPeriod === "monthly" ? "mo" : "yr"})</div>
-                                      <div className="font-mono text-amber-500 font-bold text-[10px]">Interest: ₹{(calc.interest || 0).toLocaleString()}</div>
-                                      <div className="font-mono text-xs font-extrabold text-green-400 pt-1 border-t border-neutral-800/60">
+                                      <div className="font-mono text-neutral-600 text-xs">Loan: ₹{(parseFloat(rec.amount || "0") || 0).toLocaleString()}</div>
+                                      <div className="font-mono text-neutral-500 text-[10px]">Rate: {rec.interestRate || "0"}% ({rec.interestPeriod === "monthly" ? "mo" : "yr"})</div>
+                                      <div className="font-mono text-amber-600 font-bold text-xs">Interest: ₹{(calc.interest || 0).toLocaleString()}</div>
+                                      <div className="font-mono text-sm font-extrabold text-green-600 pt-1 border-t border-slate-200">
                                         Total: ₹{(calc.total || 0).toLocaleString()}
                                       </div>
                                     </td>
@@ -2894,14 +2938,14 @@ export default function AdminDashboard() {
                                       <div className="flex items-center justify-center gap-2">
                                         <button
                                           onClick={() => setSelectedGirvi(rec)}
-                                          className="p-1.5 bg-blue-500/10 border border-blue-500/20 text-blue-400 hover:bg-blue-500/20 rounded transition-colors"
+                                          className="p-1.5 bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 rounded transition-colors"
                                           title="View Pledged Details & Live Interest"
                                         >
                                           <Eye className="w-3.5 h-3.5" />
                                         </button>
                                         <button
                                           onClick={() => handleReleaseGirvi(rec.id)}
-                                          className="p-1.5 bg-amber-500/10 border border-amber-500/20 text-amber-400 hover:bg-amber-500/20 rounded transition-colors"
+                                          className="p-1.5 bg-amber-50 border border-amber-200 text-amber-700 hover:bg-amber-100 rounded transition-colors"
                                           title="Close Loan (Move to History)"
                                         >
                                           <CheckSquare className="w-3.5 h-3.5" />
@@ -2913,15 +2957,15 @@ export default function AdminDashboard() {
                               })}
                             {girviRecords.filter(r => r.status === "active").filter((rec) => {
                               const q = girviSearchQuery.toLowerCase();
-                              const nameM = rec.name.toLowerCase().includes(q);
-                              const parentM = rec.sonOf.toLowerCase().includes(q);
-                              const phoneM = rec.phone.toLowerCase().includes(q);
-                              const villageM = rec.village.toLowerCase().includes(q);
-                              const ornamentsM = rec.ornaments && rec.ornaments.some(o => o.name.toLowerCase().includes(q));
+                              const nameM = (rec.name || "").toLowerCase().includes(q);
+                              const parentM = (rec.sonOf || "").toLowerCase().includes(q);
+                              const phoneM = (rec.phone || "").toLowerCase().includes(q);
+                              const villageM = (rec.village || "").toLowerCase().includes(q);
+                              const ornamentsM = rec.ornaments && rec.ornaments.some(o => (o.name || "").toLowerCase().includes(q));
                               return nameM || parentM || phoneM || villageM || ornamentsM;
                             }).length === 0 && (
                               <tr>
-                                <td colSpan={6} className="py-12 px-4 text-center text-neutral-500">
+                                <td colSpan={6} className="py-12 px-4 text-center text-neutral-500 text-sm">
                                   No active pledged records found.
                                 </td>
                               </tr>
@@ -2933,14 +2977,14 @@ export default function AdminDashboard() {
                   </div>
 
                   {/* History tab archive */}
-                  <div className="space-y-4 pt-4 border-t border-neutral-800">
+                  <div className="space-y-4 pt-4 border-t border-slate-200">
                     <div>
-                      <h4 className="font-serif text-lg text-neutral-400">Closed Pledges History (गिरवी बंद खाते इतिहास)</h4>
-                      <p className="text-[10px] text-neutral-500">History record log of closed or released gold pledges.</p>
+                      <h4 className="font-serif text-xl font-bold text-neutral-850">Closed Pledges History (गिरवी बंद खाते इतिहास)</h4>
+                      <p className="text-xs text-neutral-500">History record log of closed or released gold pledges.</p>
                     </div>
 
                     <div className="relative w-full">
-                      <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-500">
+                      <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400">
                         <Search className="w-4 h-4" />
                       </span>
                       <input
@@ -2948,23 +2992,23 @@ export default function AdminDashboard() {
                         value={girviHistorySearchQuery}
                         onChange={(e) => setGirviHistorySearchQuery(e.target.value)}
                         placeholder="Search closed pledges history log..."
-                        className="w-full bg-neutral-900 border border-neutral-850 focus:border-neutral-700 outline-none rounded-md py-2.5 pl-11 pr-6 text-xs text-neutral-300 transition-all"
+                        className="w-full bg-white border border-slate-300 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none rounded-md py-2.5 pl-11 pr-6 text-sm text-neutral-900 transition-all shadow-sm"
                       />
                       {girviHistorySearchQuery && (
                         <button
                           onClick={() => setGirviHistorySearchQuery("")}
-                          className="absolute inset-y-0 right-4 flex items-center text-neutral-500 hover:text-white text-[10px] uppercase font-bold"
+                          className="absolute inset-y-0 right-4 flex items-center text-neutral-450 hover:text-neutral-900 text-[10px] uppercase font-bold"
                         >
                           Clear
                         </button>
                       )}
                     </div>
 
-                    <div className="bg-neutral-900/60 border border-neutral-850 rounded-sm overflow-hidden">
+                    <div className="bg-white border border-slate-200 rounded-md overflow-hidden shadow-sm">
                       <div className="overflow-x-auto">
-                        <table className="w-full text-left font-sans text-xs border-collapse">
+                        <table className="w-full text-left font-sans text-sm border-collapse">
                           <thead>
-                            <tr className="border-b border-neutral-800 bg-neutral-950/60 text-neutral-500 font-bold uppercase tracking-wider text-[9px]">
+                            <tr className="border-b border-slate-200 bg-slate-50 text-neutral-500 font-bold uppercase tracking-wider text-[10px]">
                               <th className="py-3 px-4 text-center">S.No</th>
                               <th className="py-3 px-4">Customer</th>
                               <th className="py-3 px-4">Village</th>
@@ -2973,55 +3017,55 @@ export default function AdminDashboard() {
                               <th className="py-3 px-4 text-center">Actions</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-neutral-800/40 text-neutral-400">
+                          <tbody className="divide-y divide-slate-100 text-neutral-700 bg-white">
                             {girviRecords
                               .filter(r => r.status === "released")
                               .filter((rec) => {
                                 const q = girviHistorySearchQuery.toLowerCase();
-                                const nameM = rec.name.toLowerCase().includes(q);
-                                const parentM = rec.sonOf.toLowerCase().includes(q);
-                                const phoneM = rec.phone.toLowerCase().includes(q);
-                                const villageM = rec.village.toLowerCase().includes(q);
-                                const ornamentsM = rec.ornaments && rec.ornaments.some(o => o.name.toLowerCase().includes(q));
+                                const nameM = (rec.name || "").toLowerCase().includes(q);
+                                const parentM = (rec.sonOf || "").toLowerCase().includes(q);
+                                const phoneM = (rec.phone || "").toLowerCase().includes(q);
+                                const villageM = (rec.village || "").toLowerCase().includes(q);
+                                const ornamentsM = rec.ornaments && rec.ornaments.some(o => (o.name || "").toLowerCase().includes(q));
                                 return nameM || parentM || phoneM || villageM || ornamentsM;
                               })
                               .map((rec, index) => (
-                                <tr key={rec.id} className="hover:bg-white/2 transition-colors">
-                                  <td className="py-3 px-4 text-center font-mono text-neutral-600">
+                                <tr key={rec.id} className="hover:bg-slate-50/50 border-b border-slate-100 transition-colors">
+                                  <td className="py-3 px-4 text-center font-mono text-neutral-400">
                                     {index + 1}
                                   </td>
                                   <td className="py-3 px-4">
-                                    <div className="font-bold text-neutral-300">{rec.name}</div>
-                                    <div className="text-[9px] text-neutral-500">S/O: {rec.sonOf}</div>
+                                    <div className="font-bold text-neutral-900 text-sm">{rec.name}</div>
+                                    <div className="text-[10px] text-neutral-500">S/O: {rec.sonOf}</div>
                                   </td>
-                                  <td className="py-3 px-4 text-neutral-400">
+                                  <td className="py-3 px-4 text-neutral-600">
                                     {rec.village}
                                   </td>
                                   <td className="py-3 px-4">
                                     <div className="flex flex-wrap gap-1">
                                       {rec.ornaments && rec.ornaments.map((o, i) => (
-                                        <span key={i} className="text-[10px] text-neutral-400 bg-neutral-950 px-1.5 py-0.5 rounded border border-neutral-800/50">
+                                        <span key={i} className="text-[10px] text-neutral-700 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200 font-bold">
                                           {o.name} ({o.weight})
                                         </span>
                                       ))}
                                     </div>
-                                    <div className="text-[8px] text-neutral-500 font-mono mt-1">Closed on: {rec.releasedDate}</div>
+                                    <div className="text-[9px] text-neutral-500 font-mono mt-1">Closed on: {rec.releasedDate}</div>
                                   </td>
-                                  <td className="py-3 px-4 text-right font-mono text-neutral-300">
+                                  <td className="py-3 px-4 text-right font-mono text-neutral-900 font-bold">
                                     ₹{(parseFloat(rec.amount || "0") || 0).toLocaleString()}
                                   </td>
                                   <td className="py-3 px-4 text-center">
                                     <div className="flex items-center justify-center gap-2">
                                       <button
                                         onClick={() => setSelectedGirvi(rec)}
-                                        className="p-1 text-neutral-400 hover:text-white transition-colors"
+                                        className="p-1 text-neutral-500 hover:text-blue-600 transition-colors"
                                         title="View historical log details"
                                       >
                                         <Eye className="w-3.5 h-3.5" />
                                       </button>
                                       <button
                                         onClick={() => handleDeleteGirviHistory(rec.id)}
-                                        className="p-1 text-red-500/60 hover:text-red-400 transition-colors"
+                                        className="p-1 text-red-500 hover:text-red-700 transition-colors"
                                         title="Permanently Delete History Entry"
                                       >
                                         <Trash2 className="w-3.5 h-3.5" />
@@ -3032,11 +3076,11 @@ export default function AdminDashboard() {
                               ))}
                             {girviRecords.filter(r => r.status === "released").filter((rec) => {
                               const q = girviHistorySearchQuery.toLowerCase();
-                              const nameM = rec.name.toLowerCase().includes(q);
-                              const parentM = rec.sonOf.toLowerCase().includes(q);
-                              const phoneM = rec.phone.toLowerCase().includes(q);
-                              const villageM = rec.village.toLowerCase().includes(q);
-                              const ornamentsM = rec.ornaments && rec.ornaments.some(o => o.name.toLowerCase().includes(q));
+                              const nameM = (rec.name || "").toLowerCase().includes(q);
+                              const parentM = (rec.sonOf || "").toLowerCase().includes(q);
+                              const phoneM = (rec.phone || "").toLowerCase().includes(q);
+                              const villageM = (rec.village || "").toLowerCase().includes(q);
+                              const ornamentsM = rec.ornaments && rec.ornaments.some(o => (o.name || "").toLowerCase().includes(q));
                               return nameM || parentM || phoneM || villageM || ornamentsM;
                             }).length === 0 && (
                               <tr>
