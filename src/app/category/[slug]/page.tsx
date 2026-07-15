@@ -511,6 +511,66 @@ export default function CategoryPage() {
             ) : (
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                 <AnimatePresence mode="popLayout">
+                  {isDesignMode && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="border-2 border-dashed border-[#dfba73]/30 hover:border-[#dfba73] p-6 flex flex-col items-center justify-center text-center bg-neutral-950/20 group relative transition-all duration-300 min-h-[300px]"
+                    >
+                      <button
+                        onClick={async () => {
+                          const newName = window.prompt("Enter new product design name:");
+                          if (!newName) return;
+                          const newPrice = window.prompt("Enter product price (in INR):");
+                          if (!newPrice) return;
+                          
+                          // Format category tag clean title
+                          const cleanPrice = parseFloat(newPrice.replace(/[^0-9.]/g, "")) || 0;
+                          const generatedId = `oj-cust-${Date.now().toString().slice(-4)}`;
+                          
+                          try {
+                            const res = await fetch("/api/products", {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({
+                                id: generatedId,
+                                name: newName,
+                                category: slug === "silver-jewellery" ? "silver" : "new-arrivals",
+                                subCategory: slug.charAt(0).toUpperCase() + slug.slice(1),
+                                price: cleanPrice,
+                                rating: 5.0,
+                                materials: slug === "silver-jewellery" ? "925 Sterling Silver" : "22k Pure Gold",
+                                description: "Handcrafted boutique luxury ornament design. Available for showroom custom order.",
+                                details: ["Hallmark certified", "Customized order dori"],
+                              }),
+                            });
+                            
+                            const data = await res.json();
+                            if (data.success) {
+                              alert("Bespoke product card added to database catalog!");
+                              // Refresh dynamic listing
+                              fetch("/api/products", { cache: "no-store" })
+                                .then((r) => r.json())
+                                .then((d) => {
+                                  if (d.success && d.products) {
+                                    setDbProducts(d.products);
+                                  }
+                                });
+                            }
+                          } catch (err: any) {
+                            alert("Failed to insert card: " + err.message);
+                          }
+                        }}
+                        className="w-12 h-12 rounded-full bg-[#dfba73]/10 text-[#dfba73] hover:bg-[#dfba73] hover:text-neutral-950 font-sans text-xl font-bold flex items-center justify-center transition-all cursor-pointer shadow-lg mb-4"
+                      >
+                        +
+                      </button>
+                      <span className="font-serif text-sm text-white font-medium">Add New Design</span>
+                      <p className="font-sans text-[10px] text-neutral-500 mt-2 px-4 leading-relaxed">
+                        Instantly seed a custom product card into the {getCategoryTitle()} registry.
+                      </p>
+                    </motion.div>
+                  )}
                   {filteredProducts.map((product) => (
                     <ProductCard
                       key={product.id}

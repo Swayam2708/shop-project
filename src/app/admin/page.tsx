@@ -694,8 +694,8 @@ export default function AdminDashboard() {
     localStorage.setItem("oj_form_submissions", JSON.stringify(updated));
   };
 
-  // Update a product's price/name/category/description/materials from dashboard
-  const handleUpdateProduct = async (id: string, name: string, priceStr: string, subCategory: string, description: string, materials: string) => {
+  // Update a product's price/name/category/description/materials/details from dashboard
+  const handleUpdateProduct = async (id: string, name: string, priceStr: string, subCategory: string, description: string, materials: string, detailsStr: string) => {
     const cleanPrice = priceStr.replace(/[^0-9.]/g, "");
     const numericPrice = parseFloat(cleanPrice);
 
@@ -709,6 +709,7 @@ export default function AdminDashboard() {
           subCategory,
           description,
           materials,
+          details: detailsStr ? detailsStr.split(",").map((d) => d.trim()).join(" | ") : "",
         }),
       });
       const data = await res.json();
@@ -1927,6 +1928,17 @@ export default function AdminDashboard() {
                             rows={3}
                             className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2.5 px-3 outline-none text-xs text-white resize-none"
                           />
+                          <div className="mt-3">
+                            <label className="block font-sans text-[9px] uppercase tracking-widest text-[#dfba73] font-bold mb-1">
+                              Specifications Details (comma separated)
+                            </label>
+                            <input
+                              type="text"
+                              defaultValue={product.details ? product.details.join(", ") : ""}
+                              id={`inp_details_${product.id}`}
+                              className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 outline-none text-xs text-white"
+                            />
+                          </div>
                         </div>
                       </div>
 
@@ -1939,14 +1951,16 @@ export default function AdminDashboard() {
                             const subcatInp = document.getElementById(`inp_subcat_${product.id}`) as HTMLInputElement;
                             const descInp = document.getElementById(`inp_desc_${product.id}`) as HTMLTextAreaElement;
                             const matInp = document.getElementById(`inp_mat_${product.id}`) as HTMLInputElement;
-                            if (nameInp && priceInp && subcatInp && descInp && matInp) {
+                            const detailsInp = document.getElementById(`inp_details_${product.id}`) as HTMLInputElement;
+                            if (nameInp && priceInp && subcatInp && descInp && matInp && detailsInp) {
                               handleUpdateProduct(
                                 product.id,
                                 nameInp.value,
                                 priceInp.value,
                                 subcatInp.value,
                                 descInp.value,
-                                matInp.value
+                                matInp.value,
+                                detailsInp.value
                               );
                             }
                           }}

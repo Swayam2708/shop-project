@@ -229,6 +229,21 @@ export default function Home() {
 
   // Load all customizations from database on mount
   useEffect(() => {
+    // Read search param on mount
+    if (typeof window !== "undefined") {
+      const searchParams = new URLSearchParams(window.location.search);
+      const query = searchParams.get("search");
+      if (query) {
+        setSearchQuery(query);
+        setTimeout(() => {
+          const catalog = document.getElementById("new-arrivals") || document.getElementById("best-sellers");
+          if (catalog) {
+            catalog.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        }, 400);
+      }
+    }
+
     // Fetch products catalog from database
     fetch("/api/products", { cache: "no-store" })
       .then((res) => res.json())
@@ -757,24 +772,75 @@ export default function Home() {
             { id: "pendants", name: "Pendants", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=200&auto=format&fit=crop" },
             { id: "silver-jewellery", name: "Silver", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=200&auto=format&fit=crop" },
             { id: "gold-jewellery", name: "Gold", img: "https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=200&auto=format&fit=crop" },
-          ].map((cat) => (
-            <Link 
-              key={cat.id} 
-              href={`/category/${cat.id}`}
-              className="flex flex-col items-center gap-3 group shrink-0 snap-center cursor-pointer"
-            >
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border border-[#dfba73]/30 p-1 group-hover:border-[#dfba73] transition-all duration-300 transform group-hover:scale-105 overflow-hidden">
-                <img 
-                  src={cat.img} 
-                  alt={cat.name} 
-                  className="w-full h-full object-cover rounded-full"
-                />
+          ].map((cat) => {
+            const catName = customText[`cat_name_${cat.id}`] || cat.name;
+            const catImg = customizedImages[`cat_img_${cat.id}`] || cat.img;
+
+            return (
+              <div 
+                key={cat.id} 
+                className="flex flex-col items-center gap-3 group shrink-0 snap-center relative"
+              >
+                {isDesignMode ? (
+                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full border border-[#dfba73]/30 p-1 overflow-hidden">
+                    <img 
+                      src={catImg} 
+                      alt={catName} 
+                      className="w-full h-full object-cover rounded-full"
+                    />
+                    <label className="absolute inset-0 bg-neutral-950/80 flex flex-col items-center justify-center text-[#dfba73] cursor-pointer text-[7px] uppercase tracking-wider text-center p-1 font-bold z-10">
+                      <Upload className="w-4 h-4 mb-0.5" />
+                      Upload
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                              if (typeof reader.result === "string") {
+                                handleUploadImage(`cat_img_${cat.id}`, reader.result);
+                              }
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                      />
+                    </label>
+                  </div>
+                ) : (
+                  <Link href={`/category/${cat.id}`}>
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border border-[#dfba73]/30 p-1 group-hover:border-[#dfba73] transition-all duration-300 transform group-hover:scale-105 overflow-hidden cursor-pointer">
+                      <img 
+                        src={catImg} 
+                        alt={catName} 
+                        className="w-full h-full object-cover rounded-full"
+                      />
+                    </div>
+                  </Link>
+                )}
+
+                {isDesignMode ? (
+                  <span
+                    contentEditable={true}
+                    suppressContentEditableWarning
+                    onBlur={(e) => handleTextChange(`cat_name_${cat.id}`, e.currentTarget.textContent || "")}
+                    className="font-sans text-[10px] sm:text-xs font-bold uppercase tracking-wider text-neutral-800 dark:text-neutral-250 border border-dashed border-amber-500/40 px-1 rounded-sm cursor-text"
+                  >
+                    {catName}
+                  </span>
+                ) : (
+                  <Link href={`/category/${cat.id}`}>
+                    <span className="font-sans text-[10px] sm:text-xs font-bold uppercase tracking-wider text-neutral-800 dark:text-neutral-250 group-hover:text-[#dfba73] transition-colors cursor-pointer">
+                      {catName}
+                    </span>
+                  </Link>
+                )}
               </div>
-              <span className="font-sans text-[10px] sm:text-xs font-bold uppercase tracking-wider text-neutral-800 dark:text-neutral-250 group-hover:text-[#dfba73] transition-colors">
-                {cat.name}
-              </span>
-            </Link>
-          ))}
+            );
+          })}
         </div>
       </section>
 

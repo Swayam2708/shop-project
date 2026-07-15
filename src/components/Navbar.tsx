@@ -282,6 +282,10 @@ export default function Navbar({
                   if (setSearchQuery) {
                     setSearchQuery(e.target.value);
                   }
+                  if (typeof window !== "undefined" && window.location.pathname !== "/") {
+                    window.location.href = `/?search=${encodeURIComponent(e.target.value)}`;
+                    return;
+                  }
                   const catalog = document.getElementById("new-arrivals") || document.getElementById("best-sellers");
                   if (catalog) {
                     catalog.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -409,20 +413,25 @@ export default function Navbar({
         <div className={`border-t border-[#dfba73]/15 bg-neutral-950/95 py-2 md:py-3 transition-all duration-300 ${isScrolled ? "hidden md:block" : "block"}`}>
           <div className="max-w-7xl mx-auto px-6 flex items-center justify-start md:justify-center gap-6 md:gap-8 overflow-x-auto md:overflow-x-visible whitespace-nowrap scrollbar-none font-sans text-[11px] font-bold uppercase tracking-[0.18em] text-neutral-100/80">
             {[
-              { label: "All Jewellery", href: "/", cat: "all" },
-              { label: "Gold Jewellery", href: "/category/gold-jewellery", cat: "gold" },
-              { label: "Rings", href: "/category/rings", cat: "rings" },
-              { label: "Necklaces", href: "/category/necklaces", cat: "necklaces" },
-              { label: "Earrings", href: "/category/earrings", cat: "earrings" },
-              { label: "Bangles", href: "/category/bangles", cat: "bangles" },
-              { label: "Chains", href: "/category/chains", cat: "chains" },
-              { label: "Bracelets", href: "/category/bracelets", cat: "bracelets" },
-              { label: "Pendants", href: "/category/pendants", cat: "pendants" },
-              { label: "Silver Jewellery", href: "/category/silver-jewellery", cat: "silver" },
+              { label: "All Jewellery", href: "/#new-arrivals", cat: "all" },
+              { label: "Gold Edit", href: "/#best-sellers", cat: "rings" },
+              { label: "Diamond Edit", href: "/#best-sellers", cat: "necklaces" },
+              { label: "Earrings", href: "/#best-sellers", cat: "earrings" },
+              { label: "Rings", href: "/#best-sellers", cat: "rings" },
+              { label: "Daily Wear", href: "/#daily-wear", cat: "daily" },
+              { label: "Bridal", href: "/#bridal", cat: "bridal" },
+              { label: "Silver", href: "/#silver-collection", cat: "silver" },
+              { label: "Heritage", href: "/#about", cat: "about" },
+              { label: "Contact", href: "/#contact", cat: "contact" }
             ].map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
+                onClick={() => {
+                  if (setActiveCategory && item.cat !== "about" && item.cat !== "contact") {
+                    setActiveCategory(item.cat);
+                  }
+                }}
                 className={`hover:text-gold border-b border-transparent hover:border-gold pb-0.5 transition-all duration-300 ${
                   activeCategory === item.cat ? "text-gold border-gold" : ""
                 }`}
