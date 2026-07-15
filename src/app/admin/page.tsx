@@ -248,6 +248,18 @@ export default function AdminDashboard() {
   const [rateSilverInput, setRateSilverInput] = useState("92");
   const [activeTab, setActiveTab] = useState<"inquiries" | "products" | "logs" | "settings" | "udhaar" | "girvi" | "calculator">("inquiries");
 
+  // New product creation form states
+  const [newProdId, setNewProdId] = useState("");
+  const [newProdName, setNewProdName] = useState("");
+  const [newProdCategory, setNewProdCategory] = useState("new-arrivals");
+  const [newProdSubCategory, setNewProdSubCategory] = useState("Rings");
+  const [newProdPrice, setNewProdPrice] = useState("");
+  const [newProdMaterials, setNewProdMaterials] = useState("");
+  const [newProdDesc, setNewProdDesc] = useState("");
+  const [newProdDetails, setNewProdDetails] = useState("");
+  const [newProdImage, setNewProdImage] = useState("");
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
   // Mock visitor log feed
   const [visitorLogs, setVisitorLogs] = useState<any[]>([]);
 
@@ -709,6 +721,52 @@ export default function AdminDashboard() {
     } catch (err: any) {
       console.error("Failed to update product:", err);
       alert("Error updating product: " + err.message);
+    }
+  };
+
+  // Add a new product to the database
+  const handleCreateProduct = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newProdId || !newProdName || !newProdPrice) {
+      alert("Please fill in Product ID, Name, and Price.");
+      return;
+    }
+
+    try {
+      const cleanPrice = newProdPrice.replace(/[^0-9.]/g, "");
+      const res = await fetch("/api/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: newProdId,
+          name: newProdName,
+          category: newProdCategory,
+          subCategory: newProdSubCategory,
+          price: parseFloat(cleanPrice) || 0,
+          materials: newProdMaterials,
+          description: newProdDesc,
+          details: newProdDetails ? newProdDetails.split(",").map((d) => d.trim()) : [],
+          image: newProdImage || undefined,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        alert("New product card successfully added to database!");
+        setNewProdId("");
+        setNewProdName("");
+        setNewProdPrice("");
+        setNewProdMaterials("");
+        setNewProdDesc("");
+        setNewProdDetails("");
+        setNewProdImage("");
+        setIsFormOpen(false);
+        loadDashboardData();
+      } else {
+        alert("Failed to add product: " + data.error);
+      }
+    } catch (err: any) {
+      alert("Error adding product: " + err.message);
     }
   };
 
@@ -1612,6 +1670,173 @@ export default function AdminDashboard() {
                 <p className="font-sans text-xs text-neutral-400 mt-1">
                   Instantly edit product names, prices, categories, quick view descriptions, and gold photos.
                 </p>
+              </div>
+
+              {/* Add New Product Form Section */}
+              <div className="space-y-4">
+                <div className="flex justify-between items-center bg-neutral-900/60 border border-amber-500/10 p-4 rounded-sm">
+                  <div>
+                    <h4 className="font-serif text-base text-white">Need to expand your showroom catalog?</h4>
+                    <p className="font-sans text-[11px] text-neutral-400">Create new dynamic items with pricing, materials description, and photos.</p>
+                  </div>
+                  <button
+                    onClick={() => setIsFormOpen(!isFormOpen)}
+                    className="py-2 px-4 bg-[#dfba73] hover:bg-[#c5a059] text-neutral-950 font-sans text-xs font-bold tracking-wider uppercase transition-colors"
+                  >
+                    {isFormOpen ? "Hide Form" : "Add New Design"}
+                  </button>
+                </div>
+
+                {isFormOpen && (
+                  <form 
+                    onSubmit={handleCreateProduct}
+                    className="bg-neutral-900 border border-[#dfba73]/30 p-6 rounded-sm space-y-4 animate-slide-up"
+                  >
+                    <div className="border-b border-[#dfba73]/15 pb-2 mb-2">
+                      <h4 className="font-serif text-base text-[#dfba73]">Add New Product Card</h4>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <label className="block font-sans text-[9px] uppercase tracking-widest text-[#dfba73] font-bold mb-1">
+                          Product Code / ID (e.g. oj-013)
+                        </label>
+                        <input
+                          type="text"
+                          value={newProdId}
+                          onChange={(e) => setNewProdId(e.target.value)}
+                          placeholder="e.g. oj-013"
+                          required
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 outline-none text-xs text-white"
+                        />
+                      </div>
+                      <div>
+                        <label className="block font-sans text-[9px] uppercase tracking-widest text-[#dfba73] font-bold mb-1">
+                          Product Name
+                        </label>
+                        <input
+                          type="text"
+                          value={newProdName}
+                          onChange={(e) => setNewProdName(e.target.value)}
+                          placeholder="e.g. Traditional Gold Choker"
+                          required
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 outline-none text-xs text-white"
+                        />
+                      </div>
+                      <div>
+                        <label className="block font-sans text-[9px] uppercase tracking-widest text-[#dfba73] font-bold mb-1">
+                          Price (in INR)
+                        </label>
+                        <input
+                          type="text"
+                          value={newProdPrice}
+                          onChange={(e) => setNewProdPrice(e.target.value)}
+                          placeholder="e.g. 85000"
+                          required
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 outline-none text-xs text-white"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <label className="block font-sans text-[9px] uppercase tracking-widest text-[#dfba73] font-bold mb-1">
+                          Category Tag
+                        </label>
+                        <select
+                          value={newProdCategory}
+                          onChange={(e) => setNewProdCategory(e.target.value as any)}
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 outline-none text-xs text-white"
+                        >
+                          <option value="new-arrivals">New Arrivals</option>
+                          <option value="best-sellers">Best Sellers</option>
+                          <option value="bridal">Bridal</option>
+                          <option value="daily-wear">Daily Wear</option>
+                          <option value="silver">Silver Jewellery</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block font-sans text-[9px] uppercase tracking-widest text-[#dfba73] font-bold mb-1">
+                          Subcategory (Rings, Chains, etc.)
+                        </label>
+                        <input
+                          type="text"
+                          value={newProdSubCategory}
+                          onChange={(e) => setNewProdSubCategory(e.target.value)}
+                          placeholder="e.g. Necklaces"
+                          required
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 outline-none text-xs text-white"
+                        />
+                      </div>
+                      <div>
+                        <label className="block font-sans text-[9px] uppercase tracking-widest text-[#dfba73] font-bold mb-1">
+                          Gold Purity / Materials
+                        </label>
+                        <input
+                          type="text"
+                          value={newProdMaterials}
+                          onChange={(e) => setNewProdMaterials(e.target.value)}
+                          placeholder="e.g. 22k Solid Gold"
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 outline-none text-xs text-white"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block font-sans text-[9px] uppercase tracking-widest text-[#dfba73] font-bold mb-1">
+                          Product Description (for Quick View / Details page)
+                        </label>
+                        <textarea
+                          value={newProdDesc}
+                          onChange={(e) => setNewProdDesc(e.target.value)}
+                          placeholder="Write dynamic description..."
+                          className="w-full h-20 bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 outline-none text-xs text-white resize-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block font-sans text-[9px] uppercase tracking-widest text-[#dfba73] font-bold mb-1">
+                          Specifications Details (comma separated, e.g. Weight: 14g, Width: 5mm)
+                        </label>
+                        <textarea
+                          value={newProdDetails}
+                          onChange={(e) => setNewProdDetails(e.target.value)}
+                          placeholder="e.g. Weight: 12.5g, Diameter: 14cm"
+                          className="w-full h-20 bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 outline-none text-xs text-white resize-none"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block font-sans text-[9px] uppercase tracking-widest text-[#dfba73] font-bold mb-1">
+                        Mock Image URL (optional, defaults to gold necklace placeholder)
+                      </label>
+                      <input
+                        type="text"
+                        value={newProdImage}
+                        onChange={(e) => setNewProdImage(e.target.value)}
+                        placeholder="e.g. https://images.unsplash.com/..."
+                        className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 outline-none text-xs text-white"
+                      />
+                    </div>
+
+                    <div className="flex justify-end gap-3 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setIsFormOpen(false)}
+                        className="py-2.5 px-6 bg-neutral-950 border border-neutral-800 hover:bg-neutral-800 text-white font-sans text-xs font-bold uppercase transition-colors"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="py-2.5 px-6 bg-amber-500 hover:bg-amber-600 text-neutral-950 font-sans text-xs font-bold uppercase transition-colors"
+                      >
+                        Save Product Card
+                      </button>
+                    </div>
+                  </form>
+                )}
               </div>
 
               <div className="grid grid-cols-1 gap-6">

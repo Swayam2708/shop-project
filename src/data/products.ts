@@ -300,5 +300,53 @@ export const products: Product[] = [
     description: "Highly detailed miniature idol of Goddess Saraswati playing the veena, beautifully carved from 99.9% pure solid silver.",
     materials: "999 Fine Silver",
     details: ["Height: 3.0 inches", "Weight: 68g", "Hallmarked purity assurance", "Arrives in premium packaging"]
+  },
+  {
+    id: "oj-silver-013",
+    name: "Sterling Silver Royal Peacock Kada",
+    category: "silver",
+    subCategory: "Bracelets",
+    price: 245,
+    rating: 4.9,
+    image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=500&auto=format&fit=crop",
+    description: "An adjustable antique finish kada featuring double peacock head motifs and detailed silver wire carvings.",
+    materials: "925 Sterling Silver, Oxidized finish",
+    details: ["Diameter: 6.2cm (adjustable)", "Weight: 38g", "Traditional design", "Anti-tarnish coating"]
+  },
+  {
+    id: "oj-silver-014",
+    name: "Oxidized Silver Royal Peacock Jhumkas",
+    category: "silver",
+    subCategory: "Earrings",
+    price: 135,
+    rating: 4.8,
+    image: "https://images.unsplash.com/photo-1635767798638-3e25273a8236?q=80&w=500&auto=format&fit=crop",
+    description: "Traditional peacock-shaped jhumka earrings featuring delicate dome drops and mini silver bead hangings.",
+    materials: "925 Sterling Silver",
+    details: ["Length: 5.5cm", "Weight: 14g per pair", "Secure push back closure", "Hand-assembled links"]
+  },
+  {
+    id: "oj-silver-015",
+    name: "999 Fine Silver Lakshmi & Ganesha Combo Coin (50g)",
+    category: "silver",
+    subCategory: "Coins",
+    price: 220,
+    rating: 5.0,
+    image: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=500&auto=format&fit=crop",
+    description: "Heavy auspicious silver coin representing wealth and prosperity, embossed with Laxmi-Ganesh motifs.",
+    materials: "999 Fine Silver",
+    details: ["Weight: 50.0 grams", "Diameter: 50mm", "Govt approved assay mark", "Comes in premium wooden gift box"]
+  },
+  {
+    id: "oj-silver-016",
+    name: "Sterling Silver Delicate Choker Necklace",
+    category: "silver",
+    subCategory: "Necklaces",
+    price: 380,
+    rating: 4.7,
+    image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=500&auto=format&fit=crop",
+    description: "A gorgeous modern silver choker with teardrop silver dangles that sit beautifully on the collarbone.",
+    materials: "925 Sterling Silver",
+    details: ["Length: 14 inches + 2 inches extender", "Weight: 18.5g", "Lobster clasp lock", "BIS 925 stamped"]
   }
 ];
