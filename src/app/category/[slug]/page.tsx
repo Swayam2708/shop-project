@@ -7,8 +7,21 @@ import ProductCard from "@/components/ProductCard";
 import QuickViewModal from "@/components/QuickViewModal";
 import { products as initialProducts, Product } from "@/data/products";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, SlidersHorizontal, ChevronDown, Check, X, Shield, Clock, Sparkles } from "lucide-react";
+import { ArrowLeft, SlidersHorizontal, Check, X, Edit, Lock, RefreshCw, Star } from "lucide-react";
 import Link from "next/link";
+
+// Secure SHA-256 Client-Side Hashing Utility
+async function hashPasscode(input: string): Promise<string> {
+  if (typeof window === "undefined" || !window.crypto || !window.crypto.subtle) {
+    return input;
+  }
+  const encoder = new TextEncoder();
+  const data = encoder.encode(input);
+  const hashBuffer = await window.crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+}
 
 export default function CategoryPage() {
   const params = useParams();
@@ -22,6 +35,10 @@ export default function CategoryPage() {
   const [cart, setCart] = useState<{ product: Product; quantity: number }[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
+
+  // Design studio state variables
+  const [isDesignMode, setIsDesignMode] = useState(false);
+  const [isStudioOpen, setIsStudioOpen] = useState(false);
 
   // Filter criteria states
   const [maxPrice, setMaxPrice] = useState<number>(300000);
@@ -55,6 +72,10 @@ export default function CategoryPage() {
       .catch((err) => console.error("Category page failed to load products:", err));
 
     // Fetch customizations
+    fetchCustomContent();
+  }, []);
+
+  const fetchCustomContent = () => {
     fetch("/api/custom-content", { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
@@ -75,7 +96,7 @@ export default function CategoryPage() {
         }
       })
       .catch((err) => console.error("Category page failed to load custom overrides:", err));
-  }, []);
+  };
 
   // Save wishlist and cart updates locally
   useEffect(() => {
@@ -89,6 +110,68 @@ export default function CategoryPage() {
       localStorage.setItem("oj_cart", JSON.stringify(cart));
     }
   }, [cart]);
+
+  // Design studio authorization functions
+  const handleToggleDesignMode = async () => {
+    if (isDesignMode) {
+      setIsDesignMode(false);
+      return;
+    }
+
+    const enteredCode = window.prompt("Enter Owner Security Passcode to Edit Website:");
+    if (enteredCode === null) return;
+
+    const enteredHash = await hashPasscode(enteredCode);
+    const defaultHash = await hashPasscode("OJ2026");
+    const correctHash = customText["oj_admin_passcode"] || defaultHash;
+
+    if (enteredHash === correctHash) {
+      setIsDesignMode(true);
+    } else {
+      alert("Access Denied: Incorrect Security Passcode.");
+    }
+  };
+
+  // Save text changes to database
+  const handleTextChange = async (tid: string, newText: string) => {
+    setCustomText((prev) => ({ ...prev, [tid]: newText }));
+    try {
+      await fetch("/api/custom-content", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: `oj_custom_txt_${tid}`, value: newText }),
+      });
+    } catch (err) {
+      console.error("Category page failed to save text edit:", err);
+    }
+  };
+
+  // Set custom image and save to database
+  const handleUploadImage = async (tid: string, base64: string) => {
+    setCustomizedImages((prev) => ({ ...prev, [tid]: base64 }));
+    try {
+      await fetch("/api/custom-content", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: `oj_custom_img_${tid}`, value: base64 }),
+      });
+    } catch (err) {
+      console.error("Category page failed to save image upload:", err);
+    }
+  };
+
+  const handleResetAllEdits = async () => {
+    if (window.confirm("Are you sure you want to delete all text edits and custom photos, and restore initial defaults?")) {
+      try {
+        await fetch("/api/custom-content", { method: "DELETE" });
+      } catch (err) {
+        console.error("Failed to delete settings on server:", err);
+      }
+      setCustomizedImages({});
+      setCustomText({});
+      setIsDesignMode(false);
+    }
+  };
 
   // Map products to include database customizations
   const products = dbProducts.map((p) => ({
@@ -131,7 +214,7 @@ export default function CategoryPage() {
       if (p.category !== "silver") return false;
     } else if (slug !== "") {
       const pSub = p.subCategory.toLowerCase();
-      // Match singular/plural variances (e.g. rings -> Rings)
+      // Match singular/plural variances
       const matchSub = pSub === slug || 
                        pSub.replace("s", "") === slug.replace("s", "") ||
                        pSub.includes(slug) ||
@@ -168,7 +251,6 @@ export default function CategoryPage() {
         if (selectedWeight === "medium" && (weightVal < 5 || weightVal > 15)) return false;
         if (selectedWeight === "heavy" && weightVal <= 15) return false;
       } else {
-        // If weight not explicitly specified in details, fallback check
         return false;
       }
     }
@@ -437,7 +519,9 @@ export default function CategoryPage() {
                       onWishlistToggle={handleWishlistToggle}
                       onQuickView={handleOpenQuickView}
                       onAddToCart={handleAddToCart}
-                      isDesignMode={false}
+                      isDesignMode={isDesignMode}
+                      onEditText={handleTextChange}
+                      onUploadPhoto={handleUploadImage}
                       customText={customText}
                     />
                   ))}
@@ -499,6 +583,62 @@ export default function CategoryPage() {
         </div>
       </footer>
 
+      {/* Floating Design Studio Panel */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+        <AnimatePresence>
+          {isDesignMode && (
+            <motion.div
+              initial={{ opacity: 0, y: 15, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 15, scale: 0.95 }}
+              className="bg-neutral-950/95 border border-[#dfba73]/30 p-4 shadow-2xl backdrop-blur-md rounded-sm w-56 flex flex-col gap-2"
+            >
+              <div className="flex items-center justify-between border-b border-[#dfba73]/15 pb-2">
+                <span className="font-sans text-[9px] font-bold uppercase tracking-widest text-[#dfba73]">
+                  Boutique Studio
+                </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+              </div>
+              <p className="font-sans text-[10px] text-neutral-400 leading-normal">
+                Click any title or price directly to customize, or hover to replace images.
+              </p>
+              
+              <div className="flex gap-2 border-t border-[#dfba73]/20 pt-3">
+                <button
+                  onClick={handleResetAllEdits}
+                  className="flex-1 py-1.5 bg-neutral-900 border border-red-500/30 hover:bg-red-500/10 text-red-400 font-sans text-[9px] font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-1.5"
+                >
+                  <RefreshCw className="w-3.5 h-3.5" />
+                  Reset Defaults
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <button
+          onClick={handleToggleDesignMode}
+          className={`px-4 py-2.5 md:px-5 md:py-3 rounded-full shadow-2xl font-sans text-[10px] md:text-xs font-bold tracking-widest uppercase transition-all duration-300 flex items-center gap-2 border active:scale-[0.98] cursor-pointer ${
+            isDesignMode
+              ? "bg-red-600 border-red-500 text-white hover:bg-red-700 scale-105"
+              : "bg-[#dfba73] border-[#dfba73] text-neutral-950 hover:bg-[#c5a059] hover:scale-105"
+          }`}
+          title={isDesignMode ? "Exit Design Mode" : "Design Mode: Customize Website"}
+        >
+          {isDesignMode ? (
+            <>
+              <X className="w-4 h-4" />
+              Close Editor
+            </>
+          ) : (
+            <>
+              <Edit className="w-4 h-4" />
+              Edit Page
+            </>
+          )}
+        </button>
+      </div>
+
       {/* Quick View Modal */}
       <QuickViewModal
         product={selectedProduct}
@@ -508,7 +648,9 @@ export default function CategoryPage() {
         onWishlistToggle={handleWishlistToggle}
         onAddToCart={handleAddToCart}
         onInquiry={handleWhatsAppInquiry}
-        isDesignMode={false}
+        isDesignMode={isDesignMode}
+        onEditText={handleTextChange}
+        onUploadPhoto={handleUploadImage}
         customText={customText}
       />
 

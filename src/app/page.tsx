@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import {
   ArrowRight,
   Send,
@@ -729,6 +730,51 @@ export default function Home() {
             Scroll To Explore
           </span>
           <div className="w-px h-10 bg-gradient-to-b from-white/60 to-transparent animate-pulse" />
+        </div>
+      </section>
+
+      {/* Premium Category Circles Section */}
+      <section className="pt-16 pb-6 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto z-10 relative">
+        <div className="flex flex-col items-center text-center mb-8">
+          <span className="font-sans text-[10px] text-[#dfba73] tracking-[0.3em] uppercase font-bold block mb-1">
+            Bespoke Registry
+          </span>
+          <h2 className="font-serif text-2xl md:text-4xl font-light text-neutral-900 dark:text-neutral-100">
+            Browse By Category
+          </h2>
+          <div className="w-12 h-px bg-[#dfba73] mt-3" />
+        </div>
+        
+        <div className="flex items-center justify-start md:justify-center gap-6 md:gap-10 overflow-x-auto pb-4 scrollbar-none snap-x snap-mandatory">
+          {[
+            { id: "rings", name: "Rings", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=200&auto=format&fit=crop" },
+            { id: "necklaces", name: "Necklaces", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=200&auto=format&fit=crop" },
+            { id: "earrings", name: "Earrings", img: "https://images.unsplash.com/photo-1635767798638-3e25273a8236?q=80&w=200&auto=format&fit=crop" },
+            { id: "chains", name: "Chains", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=200&auto=format&fit=crop" },
+            { id: "bridal", name: "Bridal", img: "https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=200&auto=format&fit=crop" },
+            { id: "bangles", name: "Bangles", img: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=200&auto=format&fit=crop" },
+            { id: "bracelets", name: "Bracelets", img: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=200&auto=format&fit=crop" },
+            { id: "pendants", name: "Pendants", img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=200&auto=format&fit=crop" },
+            { id: "silver-jewellery", name: "Silver", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=200&auto=format&fit=crop" },
+            { id: "gold-jewellery", name: "Gold", img: "https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=200&auto=format&fit=crop" },
+          ].map((cat) => (
+            <Link 
+              key={cat.id} 
+              href={`/category/${cat.id}`}
+              className="flex flex-col items-center gap-3 group shrink-0 snap-center cursor-pointer"
+            >
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border border-[#dfba73]/30 p-1 group-hover:border-[#dfba73] transition-all duration-300 transform group-hover:scale-105 overflow-hidden">
+                <img 
+                  src={cat.img} 
+                  alt={cat.name} 
+                  className="w-full h-full object-cover rounded-full"
+                />
+              </div>
+              <span className="font-sans text-[10px] sm:text-xs font-bold uppercase tracking-wider text-neutral-800 dark:text-neutral-250 group-hover:text-[#dfba73] transition-colors">
+                {cat.name}
+              </span>
+            </Link>
+          ))}
         </div>
       </section>
 
