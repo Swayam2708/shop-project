@@ -2530,13 +2530,13 @@ export default function AdminDashboard() {
                             })}
                           {udhaarRecords.filter((rec) => {
                             const query = udhaarSearchQuery.toLowerCase();
-                            const matchesName = rec.name.toLowerCase().includes(query);
-                            const matchesSonOf = rec.sonOf.toLowerCase().includes(query);
-                            const matchesPhone = rec.phone.toLowerCase().includes(query);
-                            const matchesVillage = rec.village.toLowerCase().includes(query);
-                            const matchesDate = rec.date.toLowerCase().includes(query);
-                            const matchesOrnament = rec.ornament.toLowerCase().includes(query) || 
-                              (rec.ornaments && rec.ornaments.some(o => o.name.toLowerCase().includes(query)));
+                            const matchesName = (rec.name || "").toLowerCase().includes(query);
+                            const matchesSonOf = (rec.sonOf || "").toLowerCase().includes(query);
+                            const matchesPhone = (rec.phone || "").toLowerCase().includes(query);
+                            const matchesVillage = (rec.village || "").toLowerCase().includes(query);
+                            const matchesDate = (rec.date || "").toLowerCase().includes(query);
+                            const matchesOrnament = (rec.ornament || "").toLowerCase().includes(query) || 
+                              (rec.ornaments && rec.ornaments.some(o => (o.name || "").toLowerCase().includes(query)));
                             
                             return matchesName || matchesSonOf || matchesPhone || matchesVillage || matchesDate || matchesOrnament;
                           }).length === 0 && (
