@@ -1670,11 +1670,11 @@ export default function AdminDashboard() {
                         <div className="grid grid-cols-2 gap-4">
                           <div>
                             <label className="block font-sans text-[9px] uppercase tracking-widest text-[#dfba73] font-bold mb-1">
-                              Price (in USD)
+                              Price (in INR)
                             </label>
                             <input
                               type="text"
-                              defaultValue={`$${product.price.toLocaleString()}`}
+                              defaultValue={`₹${product.price.toLocaleString()}`}
                               id={`inp_price_${product.id}`}
                               className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 outline-none text-xs text-white"
                             />

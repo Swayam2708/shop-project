@@ -40,7 +40,7 @@ export default function QuickViewModal({
   // Customized text mappings
   const displayName = customText[`prod_name_${product.id}`] || product.name;
   const displaySubCat = customText[`prod_subcat_${product.id}`] || product.subCategory;
-  const displayPrice = customText[`prod_price_${product.id}`] || `$${product.price.toLocaleString()}`;
+  const displayPrice = customText[`prod_price_${product.id}`] || `₹${product.price.toLocaleString()}`;
   const displayDesc = customText[`prod_desc_${product.id}`] || product.description;
   const displayMaterials = customText[`prod_mat_${product.id}`] || product.materials;
 

@@ -575,7 +575,7 @@ export default function Navbar({
                           {item.name}
                         </h4>
                         <p className="font-sans text-xs text-gold font-semibold mt-1">
-                          ${item.price.toLocaleString()}
+                          ₹{item.price.toLocaleString()}
                         </p>
                         <div className="flex gap-3 mt-2">
                           <button

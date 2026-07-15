@@ -44,7 +44,7 @@ export default function ProductCard({
   // Get custom edits or fallbacks
   const displayName = customText[`prod_name_${product.id}`] || product.name;
   const displaySubCat = customText[`prod_subcat_${product.id}`] || product.subCategory;
-  const displayPrice = customText[`prod_price_${product.id}`] || `$${product.price.toLocaleString()}`;
+  const displayPrice = customText[`prod_price_${product.id}`] || `₹${product.price.toLocaleString()}`;
 
   return (
     <motion.div

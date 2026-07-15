@@ -456,7 +456,7 @@ export default function Home() {
   // Send WhatsApp Inquiry (connect dynamically to current WhatsApp Number)
   const handleWhatsAppInquiry = (product: Product, quantity: number = 1) => {
     const pName = customText[`prod_name_${product.id}`] || product.name;
-    const pPrice = customText[`prod_price_${product.id}`] || `$${product.price.toLocaleString()}`;
+    const pPrice = customText[`prod_price_${product.id}`] || `₹${product.price.toLocaleString()}`;
 
     const message = `Hello,\nI am interested in inquiring about your pure gold item:\n\n*Product:* ${pName}\n*ID:* ${product.id}\n*Quantity:* ${quantity}\n*Price:* ${pPrice}\n\nPlease share design details with me. Thank you!`;
     const encoded = encodeURIComponent(message);
@@ -1445,7 +1445,7 @@ export default function Home() {
                         onBlur={(e) => handleTextChange(`prod_price_${product.id}`, e.currentTarget.textContent || "")}
                         className={`font-sans text-sm text-[#dfba73] font-bold mt-1 ${editOutlineClass}`}
                       >
-                        {customText[`prod_price_${product.id}`] || `$${product.price.toLocaleString()}`}
+                        {customText[`prod_price_${product.id}`] || `₹${product.price.toLocaleString()}`}
                       </p>
                       <button
                         onClick={() => handleOpenQuickView(product)}
@@ -2432,8 +2432,16 @@ export default function Home() {
         </div>
 
         {/* Bottom border & copyright */}
-        <div className="max-w-7xl mx-auto border-t border-neutral-800 mt-16 pt-8 flex flex-col sm:flex-row items-center justify-between font-sans text-[11px] text-neutral-500">
-          <p>© 2026 Omar Jewellers OJ. All Rights Reserved.</p>
+        <div className="max-w-7xl mx-auto border-t border-neutral-800 mt-16 pt-8 flex flex-col sm:flex-row items-center justify-between font-sans text-[11px] text-neutral-500 gap-4">
+          <div>
+            <p>© 2026 Omar Jewellers OJ. All Rights Reserved.</p>
+            <p className="mt-1 text-neutral-500">
+              Developed by <span className="text-[#dfba73] font-semibold">Swayam Omar (Web Developer)</span>
+            </p>
+            <p className="mt-0.5 text-neutral-500">
+              For errors or issues with the site, contact: <span className="font-mono font-bold text-[#dfba73]">9580125697</span>
+            </p>
+          </div>
           <div className="flex gap-6 mt-4 sm:mt-0">
             <span className="hover:text-gold transition-colors cursor-pointer">Privacy Policy</span>
             <span className="hover:text-gold transition-colors cursor-pointer">Terms of Service</span>
