@@ -1141,7 +1141,7 @@ export default function AdminDashboard() {
           <form onSubmit={handleLogin} className="w-full space-y-6">
             <div>
               <label className="block text-[10px] uppercase tracking-widest text-amber-500 font-bold mb-2">
-                Owner Passcode (Default: OJ2026)
+                Owner Passcode
               </label>
               <input
                 type="password"

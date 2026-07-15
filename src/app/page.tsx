@@ -28,6 +28,19 @@ import ProductCard from "@/components/ProductCard";
 import QuickViewModal from "@/components/QuickViewModal";
 import { products as initialProducts, Product } from "@/data/products";
 
+// Secure SHA-256 Client-Side Hashing Utility
+async function hashPasscode(input: string): Promise<string> {
+  if (typeof window === "undefined" || !window.crypto || !window.crypto.subtle) {
+    return input;
+  }
+  const encoder = new TextEncoder();
+  const data = encoder.encode(input);
+  const hashBuffer = await window.crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+}
+
 // Decorative Golden Filigree Corner Scroll Component
 function GoldCorner({ className, flipX = false, flipY = false }: { className?: string; flipX?: boolean; flipY?: boolean }) {
   const transform = `${flipX ? "scaleX(-1)" : ""} ${flipY ? "scaleY(-1)" : ""}`.trim();
@@ -492,18 +505,22 @@ export default function Home() {
   };
 
   // Restrict Edit Website trigger to Owner Passcode
-  const handleToggleDesignMode = () => {
+  const handleToggleDesignMode = async () => {
     if (isDesignMode) {
       setIsDesignMode(false);
       return;
     }
 
     const enteredCode = window.prompt("Enter Owner Security Passcode to Edit Website:");
-    const correctCode = localStorage.getItem("oj_admin_passcode") || "OJ2026";
+    if (enteredCode === null) return;
 
-    if (enteredCode === correctCode) {
+    const enteredHash = await hashPasscode(enteredCode);
+    const defaultHash = await hashPasscode("OJ2026");
+    const correctHash = customText["oj_admin_passcode"] || defaultHash;
+
+    if (enteredHash === correctHash) {
       setIsDesignMode(true);
-    } else if (enteredCode !== null) {
+    } else {
       alert("Access Denied: Incorrect Security Passcode.");
     }
   };
