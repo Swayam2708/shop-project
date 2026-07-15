@@ -49,11 +49,11 @@ export default function ProductCard({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-      className="group relative bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 hover:border-[#dfba73] dark:hover:border-[#dfba73] p-4 transition-[border-color,box-shadow] duration-300 ease-out flex flex-col justify-between hover:shadow-xl hover:shadow-gold/5 transform-gpu"
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="group relative bg-[#FAF9F5]/30 dark:bg-neutral-900/30 border border-neutral-200/50 dark:border-neutral-800/50 hover:border-[#dfba73]/60 p-4 transition-all duration-500 ease-out flex flex-col justify-between hover:shadow-2xl hover:shadow-[#dfba73]/8 hover:-translate-y-1 rounded-sm backdrop-blur-xs transform-gpu"
     >
       <div className="relative overflow-hidden aspect-square border border-gold/10 bg-neutral-950 mb-4">
         {/* Zoom image */}

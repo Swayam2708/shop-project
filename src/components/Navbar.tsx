@@ -38,6 +38,19 @@ export default function Navbar({
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
+  // Dynamic product loading inside Navbar for search suggestions
+  const [navbarProducts, setNavbarProducts] = useState<Product[]>([]);
+  useEffect(() => {
+    fetch("/api/products", { cache: "no-store" })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.products) {
+          setNavbarProducts(data.products);
+        }
+      })
+      .catch((err) => console.error("Navbar failed to prefetch catalog:", err));
+  }, []);
+
   // Real-time market rates simulation inside Navbar
   const [marketRates, setMarketRates] = useState({
     g24k: 7650,
@@ -114,6 +127,51 @@ export default function Navbar({
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Modern Fuzzy matching logic: e.g. "ring" will also fetch "earring" and "toe rings"
+  const getFuzzyFilteredProducts = () => {
+    if (!searchQuery) return [];
+    const query = searchQuery.toLowerCase().trim();
+
+    // Synonyms and related categories mapping
+    const getRelatedTerms = (q: string) => {
+      const terms = [q];
+      if (q.includes("ring") || q === "anguthi") {
+        terms.push("ring", "rings", "earrings", "toe rings", "bichhiya", "bichiya");
+      }
+      if (q.includes("ear") || q === "jhumka" || q === "earing") {
+        terms.push("earring", "earrings", "jhumkas", "studs", "drops");
+      }
+      if (q.includes("neck") || q === "haar" || q === "choker") {
+        terms.push("necklace", "necklaces", "choker", "pendant", "set", "sets");
+      }
+      if (q.includes("silver") || q === "chandi") {
+        terms.push("silver", "payal", "anklets", "bichhiya", "coin", "coins");
+      }
+      if (q.includes("gold") || q === "sona") {
+        terms.push("gold", "solid gold", "22k", "18k", "choker");
+      }
+      return terms;
+    };
+
+    const relatedTerms = getRelatedTerms(query);
+
+    return navbarProducts.filter((p) => {
+      const name = p.name.toLowerCase();
+      const sub = p.subCategory.toLowerCase();
+      const desc = p.description.toLowerCase();
+      const mat = p.materials.toLowerCase();
+
+      return relatedTerms.some((term) => 
+        name.includes(term) || 
+        sub.includes(term) || 
+        desc.includes(term) || 
+        mat.includes(term)
+      );
+    });
+  };
+
+  const searchResults = getFuzzyFilteredProducts();
 
   // Voice search using Web Speech API
   const startVoiceSearch = () => {
@@ -318,6 +376,62 @@ export default function Navbar({
                   <Mic className="w-4 h-4" />
                 </button>
               </div>
+
+              {/* Modern Search Suggestion Dropdown (Glassmorphism & Soft Shadows) */}
+              <AnimatePresence>
+                {searchQuery && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="absolute top-full left-0 right-0 mt-3 bg-neutral-950/95 border border-[#dfba73]/30 backdrop-blur-md shadow-2xl rounded-sm py-3 px-4 z-50 max-h-96 overflow-y-auto divide-y divide-neutral-900"
+                  >
+                    <div className="pb-2 mb-2 flex justify-between items-center">
+                      <span className="font-sans text-[8px] uppercase tracking-widest text-neutral-400 font-bold">
+                        Search Suggestions ({searchResults.length})
+                      </span>
+                    </div>
+
+                    {searchResults.length === 0 ? (
+                      <div className="py-6 text-center text-xs text-neutral-500 font-sans">
+                        No matches found. Try searching for "gold", "silver", "rings", etc.
+                      </div>
+                    ) : (
+                      <div className="space-y-2 pt-2">
+                        {searchResults.slice(0, 5).map((prod) => (
+                          <Link
+                            key={prod.id}
+                            href={`/product/${prod.id}`}
+                            onClick={() => setSearchQuery && setSearchQuery("")}
+                            className="flex items-center gap-3 p-1.5 hover:bg-white/5 rounded-sm transition-all duration-300 group/item cursor-pointer"
+                          >
+                            <div className="w-10 h-10 bg-neutral-900 border border-neutral-800 rounded-sm overflow-hidden shrink-0">
+                              <img
+                                src={prod.image}
+                                alt={prod.name}
+                                className="w-full h-full object-cover group-hover/item:scale-105 transition-transform duration-500"
+                              />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-sans text-[11px] font-medium text-white group-hover/item:text-[#dfba73] transition-colors truncate">
+                                {prod.name}
+                              </p>
+                              <p className="font-sans text-[9px] text-neutral-400 mt-0.5">
+                                {prod.subCategory} • {prod.materials}
+                              </p>
+                            </div>
+                            <div className="text-right shrink-0">
+                              <p className="font-serif text-[11px] text-[#dfba73] font-medium">
+                                ₹{prod.price.toLocaleString()}
+                              </p>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
 

@@ -68,7 +68,7 @@ export default function QuickViewModal({
             animate={{ opacity: 1, scale: 1, rotateX: 0, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, rotateX: -8, y: 15 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="relative w-full max-w-4xl bg-neutral-900 border border-[#dfba73]/25 shadow-2xl overflow-hidden z-10 grid grid-cols-1 md:grid-cols-2 rounded-sm transform-gpu"
+            className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto md:overflow-hidden bg-neutral-900 border border-[#dfba73]/25 shadow-2xl z-10 grid grid-cols-1 md:grid-cols-2 rounded-sm transform-gpu scrollbar-none"
           >
             {/* Close Button */}
             <motion.button
@@ -86,7 +86,7 @@ export default function QuickViewModal({
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="relative h-72 md:h-full bg-neutral-950 border-r border-[#dfba73]/15 overflow-hidden"
+              className="relative h-60 md:h-[450px] bg-neutral-955 border-r border-[#dfba73]/15 overflow-hidden"
             >
               <img
                 src={product.image}
@@ -125,7 +125,7 @@ export default function QuickViewModal({
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.15 }}
-              className="p-6 md:p-8 flex flex-col justify-between max-h-[85vh] md:max-h-[600px] overflow-y-auto text-neutral-100"
+              className="p-4 md:p-6 flex flex-col justify-between md:h-[450px] overflow-y-auto text-neutral-100 scrollbar-none"
             >
               <div>
                 <div className="flex flex-col mb-1">

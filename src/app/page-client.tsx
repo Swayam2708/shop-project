@@ -212,6 +212,46 @@ export default function Home(props: {
   // Search input query state
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Modern Fuzzy matching logic: e.g. "ring" will also fetch "earring" and "toe rings"
+  const matchesFuzzySearch = (p: Product) => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase().trim();
+
+    const getRelatedTerms = (q: string) => {
+      const terms = [q];
+      if (q.includes("ring") || q === "anguthi") {
+        terms.push("ring", "rings", "earrings", "toe rings", "bichhiya", "bichiya");
+      }
+      if (q.includes("ear") || q === "jhumka" || q === "earing") {
+        terms.push("earring", "earrings", "jhumkas", "studs", "drops");
+      }
+      if (q.includes("neck") || q === "haar" || q === "choker") {
+        terms.push("necklace", "necklaces", "choker", "pendant", "set", "sets");
+      }
+      if (q.includes("silver") || q === "chandi") {
+        terms.push("silver", "payal", "anklets", "bichhiya", "coin", "coins");
+      }
+      if (q.includes("gold") || q === "sona") {
+        terms.push("gold", "solid gold", "22k", "18k", "choker");
+      }
+      return terms;
+    };
+
+    const relatedTerms = getRelatedTerms(query);
+
+    const name = (customText[`prod_name_${p.id}`] || p.name).toLowerCase();
+    const sub = p.subCategory.toLowerCase();
+    const desc = (customText[`prod_desc_${p.id}`] || p.description).toLowerCase();
+    const mat = (customText[`prod_mat_${p.id}`] || p.materials).toLowerCase();
+
+    return relatedTerms.some((term) =>
+      name.includes(term) ||
+      sub.includes(term) ||
+      desc.includes(term) ||
+      mat.includes(term)
+    );
+  };
+
   // State to hold customized images & text edits from localStorage
   const [customizedImages, setCustomizedImages] = useState<Record<string, string>>(props.initialCustomizedImages);
   const [customText, setCustomText] = useState<Record<string, string>>(props.initialCustomText);
@@ -557,14 +597,7 @@ export default function Home(props: {
       // Filter by subcategory (Rings, Necklaces, etc.) for both best-sellers and silver products
       return (p.category === "best-sellers" || p.category === "silver") && p.subCategory.toLowerCase() === activeCategory.toLowerCase();
     })
-    .filter((p) => {
-      if (!searchQuery) return true;
-      const name = (customText[`prod_name_${p.id}`] || p.name).toLowerCase();
-      const sub = p.subCategory.toLowerCase();
-      const desc = (customText[`prod_desc_${p.id}`] || p.description).toLowerCase();
-      const mat = (customText[`prod_mat_${p.id}`] || p.materials).toLowerCase();
-      return name.includes(searchQuery.toLowerCase()) || sub.includes(searchQuery.toLowerCase()) || desc.includes(searchQuery.toLowerCase()) || mat.includes(searchQuery.toLowerCase());
-    });
+    .filter(matchesFuzzySearch);
 
   // Dynamic values or defaults
   const customHeroBanner = customText["hero_banner_url"] || customizedImages["hero_banner"];
@@ -1229,14 +1262,7 @@ export default function Home(props: {
               const cleanActive = activeSilverSub.toLowerCase().replace(/[^a-zA-Z0-9]/g, "");
               return cleanSub === cleanActive;
             })
-            .filter((p) => {
-              if (!searchQuery) return true;
-              const name = (customText[`prod_name_${p.id}`] || p.name).toLowerCase();
-              const sub = p.subCategory.toLowerCase();
-              const desc = (customText[`prod_desc_${p.id}`] || p.description).toLowerCase();
-              const mat = (customText[`prod_mat_${p.id}`] || p.materials).toLowerCase();
-              return name.includes(searchQuery.toLowerCase()) || sub.includes(searchQuery.toLowerCase()) || desc.includes(searchQuery.toLowerCase()) || mat.includes(searchQuery.toLowerCase());
-            })
+            .filter(matchesFuzzySearch)
             .map((product) => (
               <ProductCard
                 key={product.id}
@@ -1295,14 +1321,7 @@ export default function Home(props: {
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8">
           {products
             .filter((p) => p.category === "new-arrivals")
-            .filter((p) => {
-              if (!searchQuery) return true;
-              const name = (customText[`prod_name_${p.id}`] || p.name).toLowerCase();
-              const sub = p.subCategory.toLowerCase();
-              const desc = (customText[`prod_desc_${p.id}`] || p.description).toLowerCase();
-              const mat = (customText[`prod_mat_${p.id}`] || p.materials).toLowerCase();
-              return name.includes(searchQuery.toLowerCase()) || sub.includes(searchQuery.toLowerCase()) || desc.includes(searchQuery.toLowerCase()) || mat.includes(searchQuery.toLowerCase());
-            })
+            .filter(matchesFuzzySearch)
             .map((product) => (
               <ProductCard
                 key={product.id}
