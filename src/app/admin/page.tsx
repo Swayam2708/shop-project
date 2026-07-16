@@ -1444,7 +1444,7 @@ export default function AdminDashboard() {
                 }`}
               >
                 <UserCheck className="w-4 h-4" />
-                Girvi Ledger (गिरवी)
+                Girvi Ledger
                 {girviRecords.filter(r => r.status === "active").length > 0 && (
                   <span className={`ml-auto w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
                     activeTab === "girvi" ? "bg-neutral-950 text-amber-500" : "bg-amber-500 text-neutral-950"
@@ -2423,7 +2423,7 @@ export default function AdminDashboard() {
                         type="text"
                         required
                         id="inp_festive_bless"
-                        defaultValue={customText["festive_card_bless"] || "शुभ लाभ"}
+                        defaultValue={customText["festive_card_bless"] || "Shubh Labh"}
                         className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2.5 px-4 text-white text-xs"
                       />
                     </div>
@@ -2596,7 +2596,7 @@ export default function AdminDashboard() {
                         type="text"
                         required
                         id="inp_nav_blessings"
-                        defaultValue={customText["nav_blessings"] || "ॐ श्री गणेशाय नमः • ॐ नमः शिवाय • शुभ लाभ"}
+                        defaultValue={customText["nav_blessings"] || "Om Shree Ganeshaya Namah • Om Namah Shivaya • Shubh Labh"}
                         className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs"
                       />
                     </div>
@@ -3024,7 +3024,7 @@ export default function AdminDashboard() {
                     Ledger Registry
                   </span>
                   <h2 className="font-serif text-3xl font-light text-white mt-1">
-                    Udhaar Notebook (खाता बही)
+                    Udhaar Notebook
                   </h2>
                   <p className="font-sans text-xs text-neutral-400 mt-1">
                     Track customer credits, village-wise accounts, gold weights, and record credit payments.
@@ -3422,7 +3422,7 @@ export default function AdminDashboard() {
                     Pledging Registry
                   </span>
                   <h2 className="font-serif text-3xl font-bold text-neutral-900 mt-1">
-                    Girvi Ledger (गिरवी बही)
+                    Girvi Ledger
                   </h2>
                   <p className="text-neutral-600 mt-1 text-sm">
                     Manage cash loans given against gold & silver ornaments, calculate live compound and simple interest, and archive closed cases.
@@ -3450,7 +3450,7 @@ export default function AdminDashboard() {
                 <div className="bg-white border border-slate-200 p-6 rounded-md space-y-6 shadow-sm">
                   <h3 className="font-serif text-lg text-amber-700 border-b border-slate-200 pb-2 flex items-center gap-2 font-bold">
                     <Lock className="w-4 h-4 text-amber-600" />
-                    Pledge Ornaments (गिरवी रखें)
+                    Pledge Ornaments
                   </h3>
 
                   <form id="girvi_form" onSubmit={handleAddGirvi} className="space-y-4">
@@ -3599,8 +3599,8 @@ export default function AdminDashboard() {
                           id="girvi_period"
                           className="w-full bg-white border border-slate-300 focus:border-amber-500 outline-none py-2.5 px-3 text-neutral-900 text-sm rounded-md shadow-sm"
                         >
-                          <option value="monthly">Per Month (मासिक)</option>
-                          <option value="yearly">Per Year (वार्षिक)</option>
+                          <option value="monthly">Per Month</option>
+                          <option value="yearly">Per Year</option>
                         </select>
                       </div>
                       <div>
@@ -3611,8 +3611,8 @@ export default function AdminDashboard() {
                           id="girvi_type"
                           className="w-full bg-white border border-slate-300 focus:border-amber-500 outline-none py-2.5 px-3 text-neutral-900 text-sm rounded-md shadow-sm"
                         >
-                          <option value="simple">Simple Interest (साधारण ब्याज)</option>
-                          <option value="compound">Compound Interest (चक्रवृद्धि ब्याज)</option>
+                          <option value="simple">Simple Interest</option>
+                          <option value="compound">Compound Interest</option>
                         </select>
                       </div>
                     </div>
@@ -3659,7 +3659,7 @@ export default function AdminDashboard() {
                   {/* Tab active entries registry */}
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <h4 className="font-serif text-xl font-bold text-neutral-900">Active Pledges Log (गिरवी चालू खाते)</h4>
+                      <h4 className="font-serif text-xl font-bold text-neutral-900">Active Pledges Log</h4>
                     </div>
 
                     <div className="relative w-full">
@@ -3696,7 +3696,7 @@ export default function AdminDashboard() {
                         <div className="bg-red-50 border border-red-200/85 p-4 rounded-md space-y-2 animate-fade-in shadow-sm">
                           <div className="flex items-center gap-2 text-red-800 font-bold text-xs uppercase tracking-wider">
                             <BookOpen className="w-4 h-4 shrink-0 text-red-600 animate-pulse" /> 
-                            <span>⚠️ Linked Store Udhaar Accounts Found (उधार खाता मिलान)</span>
+                            <span>⚠️ Linked Store Udhaar Accounts Found</span>
                           </div>
                           <div className="overflow-x-auto">
                             <table className="w-full text-left text-xs text-red-950 border-collapse">
@@ -3854,7 +3854,7 @@ export default function AdminDashboard() {
                   {/* History tab archive */}
                   <div className="space-y-4 pt-4 border-t border-slate-200">
                     <div>
-                      <h4 className="font-serif text-xl font-bold text-neutral-850">Closed Pledges History (गिरवी बंद खाते इतिहास)</h4>
+                      <h4 className="font-serif text-xl font-bold text-neutral-855">Closed Pledges History</h4>
                       <p className="text-xs text-neutral-500">History record log of closed or released gold pledges.</p>
                     </div>
 
@@ -3982,7 +3982,7 @@ export default function AdminDashboard() {
                   Utility Tools
                 </span>
                 <h2 className="font-serif text-3xl font-bold text-neutral-850 mt-1">
-                  Groww-Style Interest Calculator (ब्याज कैलकुलेटर)
+                  Groww-Style Interest Calculator
                 </h2>
                 <p className="text-xs text-neutral-500 mt-1">
                   Perform instant simple or compound interest calculations for loans, gold pledges, or customer credit accounts.
@@ -4031,8 +4031,8 @@ export default function AdminDashboard() {
                         onChange={(e) => setCalcPeriod(e.target.value as "monthly" | "yearly")}
                         className="w-full bg-slate-50 border border-slate-300 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none py-2 px-3 text-neutral-900 text-sm rounded-md transition-all"
                       >
-                        <option value="monthly">Monthly (% प्रति माह)</option>
-                        <option value="yearly">Yearly (% प्रति वर्ष)</option>
+                        <option value="monthly">Monthly (% per month)</option>
+                        <option value="yearly">Yearly (% per year)</option>
                       </select>
                     </div>
                     <div>
@@ -4044,8 +4044,8 @@ export default function AdminDashboard() {
                         onChange={(e) => setCalcType(e.target.value as "simple" | "compound")}
                         className="w-full bg-slate-50 border border-slate-300 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none py-2 px-3 text-neutral-900 text-sm rounded-md transition-all"
                       >
-                        <option value="simple">Simple (साधारण)</option>
-                        <option value="compound">Compound (चक्रवृद्धि)</option>
+                        <option value="simple">Simple</option>
+                        <option value="compound">Compound</option>
                       </select>
                     </div>
                   </div>
@@ -4402,7 +4402,7 @@ export default function AdminDashboard() {
                     {familyGroupId && (familyUdhaar.length > 0 || familyGirvi.length > 0) && (
                       <div className="space-y-3 bg-amber-50/20 border border-amber-500/10 p-5 rounded-lg">
                         <h4 className="font-serif text-base font-bold text-amber-800 flex items-center gap-1.5">
-                          <UserCheck className="w-4 h-4 text-amber-700" /> Linked Family Members Records (पारिवारिक खाता मिलान)
+                          <UserCheck className="w-4 h-4 text-amber-700" /> Linked Family Members Records
                         </h4>
                         <div className="bg-white border border-slate-200 rounded overflow-hidden">
                           <table className="w-full text-left text-xs border-collapse">
@@ -4964,14 +4964,14 @@ export default function AdminDashboard() {
                     {/* Loan & Interest Calculation Sheet */}
                     <div className="space-y-2">
                       <h4 className="text-[9px] uppercase tracking-widest text-[#dfba73] font-extrabold flex items-center gap-1.5">
-                        <TrendingUp className="w-3.5 h-3.5" /> Live Interest Calculations (ब्याज की गणना)
+                        <TrendingUp className="w-3.5 h-3.5" /> Live Interest Calculations
                       </h4>
                       <div className="bg-neutral-950/60 p-4 rounded border border-neutral-800/40 space-y-3.5">
                         {/* Custom Date Range Selector */}
                         <div className="grid grid-cols-2 gap-4 text-[10px] bg-neutral-900/50 p-2.5 rounded border border-neutral-800/80 mb-1">
                           <div>
                             <label className="block text-[8px] uppercase tracking-wider text-neutral-500 font-bold mb-1">
-                              From Date (ब्याज प्रारंभ तिथि)
+                              From Date
                             </label>
                             <input
                               type="date"
@@ -4982,7 +4982,7 @@ export default function AdminDashboard() {
                           </div>
                           <div>
                             <label className="block text-[8px] uppercase tracking-wider text-neutral-500 font-bold mb-1">
-                              To Date (ब्याज समाप्ति तिथि)
+                              To Date
                             </label>
                             <input
                               type="date"
