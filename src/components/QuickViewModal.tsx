@@ -91,7 +91,7 @@ export default function QuickViewModal({
               <img
                 src={product.image}
                 alt={displayName}
-                className="w-full h-full object-cover transition-transform duration-1000 hover:scale-105"
+                className="w-full h-full object-contain p-4 bg-neutral-950/20 transition-transform duration-1000 hover:scale-105"
               />
               
               {isDesignMode && onUploadPhoto && (
@@ -107,11 +107,28 @@ export default function QuickViewModal({
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       if (file) {
-                        const r = new FileReader();
-                        r.onloadend = () => {
-                          if (typeof r.result === "string") onUploadPhoto(product.id, r.result);
+                        const img = new Image();
+                        img.src = URL.createObjectURL(file);
+                        img.onload = () => {
+                          const maxDim = 800;
+                          let width = img.width;
+                          let height = img.height;
+                          if (width > maxDim || height > maxDim) {
+                            const ratio = Math.min(maxDim / width, maxDim / height);
+                            width = Math.round(width * ratio);
+                            height = Math.round(height * ratio);
+                          }
+                          const canvas = document.createElement("canvas");
+                          canvas.width = width;
+                          canvas.height = height;
+                          const ctx = canvas.getContext("2d");
+                          if (ctx) {
+                            ctx.drawImage(img, 0, 0, width, height);
+                            const compressed = canvas.toDataURL("image/jpeg", 0.7);
+                            onUploadPhoto(product.id, compressed);
+                          }
+                          URL.revokeObjectURL(img.src);
                         };
-                        r.readAsDataURL(file);
                       }
                     }}
                   />

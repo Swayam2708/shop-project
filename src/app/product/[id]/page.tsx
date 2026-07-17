@@ -296,16 +296,44 @@ export default function ProductDetailPage() {
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const compressImage = (file: File, maxDim: number = 800): Promise<string> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+        if (width > maxDim || height > maxDim) {
+          const ratio = Math.min(maxDim / width, maxDim / height);
+          width = Math.round(width * ratio);
+          height = Math.round(height * ratio);
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
+          resolve(compressedBase64);
+        } else {
+          resolve("");
+        }
+        URL.revokeObjectURL(img.src);
+      };
+      img.onerror = () => {
+        resolve("");
+      };
+    });
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (reader.result) {
-          handleUploadImage(product!.id, reader.result as string);
-        }
-      };
-      reader.readAsDataURL(file);
+      const compressed = await compressImage(file, 800);
+      if (compressed) {
+        handleUploadImage(product!.id, compressed);
+      }
     }
   };
 
@@ -369,7 +397,7 @@ export default function ProductDetailPage() {
               <img
                 src={activeImage || displayImage}
                 alt={displayName}
-                className="w-full h-full object-cover transition-transform duration-1000 hover:scale-105"
+                className="w-full h-full object-contain p-4 bg-neutral-950/20 transition-transform duration-1000 hover:scale-105"
               />
               
               {/* Design Mode Photo Uploader Overlay */}

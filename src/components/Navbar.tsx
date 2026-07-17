@@ -18,6 +18,8 @@ interface NavbarProps {
   setActiveCategory?: (cat: string) => void;
   searchQuery?: string;
   setSearchQuery?: (query: string) => void;
+  language?: "en" | "hi";
+  onLanguageChange?: (lang: "en" | "hi") => void;
 }
 
 export default function Navbar({
@@ -32,11 +34,15 @@ export default function Navbar({
   setActiveCategory,
   searchQuery = "",
   setSearchQuery,
+  language = "en",
+  onLanguageChange,
 }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+
+  const t = (en: string, hi: string) => (language === "hi" ? hi : en);
 
   // Dynamic product loading inside Navbar for search suggestions
   const [navbarProducts, setNavbarProducts] = useState<Product[]>([]);
@@ -349,7 +355,7 @@ export default function Navbar({
                     catalog.scrollIntoView({ behavior: "smooth", block: "start" });
                   }
                 }}
-                placeholder="Search for gold, diamonds, rings..."
+                placeholder={t("Search for gold, diamonds, rings...", "सोना, चांदी, अंगूठी खोजें...")}
                 className="w-full bg-[#FAF9F5] dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 focus:border-gold hover:border-neutral-400 dark:hover:border-neutral-600 outline-none rounded-full py-2 pl-11 pr-24 text-xs font-sans text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-500 dark:placeholder:text-neutral-400 transition-all shadow-sm"
               />
               {searchQuery && (
@@ -437,6 +443,15 @@ export default function Navbar({
 
           {/* Action Icons */}
           <div className="flex items-center space-x-4">
+            {/* Language Toggle */}
+            <button
+              onClick={() => onLanguageChange && onLanguageChange(language === "en" ? "hi" : "en")}
+              className="flex items-center gap-1.5 px-3 py-1 border border-gold/30 hover:border-gold rounded-full bg-gold/5 hover:bg-gold/15 text-neutral-800 dark:text-neutral-200 text-[10px] sm:text-xs font-serif font-bold uppercase transition-all duration-300 select-none cursor-pointer"
+              title="Change Language / भाषा बदलें"
+            >
+              <span>{language === "en" ? "हिंदी" : "EN"}</span>
+            </button>
+
             {/* Wishlist Button */}
             <button
               onClick={() => setIsWishlistOpen(true)}
@@ -527,19 +542,19 @@ export default function Navbar({
         <div className={`border-t border-[#dfba73]/15 bg-neutral-950/95 py-2 md:py-3 transition-all duration-300 ${isScrolled ? "hidden md:block" : "block"}`}>
           <div className="max-w-7xl mx-auto px-6 flex items-center justify-start md:justify-center gap-6 md:gap-8 overflow-x-auto md:overflow-x-visible whitespace-nowrap scrollbar-none font-sans text-[11px] font-bold uppercase tracking-[0.18em] text-neutral-100/80">
             {[
-              { label: "All Jewellery", href: "/#new-arrivals", cat: "all" },
-              { label: "Gold Edit", href: "/#best-sellers", cat: "rings" },
-              { label: "Diamond Edit", href: "/#best-sellers", cat: "necklaces" },
-              { label: "Earrings", href: "/#best-sellers", cat: "earrings" },
-              { label: "Rings", href: "/#best-sellers", cat: "rings" },
-              { label: "Daily Wear", href: "/#daily-wear", cat: "daily" },
-              { label: "Bridal", href: "/#bridal", cat: "bridal" },
-              { label: "Silver", href: "/#silver-collection", cat: "silver" },
-              { label: "Heritage", href: "/#about", cat: "about" },
-              { label: "Contact", href: "/#contact", cat: "contact" }
+              { label: t("All Jewellery", "सभी आभूषण"), href: "/#new-arrivals", cat: "all" },
+              { label: t("Gold Edit", "स्वर्ण आभूषण"), href: "/#best-sellers", cat: "rings" },
+              { label: t("Diamond Edit", "हीरे के आभूषण"), href: "/#best-sellers", cat: "necklaces" },
+              { label: t("Earrings", "झुमके/बालियां"), href: "/#best-sellers", cat: "earrings" },
+              { label: t("Rings", "अंगूठियां"), href: "/#best-sellers", cat: "rings" },
+              { label: t("Daily Wear", "डेली वियर"), href: "/#daily-wear", cat: "daily" },
+              { label: t("Bridal", "दुल्हन सेट"), href: "/#bridal", cat: "bridal" },
+              { label: t("Silver", "चांदी संग्रह"), href: "/#silver-collection", cat: "silver" },
+              { label: t("Heritage", "हमारी विरासत"), href: "/#about", cat: "about" },
+              { label: t("Contact", "संपर्क करें"), href: "/#contact", cat: "contact" }
             ].map((item) => (
               <Link
-                key={item.label}
+                key={item.href + item.label}
                 href={item.href}
                 onClick={() => {
                   if (setActiveCategory && item.cat !== "about" && item.cat !== "contact") {
@@ -603,17 +618,61 @@ export default function Navbar({
                 </div>
 
                 <div className="flex flex-col space-y-6 font-sans text-base font-semibold tracking-widest uppercase">
-                  {["home", "new-arrivals", "best-sellers", "bridal", "daily-wear", "about", "reviews", "gallery", "contact"].map((section) => (
-                    <a
-                      key={section}
-                      href={`#${section}`}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="text-neutral-900 dark:text-neutral-100 hover:text-gold transition-colors flex items-center justify-between"
+                  {["home", "new-arrivals", "best-sellers", "bridal", "daily-wear", "about", "reviews", "gallery", "contact"].map((section) => {
+                    const getMobileLabel = (s: string) => {
+                      const dict: Record<string, string> = {
+                        "home": t("Home", "होम"),
+                        "new-arrivals": t("New Arrivals", "नये उत्पाद"),
+                        "best-sellers": t("Best Sellers", "लोकप्रिय"),
+                        "bridal": t("Bridal Edit", "दुल्हन सेट"),
+                        "daily-wear": t("Daily Wear", "डेली वियर"),
+                        "about": t("Our Story", "परिचय"),
+                        "reviews": t("Reviews", "समीक्षाएं"),
+                        "gallery": t("Gallery", "गैलरी"),
+                        "contact": t("Contact Us", "संपर्क करें")
+                      };
+                      return dict[s] || s;
+                    };
+                    return (
+                      <a
+                        key={section}
+                        href={`#${section}`}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="text-neutral-900 dark:text-neutral-100 hover:text-gold transition-colors flex items-center justify-between"
+                      >
+                        {getMobileLabel(section)}
+                        <ArrowRight className="w-4 h-4 text-gold" />
+                      </a>
+                    );
+                  })}
+                </div>
+                {/* Language Switcher in Mobile Drawer */}
+                <div className="mt-8 pt-6 border-t border-gold/10 flex items-center justify-between">
+                  <span className="font-sans text-[10px] text-neutral-400 font-bold uppercase tracking-wider">
+                    Language / भाषा
+                  </span>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => onLanguageChange && onLanguageChange("en")}
+                      className={`px-3 py-1 rounded-sm border text-[10px] uppercase font-bold transition-all ${
+                        language === "en"
+                          ? "bg-gold text-neutral-950 border-gold"
+                          : "bg-transparent text-neutral-600 dark:text-neutral-400 border-neutral-300 dark:border-neutral-800"
+                      }`}
                     >
-                      {section.replace("-", " ")}
-                      <ArrowRight className="w-4 h-4 text-gold" />
-                    </a>
-                  ))}
+                      English
+                    </button>
+                    <button
+                      onClick={() => onLanguageChange && onLanguageChange("hi")}
+                      className={`px-3 py-1 rounded-sm border text-[10px] uppercase font-bold transition-all ${
+                        language === "hi"
+                          ? "bg-gold text-neutral-950 border-gold"
+                          : "bg-transparent text-neutral-600 dark:text-neutral-400 border-neutral-300 dark:border-neutral-800"
+                      }`}
+                    >
+                      हिंदी
+                    </button>
+                  </div>
                 </div>
               </div>
 

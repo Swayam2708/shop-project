@@ -2423,7 +2423,7 @@ export default function AdminDashboard() {
                         type="text"
                         required
                         id="inp_festive_bless"
-                        defaultValue={customText["festive_card_bless"] || "Shubh Labh"}
+                        defaultValue={customText["festive_card_bless"] || "शुभ लाभ"}
                         className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 outline-none py-2.5 px-4 text-white text-xs"
                       />
                     </div>
@@ -2596,7 +2596,7 @@ export default function AdminDashboard() {
                         type="text"
                         required
                         id="inp_nav_blessings"
-                        defaultValue={customText["nav_blessings"] || "Om Shree Ganeshaya Namah • Om Namah Shivaya • Shubh Labh"}
+                        defaultValue={customText["nav_blessings"] || "ॐ श्री गणेशाय नमः • ॐ नमः शिवाय • शुभ लाभ"}
                         className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 py-2 px-3 text-white text-xs"
                       />
                     </div>

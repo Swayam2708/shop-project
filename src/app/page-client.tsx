@@ -256,6 +256,32 @@ export default function Home(props: {
   const [customizedImages, setCustomizedImages] = useState<Record<string, string>>(props.initialCustomizedImages);
   const [customText, setCustomText] = useState<Record<string, string>>(props.initialCustomText);
   
+  // Dynamic multi-language translation state
+  const [language, setLanguage] = useState<"en" | "hi">("en");
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedLang = localStorage.getItem("oj_language") as "en" | "hi";
+      if (savedLang === "en" || savedLang === "hi") {
+        setLanguage(savedLang);
+      }
+    }
+  }, []);
+
+  const handleLanguageChange = (lang: "en" | "hi") => {
+    setLanguage(lang);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("oj_language", lang);
+    }
+  };
+
+  // Translation helper function. Resolves: 1. Owner customization override, 2. Hindi text (if language is hi), 3. English text (default)
+  const t = (enText: string, hiText: string, customKey?: string) => {
+    if (customKey && customText[customKey]) {
+      return customText[customKey];
+    }
+    return language === "hi" ? hiText : enText;
+  };
+
   // Custom WhatsApp number configuration
   const whatsAppNumber = customText["whats_app_number"] || "9936488845";
 
@@ -410,6 +436,38 @@ export default function Home(props: {
     }
   };
 
+  // Compress and resize image client side using Canvas API (max maxDim width/height, 70% quality JPEG)
+  const compressImage = (file: File, maxDim: number = 800): Promise<string> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+        if (width > maxDim || height > maxDim) {
+          const ratio = Math.min(maxDim / width, maxDim / height);
+          width = Math.round(width * ratio);
+          height = Math.round(height * ratio);
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
+          resolve(compressedBase64);
+        } else {
+          resolve("");
+        }
+        URL.revokeObjectURL(img.src);
+      };
+      img.onerror = () => {
+        resolve("");
+      };
+    });
+  };
+
   // Set custom image and save in server database
   const handleUploadImage = async (id: string, base64: string) => {
     setCustomizedImages((prev) => ({ ...prev, [id]: base64 }));
@@ -448,16 +506,13 @@ export default function Home(props: {
   };
 
   // Custom File Uploader for Section backgrounds/about section
-  const handleBannerUpload = (e: React.ChangeEvent<HTMLInputElement>, elementId: string) => {
+  const handleBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>, elementId: string) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (typeof reader.result === "string") {
-          handleUploadImage(elementId, reader.result);
-        }
-      };
-      reader.readAsDataURL(file);
+      const compressed = await compressImage(file, 1000); // Max 1000px for background banner images
+      if (compressed) {
+        handleUploadImage(elementId, compressed);
+      }
     }
   };
 
@@ -614,6 +669,8 @@ export default function Home(props: {
         setActiveCategory={setActiveCategory}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
+        language={language}
+        onLanguageChange={handleLanguageChange}
       />
 
       {/* Floating Ambient Glows */}
@@ -699,7 +756,7 @@ export default function Home(props: {
               onBlur={(e) => handleTextChange("hero_badge", e.currentTarget.textContent || "")}
               className={`font-sans text-xs md:text-sm tracking-[0.4em] uppercase text-[#dfba73] font-bold ${editOutlineClass}`}
             >
-              {customText["hero_badge"] || "EST. 2026 • PURE GOLD REDEFINED"}
+              {t("EST. 2026 • PURE GOLD REDEFINED", "स्था. २०२६ • शुद्ध स्वर्ण की नई परिभाषा", "hero_badge")}
             </span>
             <Sparkles className="w-4 h-4 text-[#dfba73]" />
           </motion.div>
@@ -716,7 +773,7 @@ export default function Home(props: {
               onBlur={(e) => handleTextChange("hero_title_l1", e.currentTarget.textContent || "")}
               className={`block mb-2 ${editOutlineClass}`}
             >
-              {customText["hero_title_l1"] || "Pure Golden Legacies,"}
+              {t("Pure Golden Legacies,", "शुद्ध स्वर्ण की धरोहर,", "hero_title_l1")}
             </span>
             <span
               contentEditable={isDesignMode}
@@ -724,7 +781,7 @@ export default function Home(props: {
               onBlur={(e) => handleTextChange("hero_title_l2", e.currentTarget.textContent || "")}
               className={`metallic-gold-shine font-normal ${editOutlineClass}`}
             >
-              {customText["hero_title_l2"] || "Sculpted for the Modern Era."}
+              {t("Sculpted for the Modern Era.", "आधुनिक युग के लिए निर्मित।", "hero_title_l2")}
             </span>
           </motion.h1>
 
@@ -740,7 +797,7 @@ export default function Home(props: {
               onBlur={(e) => handleTextChange("hero_subtitle", e.currentTarget.textContent || "")}
               className={editOutlineClass}
             >
-              {customText["hero_subtitle"] || "Discover Omar Jewellers OJ. Modern Gen Z aesthetics meet 18k and 22k pure solid gold, forming hand-finished silhouettes that whisper absolute luxury."}
+              {t("Discover Omar Jewellers OJ. Modern Gen Z aesthetics meet 18k and 22k pure solid gold, forming hand-finished silhouettes that whisper absolute luxury.", "ओमर ज्वैलर्स ओजे की खोज करें। आधुनिक सौंदर्य के साथ १८k और २२k शुद्ध ठोस सोना, हाथ से बने शानदार आभूषण जो परम विलासिता को दर्शाते हैं।", "hero_subtitle")}
             </span>
           </motion.p>
 
@@ -754,14 +811,14 @@ export default function Home(props: {
               href="#new-arrivals"
               className="px-5 py-3 md:px-8 md:py-4 bg-[#dfba73] hover:bg-[#c5a059] text-neutral-950 font-sans text-[10px] md:text-xs font-bold tracking-widest uppercase transition-all duration-300 rounded-sm flex items-center justify-center gap-2 shadow-lg shadow-[#dfba73]/10 hover:shadow-[#dfba73]/20"
             >
-              Explore Gold Arrivals
+              {t("Explore Gold Arrivals", "स्वर्ण आभूषण देखें")}
               <ArrowRight className="w-4 h-4" />
             </a>
             <button
               onClick={handleGeneralWhatsApp}
               className="px-5 py-3 md:px-8 md:py-4 border border-neutral-200/30 hover:border-[#dfba73] hover:bg-white/5 text-white font-sans text-[10px] md:text-xs font-bold tracking-widest uppercase transition-all duration-300 rounded-sm backdrop-blur-sm"
             >
-              Book Private Consultation
+              {t("Custom Commission", "ऑर्डर पर बनवाएं")}
             </button>
           </motion.div>
         </div>
@@ -769,7 +826,7 @@ export default function Home(props: {
         {/* Scroll Indicator */}
         <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2">
           <span className="font-sans text-[10px] tracking-[0.3em] uppercase text-white/60">
-            Scroll To Explore
+            {t("Scroll To Explore", "नीचे स्क्रॉल करें")}
           </span>
           <div className="w-px h-10 bg-gradient-to-b from-white/60 to-transparent animate-pulse" />
         </div>
@@ -779,10 +836,10 @@ export default function Home(props: {
       <section className="pt-16 pb-6 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto z-10 relative">
         <div className="flex flex-col items-center text-center mb-8">
           <span className="font-sans text-[10px] text-[#dfba73] tracking-[0.3em] uppercase font-bold block mb-1">
-            Bespoke Registry
+            {t("Bespoke Registry", "कस्टम आभूषण")}
           </span>
-          <h2 className="font-serif text-2xl md:text-4xl font-light text-neutral-900 dark:text-neutral-100">
-            Browse By Category
+          <h2 className="font-serif text-2xl md:text-4xl font-light text-[#dfba73]">
+            {t("Browse By Category", "श्रेणी अनुसार खोजें")}
           </h2>
           <div className="w-12 h-px bg-[#dfba73] mt-3" />
         </div>
@@ -800,7 +857,19 @@ export default function Home(props: {
             { id: "silver-jewellery", name: "Silver", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=200&auto=format&fit=crop" },
             { id: "gold-jewellery", name: "Gold", img: "https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=200&auto=format&fit=crop" },
           ].map((cat) => {
-            const catName = customText[`cat_name_${cat.id}`] || cat.name;
+            const catNameMap: Record<string, string> = {
+              "rings": t("Rings", "अंगूठियां"),
+              "necklaces": t("Necklaces", "हार / नेकलेस"),
+              "earrings": t("Earrings", "झुमके / बालियां"),
+              "chains": t("Chains", "चैन / माला"),
+              "bridal": t("Bridal", "दुल्हन सेट"),
+              "bangles": t("Bangles", "चूड़ियां"),
+              "bracelets": t("Bracelets", "ब्रेसलेट"),
+              "pendants": t("Pendants", "पेंडेंट"),
+              "silver-jewellery": t("Silver", "चांदी संग्रह"),
+              "gold-jewellery": t("Gold", "सोने के आभूषण")
+            };
+            const catName = customText[`cat_name_${cat.id}`] || catNameMap[cat.id] || cat.name;
             const catImg = customizedImages[`cat_img_${cat.id}`] || cat.img;
 
             return (
@@ -813,7 +882,7 @@ export default function Home(props: {
                     <img 
                       src={catImg} 
                       alt={catName} 
-                      className="w-full h-full object-cover rounded-full"
+                      className="w-full h-full object-cover aspect-square rounded-full"
                     />
                     <label className="absolute inset-0 bg-neutral-950/80 flex flex-col items-center justify-center text-[#dfba73] cursor-pointer text-[7px] uppercase tracking-wider text-center p-1 font-bold z-10">
                       <Upload className="w-4 h-4 mb-0.5" />
@@ -822,16 +891,13 @@ export default function Home(props: {
                         type="file"
                         accept="image/*"
                         className="hidden"
-                        onChange={(e) => {
+                        onChange={async (e) => {
                           const file = e.target.files?.[0];
                           if (file) {
-                            const reader = new FileReader();
-                            reader.onloadend = () => {
-                              if (typeof reader.result === "string") {
-                                handleUploadImage(`cat_img_${cat.id}`, reader.result);
-                              }
-                            };
-                            reader.readAsDataURL(file);
+                            const compressed = await compressImage(file, 400); // 400px maximum resolution for category circles
+                            if (compressed) {
+                              handleUploadImage(`cat_img_${cat.id}`, compressed);
+                            }
                           }
                         }}
                       />
@@ -843,7 +909,7 @@ export default function Home(props: {
                       <img 
                         src={catImg} 
                         alt={catName} 
-                        className="w-full h-full object-cover rounded-full"
+                        className="w-full h-full object-cover aspect-square rounded-full"
                       />
                     </div>
                   </Link>
@@ -880,19 +946,19 @@ export default function Home(props: {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-[#dfba73]/10">
             <div>
               <span className="font-sans text-[10px] text-[#dfba73] tracking-[0.3em] uppercase font-bold block">
-                Official Live Board
+                {t("Official Live Board", "आधिकारिक लाइव बोर्ड")}
               </span>
               <h3 className="font-serif text-2xl md:text-3xl tracking-wide text-neutral-900 dark:text-neutral-100 mt-1">
-                Today's Showroom Metal Rates
+                {t("Today's Showroom Metal Rates", "आज के शोरूम धातु भाव")}
               </h3>
               <p className="font-sans text-xs text-neutral-500 mt-1">
-                Daily verified market rates of Shahabad Chowk, Hardoi. (Assured 100% BIS Hallmarked Purity)
+                {t("Daily verified market rates of Shahabad Chowk, Hardoi. (Assured 100% BIS Hallmarked Purity)", "शाहाबाद चौक, हरदोई के दैनिक सत्यापित बाज़ार भाव। (१००% बीआईएस हॉलमार्क शुद्धता सुनिश्चित)")}
               </p>
             </div>
             <div className="text-right shrink-0">
               <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-green-500/5 border border-green-500/20 rounded-full text-[9px] text-green-600 dark:text-green-400 font-sans tracking-widest uppercase font-bold">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping" />
-                Live Updated
+                {t("Live Updated", "लाइव अपडेट")}
               </span>
             </div>
           </div>
@@ -901,7 +967,7 @@ export default function Home(props: {
             {/* 24K Gold Card */}
             <div className="bg-neutral-50/40 dark:bg-neutral-900/10 border border-[#dfba73]/10 p-6 rounded-sm relative group hover:border-[#dfba73]/30 transition-all duration-300 shadow-sm hover:shadow-luxury-gold">
               <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-neutral-400">Gold 24K</span>
-              <p className="text-[9px] font-sans text-neutral-500 mt-0.5">99.9% Pure Fine Gold</p>
+              <p className="text-[9px] font-sans text-neutral-500 mt-0.5">{t("99.9% Pure Fine Gold", "९९.९% शुद्ध सोना")}</p>
               <h4 className="font-serif text-xl sm:text-2xl text-neutral-900 dark:text-white mt-3 font-semibold">
                 ₹{Math.round(marketRates.g24k).toLocaleString()} <span className="text-xs text-neutral-400">/ g</span>
               </h4>
@@ -913,7 +979,7 @@ export default function Home(props: {
             {/* 22K Gold Card */}
             <div className="bg-neutral-50/40 dark:bg-neutral-900/10 border border-[#dfba73]/10 p-6 rounded-sm relative group hover:border-[#dfba73]/30 transition-all duration-300 shadow-sm hover:shadow-luxury-gold">
               <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-[#dfba73]">Gold 22K</span>
-              <p className="text-[9px] font-sans text-neutral-500 mt-0.5">91.6% Pure Jeweller Gold</p>
+              <p className="text-[9px] font-sans text-neutral-500 mt-0.5">{t("91.6% Pure Jeweller Gold", "९१.६% शुद्ध आभूषण सोना")}</p>
               <h4 className="font-serif text-xl sm:text-2xl text-neutral-900 dark:text-white mt-3 font-semibold">
                 ₹{Math.round(marketRates.g22k).toLocaleString()} <span className="text-xs text-neutral-400">/ g</span>
               </h4>
@@ -925,7 +991,7 @@ export default function Home(props: {
             {/* 18K Gold Card */}
             <div className="bg-neutral-50/40 dark:bg-neutral-900/10 border border-[#dfba73]/10 p-6 rounded-sm relative group hover:border-[#dfba73]/30 transition-all duration-300 shadow-sm hover:shadow-luxury-gold">
               <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-neutral-400">Gold 18K</span>
-              <p className="text-[9px] font-sans text-neutral-500 mt-0.5">75% Pure Designer Gold</p>
+              <p className="text-[9px] font-sans text-neutral-500 mt-0.5">{t("75% Pure Designer Gold", "७५% शुद्ध डिज़ाइनर सोना")}</p>
               <h4 className="font-serif text-xl sm:text-2xl text-neutral-900 dark:text-white mt-3 font-semibold">
                 ₹{Math.round(marketRates.g18k).toLocaleString()} <span className="text-xs text-neutral-400">/ g</span>
               </h4>
@@ -937,7 +1003,7 @@ export default function Home(props: {
             {/* 999 Silver Card */}
             <div className="bg-neutral-50/40 dark:bg-neutral-900/10 border border-[#dfba73]/10 p-6 rounded-sm relative group hover:border-[#dfba73]/30 transition-all duration-300 shadow-sm hover:shadow-luxury-gold">
               <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-neutral-400">Silver 999</span>
-              <p className="text-[9px] font-sans text-neutral-500 mt-0.5">99.9% Pure Fine Silver</p>
+              <p className="text-[9px] font-sans text-neutral-500 mt-0.5">{t("99.9% Pure Fine Silver", "९९.९% शुद्ध बढ़िया चांदी")}</p>
               <h4 className="font-serif text-xl sm:text-2xl text-neutral-900 dark:text-white mt-3 font-semibold">
                 ₹{Math.round(marketRates.s999).toLocaleString()} <span className="text-xs text-neutral-400">/ g</span>
               </h4>
@@ -948,8 +1014,8 @@ export default function Home(props: {
           </div>
 
           <div className="mt-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-[#dfba73]/10 text-[9px] uppercase tracking-widest text-neutral-400 font-sans font-semibold">
-            <span>Official Showroom Board • Omar Jewellers OJ</span>
-            <span className="text-neutral-500">Government Certified BIS Hallmark Standards</span>
+            <span>{t("Official Showroom Board • Omar Jewellers OJ", "आधिकारिक शोरूम बोर्ड • ओमर ज्वैलर्स ओजे")}</span>
+            <span className="text-neutral-500">{t("Government Certified BIS Hallmark Standards", "सरकारी प्रमाणित बीआईएस हॉलमार्क मानक")}</span>
           </div>
         </div>
       </section>
@@ -967,7 +1033,7 @@ export default function Home(props: {
               onBlur={(e) => handleTextChange("festive_sub", e.currentTarget.textContent || "")}
               className={`font-sans text-xs text-gold tracking-[0.4em] uppercase font-bold block ${editOutlineClass}`}
             >
-              {customText["festive_sub"] || "Exclusive Festive Invitation"}
+              {t("Exclusive Festive Invitation", "विशेष उत्सव आमंत्रण", "festive_sub")}
             </span>
             <h2 className="font-serif text-3xl md:text-5xl font-light text-white leading-tight">
               <span
@@ -976,7 +1042,7 @@ export default function Home(props: {
                 onBlur={(e) => handleTextChange("festive_title_l1", e.currentTarget.textContent || "")}
                 className={`block mb-1 ${editOutlineClass}`}
               >
-                {customText["festive_title_l1"] || "Celebrate OJ's Legacy"}
+                {t("Celebrate OJ's Legacy", "ओजे की विरासत मनाएं", "festive_title_l1")}
               </span>
               <span
                 contentEditable={isDesignMode}
@@ -984,7 +1050,7 @@ export default function Home(props: {
                 onBlur={(e) => handleTextChange("festive_title_l2", e.currentTarget.textContent || "")}
                 className={`metallic-gold-shine font-normal ${editOutlineClass}`}
               >
-                {customText["festive_title_l2"] || "Get 10% Off Making Charges"}
+                {t("Get 10% Off Making Charges", "बनवाई शुल्क पर १०% की छूट पाएं", "festive_title_l2")}
               </span>
             </h2>
             <p className="font-sans text-sm text-neutral-300 font-light leading-relaxed max-w-lg">
@@ -994,13 +1060,13 @@ export default function Home(props: {
                 onBlur={(e) => handleTextChange("festive_desc", e.currentTarget.textContent || "")}
                 className={editOutlineClass}
               >
-                {customText["festive_desc"] || "Indulge in the finest 18K and 22K hallmarked gold creations. This festive season, claim our digital Gift Card to enjoy an exclusive 10% discount on making charges for all bridal, daily wear, and custom order gold jewelry."}
+                {t("Indulge in the finest 18K and 22K hallmarked gold creations. This festive season, claim our digital Gift Card to enjoy an exclusive 10% discount on making charges for all bridal, daily wear, and custom order gold jewelry.", "उत्कृष्ट १८K और २२K हॉलमार्क वाले सोने के आभूषणों का आनंद लें। इस त्योहारी सीजन में, दुल्हन सेट, डेली वियर और कस्टम सोने के आभूषणों के बनवाई शुल्क पर १०% की विशेष छूट पाने के लिए हमारे डिजिटल गिफ्ट कार्ड का दावा करें।", "festive_desc")}
               </span>
             </p>
             
             <div className="flex flex-wrap gap-4 items-center pt-2">
               <div className="border border-gold/30 bg-gold/5 px-4 py-2 rounded-sm font-mono text-sm text-gold tracking-widest flex items-center gap-2">
-                CODE:{" "}
+                {t("CODE:", "कोड:")}{" "}
                 <span
                   contentEditable={isDesignMode}
                   suppressContentEditableWarning
@@ -1018,7 +1084,7 @@ export default function Home(props: {
                 }}
                 className="px-6 py-3 bg-gold hover:bg-[#b8912b] text-neutral-950 font-sans text-xs font-bold tracking-widest uppercase transition-all duration-300 rounded-sm shadow-md"
               >
-                Claim Gift Code
+                {t("Claim Gift Code", "गिफ्ट कोड प्राप्त करें")}
               </button>
             </div>
           </div>
@@ -1125,7 +1191,7 @@ export default function Home(props: {
             onBlur={(e) => handleTextChange("silver_sub", e.currentTarget.textContent || "")}
             className={`font-sans text-xs text-neutral-400 dark:text-[#dfba73] tracking-[0.3em] uppercase font-bold inline-block ${editOutlineClass}`}
           >
-            {customText["silver_sub"] || "925 Sterling Silver Edit"}
+            {t("925 Sterling Silver Edit", "९२५ स्टर्लिंग चांदी संग्रह", "silver_sub")}
           </span>
           <h2 
             contentEditable={isDesignMode}
@@ -1133,7 +1199,7 @@ export default function Home(props: {
             onBlur={(e) => handleTextChange("silver_title", e.currentTarget.textContent || "")}
             className={`font-serif text-3xl md:text-5xl font-light text-neutral-900 dark:text-neutral-100 mt-2 ${editOutlineClass}`}
           >
-            {customText["silver_title"] || "Sterling Silver Collection"}
+            {t("Sterling Silver Collection", "स्टर्लिंग चांदी संग्रह", "silver_title")}
           </h2>
           <p className="font-sans text-xs md:text-sm text-neutral-500 dark:text-neutral-400 mt-4 max-w-md mx-auto leading-relaxed">
             <span
@@ -1142,7 +1208,7 @@ export default function Home(props: {
               onBlur={(e) => handleTextChange("silver_desc", e.currentTarget.textContent || "")}
               className={editOutlineClass}
             >
-              {customText["silver_desc"] || "Pure hallmarked 925 sterling silver jewelry. Anti-tarnish, hypoallergenic creations crafted for brilliant luster."}
+              {t("Pure hallmarked 925 sterling silver jewelry. Anti-tarnish, hypoallergenic creations crafted for brilliant luster.", "शुद्ध हॉलमार्क ९२५ स्टर्लिंग चांदी के आभूषण। उत्कृष्ट चमक के साथ एंटी-टार्निश और हाइपोएलर्जेनिक कलाकृतियां।", "silver_desc")}
             </span>
           </p>
         </div>
@@ -1150,7 +1216,7 @@ export default function Home(props: {
         {/* Shop Silver by Space / Category Grid */}
         <div className="mb-12">
           <p className="text-center font-sans text-[10px] tracking-[0.25em] text-[#dfba73] uppercase font-bold mb-6">
-            Shop Silver by Category
+            {t("Shop Silver by Category", "श्रेणी अनुसार चांदी खरीदें")}
           </p>
           <div className="flex flex-nowrap items-center justify-start md:justify-center gap-4 sm:gap-6 overflow-x-auto scrollbar-none pb-4 px-4 w-full">
             {[
@@ -1163,8 +1229,26 @@ export default function Home(props: {
               { id: "rings", label: "Silver Rings", sub: "Designer bands", img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=200&auto=format&fit=crop" },
             ].map((space) => {
               const isActive = activeSilverSub === space.id;
-              const spaceLabel = customText[`sil_cat_label_${space.id}`] || space.label;
-              const spaceSub = customText[`sil_cat_sub_${space.id}`] || space.sub;
+              const silCatLabelMap: Record<string, string> = {
+                "all": t("All Silver", "सभी चांदी आभूषण"),
+                "coins": t("Pure Coins", "शुद्ध सिक्के"),
+                "idols": t("Devotional Idols", "देव मूर्तियां"),
+                "anklets": t("Traditional Payal", "पारंपरिक पायल"),
+                "toe-rings": t("Auspicious Bichhiya", "शुभ बिछिया"),
+                "pooja-set": t("Pooja Utensils", "पूजा बर्तन"),
+                "rings": t("Silver Rings", "चांदी की अंगूठियां")
+              };
+              const silCatSubMap: Record<string, string> = {
+                "all": t("Signature Ornaments", "हस्ताक्षर आभूषण"),
+                "coins": t("999 Fine Coins", "९९९ फाइन सिक्के"),
+                "idols": t("Laxmi & Ganesha", "लक्ष्मी और गणेश"),
+                "anklets": t("Musical Anklets", "झंकार पायल"),
+                "toe-rings": t("Toe Rings set", "बिछिया सेट"),
+                "pooja-set": t("Thali & Diyas", "थाली और दीये"),
+                "rings": t("Designer bands", "डिज़ाइनर बैंड")
+              };
+              const spaceLabel = customText[`sil_cat_label_${space.id}`] || silCatLabelMap[space.id] || space.label;
+              const spaceSub = customText[`sil_cat_sub_${space.id}`] || silCatSubMap[space.id] || space.sub;
               const spaceImg = customizedImages[`sil_cat_img_${space.id}`] || space.img;
 
               return (
@@ -1197,16 +1281,13 @@ export default function Home(props: {
                           type="file"
                           accept="image/*"
                           className="hidden"
-                          onChange={(e) => {
+                          onChange={async (e) => {
                             const file = e.target.files?.[0];
                             if (file) {
-                              const reader = new FileReader();
-                              reader.onloadend = () => {
-                                if (typeof reader.result === "string") {
-                                  handleUploadImage(`sil_cat_img_${space.id}`, reader.result);
-                                }
-                              };
-                              reader.readAsDataURL(file);
+                              const compressed = await compressImage(file, 400); // 400px for silver category items
+                              if (compressed) {
+                                handleUploadImage(`sil_cat_img_${space.id}`, compressed);
+                              }
                             }
                           }}
                         />
@@ -1347,7 +1428,7 @@ export default function Home(props: {
                 onBlur={(e) => handleTextChange("best_sell_sub", e.currentTarget.textContent || "")}
                 className={`font-sans text-xs text-[#dfba73] tracking-[0.3em] uppercase font-bold inline-block ${editOutlineClass}`}
               >
-                {customText["best_sell_sub"] || "Gold Statements"}
+                {t("Gold Statements", "स्वर्ण आभूषण", "best_sell_sub")}
               </span>
               <h2 
                 contentEditable={isDesignMode}
@@ -1355,7 +1436,7 @@ export default function Home(props: {
                 onBlur={(e) => handleTextChange("best_sell_title", e.currentTarget.textContent || "")}
                 className={`font-serif text-3xl md:text-5xl font-light text-neutral-900 dark:text-neutral-100 mt-2 ${editOutlineClass}`}
               >
-                {customText["best_sell_title"] || "Best Sellers"}
+                {t("Best Sellers", "लोकप्रिय संग्रह", "best_sell_title")}
               </h2>
             </div>
             {/* Category Filter Tabs */}
@@ -1370,7 +1451,12 @@ export default function Home(props: {
                       : "border-[#dfba73]/15 hover:border-[#dfba73] text-neutral-800 dark:text-neutral-200 hover:bg-[#dfba73]/5"
                   }`}
                 >
-                  {category}
+                  {category === "all" ? t("All", "सभी") :
+                   category === "rings" ? t("Rings", "अंगूठियां") :
+                   category === "necklaces" ? t("Necklaces", "नेकलेस/हार") :
+                   category === "earrings" ? t("Earrings", "झुमके") :
+                   category === "bracelets" ? t("Bracelets", "ब्रेसलेट") :
+                   category === "silver" ? t("Silver Edit", "चांदी संग्रह") : category}
                 </button>
               ))}
             </div>
@@ -1407,13 +1493,13 @@ export default function Home(props: {
       >
         <div className="text-center mb-12">
           <span className="font-sans text-xs text-[#dfba73] tracking-[0.3em] uppercase font-bold">
-            100% Certified Assurance
+            {t("100% Certified Assurance", "१००% प्रमाणित आश्वासन")}
           </span>
           <h2 className="font-serif text-3xl md:text-5xl font-light text-neutral-900 dark:text-neutral-100 mt-2">
-            Pure Gold Hallmarking
+            {t("Pure Gold Hallmarking", "शुद्ध स्वर्ण हॉलमार्किंग")}
           </h2>
           <p className="font-sans text-xs md:text-sm text-neutral-500 dark:text-neutral-400 mt-3 max-w-md mx-auto leading-relaxed">
-            At Omar Jewellers, transparency is our primary pledge. Every golden silhouette displays the official four-part BIS Hallmark credentials stamped on the reverse side of the jewelry.
+            {t("At Omar Jewellers, transparency is our primary pledge. Every golden silhouette displays the official four-part BIS Hallmark credentials stamped on the reverse side of the jewelry.", "ओमर ज्वैलर्स में, पारदर्शिता हमारी प्राथमिक प्रतिज्ञा है। प्रत्येक सोने के आभूषण के पीछे आधिकारिक चार-भाग वाला बीआईएस हॉलमार्क प्रमाण अंकित होता है।")}
           </p>
         </div>
 
@@ -1423,10 +1509,10 @@ export default function Home(props: {
               <div className="w-8 h-8 rounded-full bg-[#dfba73]/15 text-[#dfba73] flex items-center justify-center font-bold text-sm shrink-0 border border-[#dfba73]/20">
                 ▲
               </div>
-              <h4 className="font-serif text-sm text-neutral-900 dark:text-white font-medium">BIS Standard Mark</h4>
+              <h4 className="font-serif text-sm text-neutral-900 dark:text-white font-medium">{t("BIS Standard Mark", "बीआईएस मानक चिह्न")}</h4>
             </div>
             <p className="font-sans text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-              Official triangular mark verified by the Bureau of Indian Standards proving authenticity.
+              {t("Official triangular mark verified by the Bureau of Indian Standards proving authenticity.", "प्रामाणिकता साबित करने वाले भारतीय मानक ब्यूरो द्वारा सत्यापित आधिकारिक त्रिकोणीय चिह्न।")}
             </p>
           </div>
 
@@ -1435,10 +1521,10 @@ export default function Home(props: {
               <div className="w-8 h-8 rounded-full bg-[#dfba73]/15 text-[#dfba73] flex items-center justify-center font-serif text-xs font-bold shrink-0 border border-[#dfba73]/20">
                 916
               </div>
-              <h4 className="font-serif text-sm text-neutral-900 dark:text-white font-medium">Purity Grade (22K916)</h4>
+              <h4 className="font-serif text-sm text-neutral-900 dark:text-white font-medium">{t("Purity Grade (22K916)", "शुद्धता ग्रेड (22K916)")}</h4>
             </div>
             <p className="font-sans text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-              Confirms the precise percentage of pure solid gold content (e.g. 91.6% pure fine gold).
+              {t("Confirms the precise percentage of pure solid gold content (e.g. 91.6% pure fine gold).", "शुद्ध सोने की मात्रा के सटीक प्रतिशत की पुष्टि करता है (उदा. ९१.६% शुद्ध स्वर्ण)।")}
             </p>
           </div>
 
@@ -1447,10 +1533,10 @@ export default function Home(props: {
               <div className="w-8 h-8 rounded-full bg-[#dfba73]/15 text-[#dfba73] flex items-center justify-center font-sans text-xs font-bold shrink-0 border border-[#dfba73]/20">
                 ★
               </div>
-              <h4 className="font-serif text-sm text-neutral-900 dark:text-white font-medium">Assaying Centre Mark</h4>
+              <h4 className="font-serif text-sm text-neutral-900 dark:text-white font-medium">{t("Assaying Centre Mark", "सत्यापन केंद्र चिह्न")}</h4>
             </div>
             <p className="font-sans text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-              The unique logo stamp of the certified lab that tested and assayed the jewelry piece.
+              {t("The unique logo stamp of the certified lab that tested and assayed the jewelry piece.", "आभूषण के टुकड़े का परीक्षण और सत्यापन करने वाली प्रमाणित प्रयोगशाला का अनूठा लोगो स्टैम्प।")}
             </p>
           </div>
 
@@ -1459,10 +1545,10 @@ export default function Home(props: {
               <div className="w-8 h-8 rounded-full bg-[#dfba73]/15 text-[#dfba73] flex items-center justify-center font-mono text-[9px] font-bold shrink-0 border border-[#dfba73]/20">
                 HUID
               </div>
-              <h4 className="font-serif text-sm text-neutral-900 dark:text-white font-medium">Unique Alphanumeric ID</h4>
+              <h4 className="font-serif text-sm text-neutral-900 dark:text-white font-medium">{t("Unique Alphanumeric ID", "विशिष्ट अल्फ़ान्यूमेरिक आईडी (HUID)")}</h4>
             </div>
             <p className="font-sans text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-              A unique 6-digit laser ID code confirming trackable authenticity records in the government app.
+              {t("A unique 6-digit laser ID code confirming trackable authenticity records in the government app.", "सरकारी ऐप में ट्रैक करने योग्य प्रामाणिकता रिकॉर्ड की पुष्टि करने वाला एक अनूठा ६-अंकीय लेज़र आईडी कोड।")}
             </p>
           </div>
         </div>
@@ -1485,7 +1571,7 @@ export default function Home(props: {
               onBlur={(e) => handleTextChange("bridal_sub", e.currentTarget.textContent || "")}
               className={`font-sans text-xs text-[#dfba73] tracking-[0.3em] uppercase font-bold inline-block ${editOutlineClass}`}
             >
-              {customText["bridal_sub"] || "Golden Vows"}
+              {t("Golden Vows", "स्वर्ण प्रतिज्ञाएं", "bridal_sub")}
             </span>
             <h2 
               contentEditable={isDesignMode}
@@ -1493,7 +1579,7 @@ export default function Home(props: {
               onBlur={(e) => handleTextChange("bridal_title", e.currentTarget.textContent || "")}
               className={`font-serif text-4xl md:text-5xl font-light text-neutral-900 dark:text-neutral-100 mt-2 mb-6 ${editOutlineClass}`}
             >
-              {customText["bridal_title"] || "The Gold Bridal Collection"}
+              {t("The Gold Bridal Collection", "स्वर्ण दुल्हन आभूषण संग्रह", "bridal_title")}
             </h2>
             <p className="font-sans text-sm text-neutral-700 dark:text-neutral-300 font-light leading-relaxed mb-8">
               <span
@@ -1502,7 +1588,7 @@ export default function Home(props: {
                 onBlur={(e) => handleTextChange("bridal_desc", e.currentTarget.textContent || "")}
                 className={editOutlineClass}
               >
-                {customText["bridal_desc"] || "A celebration of royal golden heritage. Handcrafted in solid 22k gold, our bridal collections display exquisite traditional detailing reimagined in minimalist shapes for the contemporary bride."}
+                {t("A celebration of royal golden heritage. Handcrafted in solid 22k gold, our bridal collections display exquisite traditional detailing reimagined in minimalist shapes for the contemporary bride.", "शाही सोने की विरासत का उत्सव। ठोस २२k सोने में निर्मित, हमारे दुल्हन संग्रह आधुनिक दुल्हन के लिए सुरुचिपूर्ण पारंपरिक विवरण प्रदर्शित करते हैं।", "bridal_desc")}
               </span>
             </p>
             <div className="space-y-4 mb-8">
@@ -1517,7 +1603,7 @@ export default function Home(props: {
                     onBlur={(e) => handleTextChange("bridal_b1_title", e.currentTarget.textContent || "")}
                     className={`font-serif text-lg text-neutral-900 dark:text-neutral-100 inline-block ${editOutlineClass}`}
                   >
-                    {customText["bridal_b1_title"] || "BIS 916 Hallmarked Pure Gold"}
+                    {t("BIS 916 Hallmarked Pure Gold", "बीआईएस ९१६ हॉलमार्क शुद्ध सोना", "bridal_b1_title")}
                   </h4>
                   <p className="font-sans text-xs text-neutral-500 dark:text-neutral-400 mt-1">
                     <span
@@ -1526,7 +1612,7 @@ export default function Home(props: {
                       onBlur={(e) => handleTextChange("bridal_b1_desc", e.currentTarget.textContent || "")}
                       className={editOutlineClass}
                     >
-                      {customText["bridal_b1_desc"] || "Every wedding set is officially hallmarked and certified for purity and absolute assurance."}
+                      {t("Every wedding set is officially hallmarked and certified for purity and absolute assurance.", "प्रत्येक विवाह सेट को आधिकारिक रूप से हॉलमार्क और शुद्धता व पूर्ण आश्वासन के लिए प्रमाणित किया जाता है।", "bridal_b1_desc")}
                     </span>
                   </p>
                 </div>
@@ -1542,7 +1628,7 @@ export default function Home(props: {
                     onBlur={(e) => handleTextChange("bridal_b2_title", e.currentTarget.textContent || "")}
                     className={`font-serif text-lg text-neutral-900 dark:text-neutral-100 inline-block ${editOutlineClass}`}
                   >
-                    {customText["bridal_b2_title"] || "Hand-Carved Bespoke Commissions"}
+                    {t("Hand-Carved Bespoke Commissions", "हाथ से नक्काशीदार आभूषण", "bridal_b2_title")}
                   </h4>
                   <p className="font-sans text-xs text-neutral-500 dark:text-neutral-400 mt-1">
                     <span
@@ -1551,7 +1637,7 @@ export default function Home(props: {
                       onBlur={(e) => handleTextChange("bridal_b2_desc", e.currentTarget.textContent || "")}
                       className={editOutlineClass}
                     >
-                      {customText["bridal_b2_desc"] || "Co-create your dream gold collar alongside our master metalsmiths in private studio consultations."}
+                      {t("Co-create your dream gold collar alongside our master metalsmiths in private studio consultations.", "हमारे शिल्पकारों के साथ मिलकर निजी स्टूडियो परामर्श में अपने सपनों के सोने के आभूषण तैयार करें।", "bridal_b2_desc")}
                     </span>
                   </p>
                 </div>
@@ -1561,7 +1647,7 @@ export default function Home(props: {
               onClick={handleGeneralWhatsApp}
               className="inline-flex items-center gap-2 px-8 py-4 bg-[#dfba73] hover:bg-[#c5a059] text-neutral-950 font-sans text-xs font-bold tracking-widest uppercase transition-all duration-300"
             >
-              Consult a Gold Couture Expert
+              {t("Consult a Gold Couture Expert", "स्वर्ण आभूषण विशेषज्ञ से परामर्श करें")}
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -1587,14 +1673,13 @@ export default function Home(props: {
                           type="file"
                           accept="image/*"
                           className="hidden"
-                          onChange={(e) => {
+                          onChange={async (e) => {
                             const file = e.target.files?.[0];
                             if (file) {
-                              const r = new FileReader();
-                              r.onloadend = () => {
-                                if (typeof r.result === "string") handleUploadImage(product.id, r.result);
-                              };
-                              r.readAsDataURL(file);
+                              const compressed = await compressImage(file, 800); // 800px maximum resolution for catalog products
+                              if (compressed) {
+                                handleUploadImage(product.id, compressed);
+                              }
                             }
                           }}
                         />
@@ -1648,7 +1733,7 @@ export default function Home(props: {
             onBlur={(e) => handleTextChange("daily_sub", e.currentTarget.textContent || "")}
             className={`font-sans text-xs text-[#dfba73] tracking-[0.3em] uppercase font-bold inline-block ${editOutlineClass}`}
           >
-            {customText["daily_sub"] || "Everyday Gold"}
+            {t("Everyday Gold", "दैनिक स्वर्ण आभूषण", "daily_sub")}
           </span>
           <h2 
             contentEditable={isDesignMode}
@@ -1656,7 +1741,7 @@ export default function Home(props: {
             onBlur={(e) => handleTextChange("daily_title", e.currentTarget.textContent || "")}
             className={`font-serif text-3xl md:text-5xl font-light text-neutral-900 dark:text-neutral-100 mt-2 ${editOutlineClass}`}
           >
-            {customText["daily_title"] || "Daily Gold Catalog"}
+            {t("Daily Gold Catalog", "दैनिक स्वर्ण आभूषण कैटलॉग", "daily_title")}
           </h2>
           <p className="font-sans text-xs md:text-sm text-neutral-500 dark:text-neutral-400 mt-4 max-w-md mx-auto leading-relaxed">
             <span
@@ -1665,7 +1750,7 @@ export default function Home(props: {
               onBlur={(e) => handleTextChange("daily_desc", e.currentTarget.textContent || "")}
               className={editOutlineClass}
             >
-              {customText["daily_desc"] || "Dainty, stackable, and hypoallergenic. Solid gold essentials engineered for luxurious everyday comfort."}
+              {t("Dainty, stackable, and hypoallergenic. Solid gold essentials engineered for luxurious everyday comfort.", "नाज़ुक, स्टैकेबल और हाइपोएलर्जेनिक। दैनिक उपयोग के लिए निर्मित शानदार ठोस सोने के आभूषण।", "daily_desc")}
             </span>
           </p>
         </div>
@@ -1722,9 +1807,9 @@ export default function Home(props: {
             )}
             <div className="absolute inset-0 bg-gradient-to-tr from-neutral-950/40 via-transparent to-transparent" />
             <div className="absolute bottom-6 left-6 bg-[#FAF9F5]/95 dark:bg-neutral-950/95 border border-[#dfba73]/20 p-6 max-w-xs z-10">
-              <span className="font-serif text-2xl text-gold font-light block">22 Karat</span>
+              <span className="font-serif text-2xl text-gold font-light block">{t("22 Karat", "२२ कैरेट")}</span>
               <span className="font-sans text-xs tracking-wider uppercase text-neutral-600 dark:text-neutral-400">
-                Of Uncompromised Purity & Luster.
+                {t("Of Uncompromised Purity & Luster.", "बिना किसी समझौते के शुद्धता और चमक।")}
               </span>
             </div>
           </div>
@@ -1736,7 +1821,7 @@ export default function Home(props: {
               onBlur={(e) => handleTextChange("about_sub", e.currentTarget.textContent || "")}
               className={`font-sans text-xs text-[#dfba73] tracking-[0.3em] uppercase font-bold inline-block ${editOutlineClass}`}
             >
-              {customText["about_sub"] || "Gold Alchemy"}
+              {t("Gold Alchemy", "स्वर्ण रसायन", "about_sub")}
             </span>
             <h2 
               contentEditable={isDesignMode}
@@ -1744,7 +1829,7 @@ export default function Home(props: {
               onBlur={(e) => handleTextChange("about_title", e.currentTarget.textContent || "")}
               className={`font-serif text-4xl md:text-5xl font-light text-neutral-900 dark:text-neutral-100 mt-2 mb-6 ${editOutlineClass}`}
             >
-              {customText["about_title"] || "Omar Jewellers OJ"}
+              {t("Omar Jewellers OJ", "ओमर ज्वैलर्स ओजे", "about_title")}
             </h2>
             <p className="font-sans text-sm text-neutral-700 dark:text-neutral-300 font-light leading-relaxed mb-6">
               <span
@@ -1753,7 +1838,7 @@ export default function Home(props: {
                 onBlur={(e) => handleTextChange("about_desc1", e.currentTarget.textContent || "")}
                 className={editOutlineClass}
               >
-                {customText["about_desc1"] || "Founded on the values of trust, master craftsmanship, and absolute purity, **Omar Jewellers OJ** redefines precious metal couture for the self-expressive generation. We formulate our custom-alloyed **Champagne Gold** in-house to offer a warmer, softer metallic tone that glows beautifully on all skin tones."}
+                {t("Founded on the values of trust, master craftsmanship, and absolute purity, **Omar Jewellers OJ** redefines precious metal couture for the self-expressive generation. We formulate our custom-alloyed **Champagne Gold** in-house to offer a warmer, softer metallic tone that glows beautifully on all skin tones.", "विश्वास, उत्कृष्ट शिल्प कौशल और पूर्ण शुद्धता के मूल्यों पर स्थापित, ओमर ज्वैलर्स ओजे नई पीढ़ी के लिए कीमती धातु आभूषणों को फिर से परिभाषित करता है। हम एक गर्म, नरम धातु टोन की पेशकश करने के लिए इन-हाउस विशेष रूप से मिश्रित शैम्पेन गोल्ड तैयार करते हैं जो सभी त्वचा टोन पर खूबसूरती से चमकता है।", "about_desc1")}
               </span>
             </p>
             <p className="font-sans text-sm text-neutral-700 dark:text-neutral-300 font-light leading-relaxed mb-8">
@@ -1763,7 +1848,7 @@ export default function Home(props: {
                 onBlur={(e) => handleTextChange("about_desc2", e.currentTarget.textContent || "")}
                 className={editOutlineClass}
               >
-                {customText["about_desc2"] || "Every curve, twist, and hammered edge in our pure gold jewelry celebrates the fusion of traditional smithing heritage with modern Gen Z minimalism."}
+                {t("Every curve, twist, and hammered edge in our pure gold jewelry celebrates the fusion of traditional smithing heritage with modern Gen Z minimalism.", "हमारे शुद्ध सोने के आभूषणों में हर वक्र, घुमाव और नक्काशीदार किनारा आधुनिक अतिसूक्ष्मवाद के साथ पारंपरिक शिल्प कौशल के मिलन का उत्सव मनाता है।", "about_desc2")}
               </span>
             </p>
             <div className="grid grid-cols-3 gap-4 border-t border-[#dfba73]/10 pt-8">
@@ -1774,7 +1859,7 @@ export default function Home(props: {
                   onBlur={(e) => handleTextChange("about_stat1_val", e.currentTarget.textContent || "")}
                   className={`font-serif text-2xl text-neutral-900 dark:text-neutral-100 inline-block ${editOutlineClass}`}
                 >
-                  {customText["about_stat1_val"] || "100%"}
+                  {t("100%", "१००%", "about_stat1_val")}
                 </span>
                 <p 
                   contentEditable={isDesignMode}
@@ -1782,7 +1867,7 @@ export default function Home(props: {
                   onBlur={(e) => handleTextChange("about_stat1_lbl", e.currentTarget.textContent || "")}
                   className={`font-sans text-[10px] tracking-wider uppercase text-neutral-500 dark:text-neutral-400 mt-1 ${editOutlineClass}`}
                 >
-                  {customText["about_stat1_lbl"] || "Ethical Sourcing"}
+                  {t("Ethical Sourcing", "नैतिक स्रोत", "about_stat1_lbl")}
                 </p>
               </div>
               <div>
@@ -1792,7 +1877,7 @@ export default function Home(props: {
                   onBlur={(e) => handleTextChange("about_stat2_val", e.currentTarget.textContent || "")}
                   className={`font-serif text-2xl text-neutral-900 dark:text-neutral-100 inline-block ${editOutlineClass}`}
                 >
-                  {customText["about_stat2_val"] || "Custom"}
+                  {t("Custom", "कस्टम", "about_stat2_val")}
                 </span>
                 <p 
                   contentEditable={isDesignMode}
@@ -1800,7 +1885,7 @@ export default function Home(props: {
                   onBlur={(e) => handleTextChange("about_stat2_lbl", e.currentTarget.textContent || "")}
                   className={`font-sans text-[10px] tracking-wider uppercase text-neutral-500 dark:text-neutral-400 mt-1 ${editOutlineClass}`}
                 >
-                  {customText["about_stat2_lbl"] || "Hammered Finishes"}
+                  {t("Hammered Finishes", "नक्काशीदार फिनिश", "about_stat2_lbl")}
                 </p>
               </div>
               <div>
@@ -1810,7 +1895,7 @@ export default function Home(props: {
                   onBlur={(e) => handleTextChange("about_stat3_val", e.currentTarget.textContent || "")}
                   className={`font-serif text-2xl text-neutral-900 dark:text-neutral-100 inline-block ${editOutlineClass}`}
                 >
-                  {customText["about_stat3_val"] || "BIS 916"}
+                  {t("BIS 916", "बीआईएस ९१६", "about_stat3_val")}
                 </span>
                 <p 
                   contentEditable={isDesignMode}
@@ -1818,7 +1903,7 @@ export default function Home(props: {
                   onBlur={(e) => handleTextChange("about_stat3_lbl", e.currentTarget.textContent || "")}
                   className={`font-sans text-[10px] tracking-wider uppercase text-neutral-500 dark:text-neutral-400 mt-1 ${editOutlineClass}`}
                 >
-                  {customText["about_stat3_lbl"] || "Purity Hallmark"}
+                  {t("Purity Hallmark", "शुद्धता हॉलमार्क", "about_stat3_lbl")}
                 </p>
               </div>
             </div>
@@ -1852,14 +1937,13 @@ export default function Home(props: {
                   type="file"
                   accept="image/*"
                   className="hidden"
-                  onChange={(e) => {
+                  onChange={async (e) => {
                     const file = e.target.files?.[0];
                     if (file) {
-                      const r = new FileReader();
-                      r.onloadend = () => {
-                        if (typeof r.result === "string") handleUploadImage("owner_big_photo", r.result);
-                      };
-                      r.readAsDataURL(file);
+                      const compressed = await compressImage(file, 800); // 800px maximum resolution for portrait frame
+                      if (compressed) {
+                        handleUploadImage("owner_big_photo", compressed);
+                      }
                     }
                   }}
                 />
@@ -1871,10 +1955,10 @@ export default function Home(props: {
           {/* Founder Quotes */}
           <div className="space-y-6">
             <span className="font-sans text-xs text-[#dfba73] tracking-[0.3em] uppercase font-bold">
-              The Visionary
+              {t("The Visionary", "दूरदर्शी")}
             </span>
             <h2 className="font-serif text-4xl md:text-5xl font-light text-neutral-900 dark:text-neutral-100">
-              Meet Our Founder
+              {t("Meet Our Founder", "हमारे संस्थापक से मिलें")}
             </h2>
             
             <p className="font-sans text-sm text-neutral-700 dark:text-neutral-300 font-light leading-relaxed italic border-l-2 border-[#dfba73] pl-4">
@@ -1884,7 +1968,7 @@ export default function Home(props: {
                 onBlur={(e) => handleTextChange("founder_quote_txt", e.currentTarget.textContent || "")}
                 className={editOutlineClass}
               >
-                {customText["founder_quote_txt"] || "“Jewellery is not merely an ornament; it is a timestamp of your legacy. When we hand-craft pure gold at Omar Jewellers OJ, we are shaping stories of love, heritage, and pride that will be passed down for generations.”"}
+                {t("“Jewellery is not merely an ornament; it is a timestamp of your legacy. When we hand-craft pure gold at Omar Jewellers OJ, we are shaping stories of love, heritage, and pride that will be passed down for generations.”", "“आभूषण केवल एक आभूषण नहीं है; यह आपकी विरासत का एक इतिहास है। जब हम ओमर ज्वैलर्स ओजे में शुद्ध सोने को हाथ से तैयार करते हैं, तो हम प्यार, विरासत और गौरव की कहानियों को आकार दे रहे होते हैं जो पीढ़ियों तक हस्तांतरित होंगी।”", "founder_quote_txt")}
               </span>
             </p>
 
@@ -1895,7 +1979,7 @@ export default function Home(props: {
                 onBlur={(e) => handleTextChange("founder_quote_desc", e.currentTarget.textContent || "")}
                 className={editOutlineClass}
               >
-                {customText["founder_quote_desc"] || "Under the guidance of Mr. Yogesh Kumar Gupta, our boutique has remained committed to absolute transparency, sourcing only BIS 916 hallmarked solid gold alloyed in-house. We strive to provide a modern, minimalist design approach suited for Gen Z self-expression without losing our traditional showroom roots."}
+                {t("Under the guidance of Mr. Yogesh Kumar Gupta, our boutique has remained committed to absolute transparency, sourcing only BIS 916 hallmarked solid gold alloyed in-house. We strive to provide a modern, minimalist design approach suited for Gen Z self-expression without losing our traditional showroom roots.", "श्री योगेश कुमार गुप्ता के मार्गदर्शन में, हमारा बुटीक पूर्ण पारदर्शिता के लिए प्रतिबद्ध रहा है, केवल इन-हाउस मिश्रित बीआईएस ९१६ हॉलमार्क वाले ठोस सोने का उपयोग करता है। हम अपनी पारंपरिक शोरूम जड़ों को खोए बिना आधुनिक, न्यूनतम डिज़ाइन दृष्टिकोण प्रदान करने का प्रयास करते हैं।", "founder_quote_desc")}
               </span>
             </p>
 
@@ -1906,7 +1990,7 @@ export default function Home(props: {
                 onBlur={(e) => handleTextChange("founder_sign_name", e.currentTarget.textContent || "")}
                 className={`font-serif text-2xl text-[#dfba73] italic font-semibold ${editOutlineClass}`}
               >
-                {customText["founder_sign_name"] || "Yogesh Kumar Gupta"}
+                {t("Yogesh Kumar Gupta", "योगेश कुमार गुप्ता", "founder_sign_name")}
               </h4>
               <p 
                 contentEditable={isDesignMode}
@@ -1914,7 +1998,7 @@ export default function Home(props: {
                 onBlur={(e) => handleTextChange("founder_sign_title", e.currentTarget.textContent || "")}
                 className={`font-sans text-[10px] uppercase tracking-widest text-neutral-500 dark:text-neutral-400 mt-1 font-bold ${editOutlineClass}`}
               >
-                {customText["founder_sign_title"] || "Founder, Omar Jewellers OJ"}
+                {t("Founder, Omar Jewellers OJ", "संस्थापक, ओमर ज्वैलर्स ओजे", "founder_sign_title")}
               </p>
             </div>
           </div>
@@ -1937,7 +2021,7 @@ export default function Home(props: {
             onBlur={(e) => handleTextChange("rev_sub", e.currentTarget.textContent || "")}
             className={`font-sans text-xs text-[#dfba73] tracking-[0.3em] uppercase font-bold inline-block ${editOutlineClass}`}
           >
-            {customText["rev_sub"] || "Testimonials"}
+            {t("Testimonials", "प्रशंसापत्र", "rev_sub")}
           </span>
           <h2 
             contentEditable={isDesignMode}
@@ -1945,30 +2029,30 @@ export default function Home(props: {
             onBlur={(e) => handleTextChange("rev_title", e.currentTarget.textContent || "")}
             className={`font-serif text-3xl md:text-5xl font-light text-neutral-900 dark:text-neutral-100 mt-2 ${editOutlineClass}`}
           >
-            {customText["rev_title"] || "Gold Collector Reviews"}
+            {t("Gold Collector Reviews", "स्वर्ण संग्रहकर्ता समीक्षाएं", "rev_title")}
           </h2>
         </div>
 
         <div className="flex overflow-x-auto md:grid md:grid-cols-3 gap-6 md:gap-8 scrollbar-none snap-x snap-mandatory pb-4 w-full">
           {[
             {
-              name: "Amara K.",
-              role: "Verified Buyer",
-              text: "“The Hammered Choker is an absolute dream! It’s light yet makes me feel like royalty. The gold color is so warm and different from typical brassy jewelry. A must-have!”",
+              name: t("Amara K.", "अमारा के."),
+              role: t("Verified Buyer", "सत्यापित खरीदार"),
+              text: t("“The Hammered Choker is an absolute dream! It’s light yet makes me feel like royalty. The gold color is so warm and different from typical brassy jewelry. A must-have!”", "“नक्काशीदार चोकर एक बिल्कुल सपने जैसा है! यह हल्का है फिर भी मुझे शाही महसूस कराता है। सोने का रंग बहुत गर्म है और आम पीतल के आभूषणों से बिल्कुल अलग है। बेहद खूबसूरत!”", "rev_text_rev1"),
               img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop",
               id: "rev1"
             },
             {
-              name: "Rohit S.",
-              role: "Bespoke Bridal Client",
-              text: "“Stunning craftsmanship. We ordered the Temple Floral Collar and customized the hanging gold beads. The team shared design blueprints on WhatsApp and completed the set perfectly.”",
+              name: t("Rohit S.", "रोहित एस."),
+              role: t("Bespoke Bridal Client", "कस्टम दुल्हन सेट ग्राहक"),
+              text: t("“Stunning craftsmanship. We ordered the Temple Floral Collar and customized the hanging gold beads. The team shared design blueprints on WhatsApp and completed the set perfectly.”", "“शानदार शिल्प कौशल। हमने टेंपल फ्लोरल कॉलर का ऑर्डर दिया और लटकने वाले सोने के मोतियों को कस्टमाइज़ किया। टीम ने व्हाट्सएप पर डिज़ाइन ब्लूप्रिंट साझा किए और सेट को पूरी तरह से पूरा किया।”", "rev_text_rev2"),
               img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop",
               id: "rev2"
             },
             {
-              name: "Zoe L.",
-              role: "Daily Wear Fan",
-              text: "“I wear the Helix bracelet and sphere studs daily. They have been submerged in water, perfume, and still shine with that authentic luxury luster. OJ is my go-to for gold.”",
+              name: t("Zoe L.", "ज़ो एल."),
+              role: t("Daily Wear Fan", "दैनिक उपयोग आभूषण प्रशंसक"),
+              text: t("“I wear the Helix bracelet and sphere studs daily. They have been submerged in water, perfume, and still shine with that authentic luxury luster. OJ is my go-to for gold.”", "“मैं रोजाना हेलिक्स ब्रेसलेट और स्फीयर स्टड्स पहनती हूं। वे पानी और परफ्यूम के संपर्क में आने के बाद भी प्रामाणिक लग्जरी चमक के साथ चमकते हैं। सोने के लिए ओजे मेरा पसंदीदा है।”", "rev_text_rev3"),
               img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=200&auto=format&fit=crop",
               id: "rev3"
             }
@@ -2016,14 +2100,13 @@ export default function Home(props: {
                         type="file"
                         accept="image/*"
                         className="hidden"
-                        onChange={(e) => {
+                        onChange={async (e) => {
                           const file = e.target.files?.[0];
                           if (file) {
-                            const r = new FileReader();
-                            r.onloadend = () => {
-                              if (typeof r.result === "string") handleUploadImage(`rev_avatar_${review.id}`, r.result);
-                            };
-                            r.readAsDataURL(file);
+                            const compressed = await compressImage(file, 300); // 300px maximum resolution for avatar images
+                            if (compressed) {
+                              handleUploadImage(`rev_avatar_${review.id}`, compressed);
+                            }
                           }
                         }}
                       />
@@ -2070,7 +2153,7 @@ export default function Home(props: {
             onBlur={(e) => handleTextChange("showroom_sub", e.currentTarget.textContent || "")}
             className={`font-sans text-xs text-[#dfba73] tracking-[0.3em] uppercase font-bold inline-block ${editOutlineClass}`}
           >
-            {customText["showroom_sub"] || "Visit Our Showroom"}
+            {t("Visit Our Showroom", "हमारे शोरूम पर पधारें", "showroom_sub")}
           </span>
           <h2 
             contentEditable={isDesignMode}
@@ -2078,7 +2161,7 @@ export default function Home(props: {
             onBlur={(e) => handleTextChange("showroom_title", e.currentTarget.textContent || "")}
             className={`font-serif text-3xl md:text-5xl font-light text-neutral-900 dark:text-neutral-100 mt-2 ${editOutlineClass}`}
           >
-            {customText["showroom_title"] || "Shahabad Chowk Showroom"}
+            {t("Shahabad Chowk Showroom", "शाहाबाद चौक शोरूम", "showroom_title")}
           </h2>
           <p className="font-sans text-xs md:text-sm text-neutral-500 dark:text-neutral-400 mt-2">
             <span
@@ -2087,7 +2170,7 @@ export default function Home(props: {
               onBlur={(e) => handleTextChange("showroom_desc", e.currentTarget.textContent || "")}
               className={editOutlineClass}
             >
-              {customText["showroom_desc"] || "Experience the grandeur of traditional gold craftsmanship in our luxury physical boutique."}
+              {t("Experience the grandeur of traditional gold craftsmanship in our luxury physical boutique.", "हमारे लक्जरी बुटीक में पारंपरिक सोने की कारीगरी की भव्यता का अनुभव करें।", "showroom_desc")}
             </span>
           </p>
         </div>
@@ -2097,17 +2180,17 @@ export default function Home(props: {
             {
               id: "shop_photo_1",
               fallback: "https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=600&auto=format&fit=crop",
-              label: "Showroom Entrance"
+              label: t("Showroom Entrance", "शोरूम प्रवेश द्वार")
             },
             {
               id: "shop_photo_2",
               fallback: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=600&auto=format&fit=crop",
-              label: "Gold Ornaments Lounge"
+              label: t("Gold Ornaments Lounge", "स्वर्ण आभूषण लाउंज")
             },
             {
               id: "shop_photo_3",
               fallback: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=600&auto=format&fit=crop",
-              label: "Bridal Suite"
+              label: t("Bridal Suite", "दुल्हन सुइट")
             }
           ].map((item) => (
             <div
@@ -2141,14 +2224,13 @@ export default function Home(props: {
                     type="file"
                     accept="image/*"
                     className="hidden"
-                    onChange={(e) => {
+                    onChange={async (e) => {
                       const file = e.target.files?.[0];
                       if (file) {
-                        const r = new FileReader();
-                        r.onloadend = () => {
-                          if (typeof r.result === "string") handleUploadImage(item.id, r.result);
-                        };
-                        r.readAsDataURL(file);
+                        const compressed = await compressImage(file, 800); // 800px maximum resolution for showroom gallery items
+                        if (compressed) {
+                          handleUploadImage(item.id, compressed);
+                        }
                       }
                     }}
                   />
@@ -2168,7 +2250,7 @@ export default function Home(props: {
             onBlur={(e) => handleTextChange("ig_sub", e.currentTarget.textContent || "")}
             className={`font-sans text-xs text-[#dfba73] tracking-[0.3em] uppercase font-bold inline-block ${editOutlineClass}`}
           >
-            {customText["ig_sub"] || "Instagram Feed"}
+            {t("Instagram Feed", "इंस्टाग्राम फीड", "ig_sub")}
           </span>
           <h2 
             contentEditable={isDesignMode}
@@ -2176,7 +2258,7 @@ export default function Home(props: {
             onBlur={(e) => handleTextChange("ig_title", e.currentTarget.textContent || "")}
             className={`font-serif text-3xl md:text-5xl font-light text-neutral-900 dark:text-neutral-100 mt-2 ${editOutlineClass}`}
           >
-            {customText["ig_title"] || "#OmarJewellersOJ"}
+            {t("#OmarJewellersOJ", "#ओमरज्वैलर्सओजे", "ig_title")}
           </h2>
           <p className="font-sans text-xs md:text-sm text-neutral-500 dark:text-neutral-400 mt-2">
             <span
@@ -2185,7 +2267,7 @@ export default function Home(props: {
               onBlur={(e) => handleTextChange("ig_desc", e.currentTarget.textContent || "")}
               className={editOutlineClass}
             >
-              {customText["ig_desc"] || "Tag us in your gold stacks to be featured."}
+              {t("Tag us in your gold stacks to be featured.", "फीचर होने के लिए हमें अपने स्वर्ण आभूषणों के साथ टैग करें।", "ig_desc")}
             </span>
           </p>
         </div>
@@ -2220,14 +2302,13 @@ export default function Home(props: {
                     type="file"
                     accept="image/*"
                     className="hidden"
-                    onChange={(e) => {
+                    onChange={async (e) => {
                       const file = e.target.files?.[0];
                       if (file) {
-                        const r = new FileReader();
-                        r.onloadend = () => {
-                          if (typeof r.result === "string") handleUploadImage(`gallery_${idx}`, r.result);
-                        };
-                        r.readAsDataURL(file);
+                        const compressed = await compressImage(file, 800); // 800px maximum resolution for social gallery items
+                        if (compressed) {
+                          handleUploadImage(`gallery_${idx}`, compressed);
+                        }
                       }
                     }}
                   />
@@ -2259,7 +2340,7 @@ export default function Home(props: {
               onBlur={(e) => handleTextChange("cont_sub", e.currentTarget.textContent || "")}
               className={`font-sans text-xs text-[#dfba73] tracking-[0.3em] uppercase font-bold inline-block ${editOutlineClass}`}
             >
-              {customText["cont_sub"] || "Reach Out"}
+              {t("Reach Out", "संपर्क करें", "cont_sub")}
             </span>
             <h2 
               contentEditable={isDesignMode}
@@ -2267,7 +2348,7 @@ export default function Home(props: {
               onBlur={(e) => handleTextChange("cont_title", e.currentTarget.textContent || "")}
               className={`font-serif text-3xl md:text-5xl font-light text-neutral-900 dark:text-neutral-100 mt-2 mb-6 ${editOutlineClass}`}
             >
-              {customText["cont_title"] || "Connect With Us"}
+              {t("Connect With Us", "हमसे जुड़ें", "cont_title")}
             </h2>
             <p className="font-sans text-sm text-neutral-700 dark:text-neutral-300 font-light leading-relaxed mb-8">
               <span
@@ -2276,7 +2357,7 @@ export default function Home(props: {
                 onBlur={(e) => handleTextChange("cont_desc", e.currentTarget.textContent || "")}
                 className={editOutlineClass}
               >
-                {customText["cont_desc"] || "Have questions about custom sizing, gold weight, commissions, or booking a private viewing? Connect directly with our concierge team."}
+                {t("Have questions about custom sizing, gold weight, commissions, or booking a private viewing? Connect directly with our concierge team.", "कस्टम साइजिंग, सोने के वजन, ऑर्डर आभूषणों या निजी शोरूम विजिट बुकिंग के बारे में प्रश्न हैं? हमारी कंसीयर्ज टीम से सीधे जुड़ें।", "cont_desc")}
               </span>
             </p>
 
@@ -2296,14 +2377,13 @@ export default function Home(props: {
                       type="file"
                       accept="image/*"
                       className="hidden"
-                      onChange={(e) => {
+                      onChange={async (e) => {
                         const file = e.target.files?.[0];
                         if (file) {
-                          const r = new FileReader();
-                          r.onloadend = () => {
-                            if (typeof r.result === "string") handleUploadImage("owner_photo", r.result);
-                          };
-                          r.readAsDataURL(file);
+                          const compressed = await compressImage(file, 400); // 400px maximum resolution for smaller avatar
+                          if (compressed) {
+                            handleUploadImage("owner_photo", compressed);
+                          }
                         }
                       }}
                     />
@@ -2317,7 +2397,7 @@ export default function Home(props: {
                   onBlur={(e) => handleTextChange("owner_card_name", e.currentTarget.textContent || "")}
                   className={`font-serif text-base text-neutral-900 dark:text-neutral-100 font-bold ${editOutlineClass}`}
                 >
-                  {customText["owner_card_name"] || "Mr. Yogesh Kumar Gupta"}
+                  {t("Mr. Yogesh Kumar Gupta", "श्री योगेश कुमार गुप्ता", "owner_card_name")}
                 </h4>
                 <p 
                   contentEditable={isDesignMode}
@@ -2325,10 +2405,10 @@ export default function Home(props: {
                   onBlur={(e) => handleTextChange("owner_card_role", e.currentTarget.textContent || "")}
                   className={`font-sans text-[10px] uppercase tracking-wider text-[#dfba73] font-semibold ${editOutlineClass}`}
                 >
-                  {customText["owner_card_role"] || "Managing Director & Boutique Founder"}
+                  {t("Managing Director & Boutique Founder", "प्रबंध निदेशक और बुटीक संस्थापक", "owner_card_role")}
                 </p>
                 <p className="font-sans text-[10px] text-neutral-500 mt-0.5">
-                  Shahabad Hardoi gold showroom headquarters
+                  {t("Shahabad Hardoi gold showroom headquarters", "शाहाबाद हरदोई स्वर्ण शोरूम मुख्यालय")}
                 </p>
               </div>
             </div>
@@ -2343,7 +2423,7 @@ export default function Home(props: {
                     onBlur={(e) => handleTextChange("cont_lbl1", e.currentTarget.textContent || "")}
                     className={`font-serif text-base text-neutral-900 dark:text-neutral-100 inline-block ${editOutlineClass}`}
                   >
-                    {customText["cont_lbl1"] || "Our Boutique Address"}
+                    {t("Our Boutique Address", "हमारे बुटीक का पता", "cont_lbl1")}
                   </h4>
                   <p className="font-sans text-xs text-neutral-500 dark:text-neutral-400 mt-1">
                     <span
@@ -2352,7 +2432,7 @@ export default function Home(props: {
                       onBlur={(e) => handleTextChange("cont_val1", e.currentTarget.textContent || "")}
                       className={editOutlineClass}
                     >
-                      {customText["cont_val1"] || "Chowk, Shahabad, Hardoi, Uttar Pradesh, India"}
+                      {t("Chowk, Shahabad, Hardoi, Uttar Pradesh, India", "चौक, शाहाबाद, हरदोई, उत्तर प्रदेश, भारत", "cont_val1")}
                     </span>
                   </p>
                 </div>
@@ -2366,10 +2446,10 @@ export default function Home(props: {
                     onBlur={(e) => handleTextChange("cont_lbl2", e.currentTarget.textContent || "")}
                     className={`font-serif text-base text-neutral-900 dark:text-neutral-100 inline-block ${editOutlineClass}`}
                   >
-                    {customText["cont_lbl2"] || "Direct Showroom Contact"}
+                    {t("Direct Showroom Contact", "शोरूम से सीधा संपर्क", "cont_lbl2")}
                   </h4>
                   <p className="font-sans text-xs text-neutral-500 dark:text-neutral-400 mt-1">
-                    WhatsApp: +91 {whatsAppNumber}
+                    {t("WhatsApp:", "व्हाट्सएप:")} +91 {whatsAppNumber}
                   </p>
                 </div>
               </div>
@@ -2382,7 +2462,7 @@ export default function Home(props: {
                     onBlur={(e) => handleTextChange("cont_lbl3", e.currentTarget.textContent || "")}
                     className={`font-serif text-base text-neutral-900 dark:text-neutral-100 inline-block ${editOutlineClass}`}
                   >
-                    {customText["cont_lbl3"] || "Email Support"}
+                    {t("Email Support", "ईमेल सहायता", "cont_lbl3")}
                   </h4>
                   <p className="font-sans text-xs text-neutral-500 dark:text-neutral-400 mt-1">
                     <span
@@ -2391,7 +2471,7 @@ export default function Home(props: {
                       onBlur={(e) => handleTextChange("cont_val3", e.currentTarget.textContent || "")}
                       className={editOutlineClass}
                     >
-                      {customText["cont_val3"] || "concierge@omarjewellers.com"}
+                      {t("concierge@omarjewellers.com", "concierge@omarjewellers.com", "cont_val3")}
                     </span>
                   </p>
                 </div>
@@ -2405,7 +2485,7 @@ export default function Home(props: {
                     onBlur={(e) => handleTextChange("cont_lbl4", e.currentTarget.textContent || "")}
                     className={`font-serif text-base text-neutral-900 dark:text-neutral-100 inline-block ${editOutlineClass}`}
                   >
-                    {customText["cont_lbl4"] || "Boutique Hours"}
+                    {t("Boutique Hours", "बुटीक का समय", "cont_lbl4")}
                   </h4>
                   <p className="font-sans text-xs text-neutral-500 dark:text-neutral-400 mt-1">
                     <span
@@ -2414,7 +2494,7 @@ export default function Home(props: {
                       onBlur={(e) => handleTextChange("cont_val4", e.currentTarget.textContent || "")}
                       className={editOutlineClass}
                     >
-                      {customText["cont_val4"] || "Mon - Sat: 11:00 AM - 8:30 PM (IST)"}
+                      {t("Mon - Sat: 11:00 AM - 8:30 PM (IST)", "सोम - शनि: सुबह 11:00 बजे - रात 8:30 बजे (IST)", "cont_val4")}
                     </span>
                   </p>
                 </div>
@@ -2427,7 +2507,7 @@ export default function Home(props: {
               className="mt-10 inline-flex items-center gap-3 px-8 py-4 bg-[#dfba73] hover:bg-[#c5a059] text-neutral-950 font-sans text-xs font-bold tracking-widest uppercase transition-all duration-300 w-full sm:w-auto justify-center rounded-sm shadow-md"
             >
               <MessageCircle className="w-5 h-5" />
-              Chat on WhatsApp
+              {t("Chat on WhatsApp", "व्हाट्सएप पर चैट करें")}
             </button>
           </div>
 
@@ -2439,16 +2519,16 @@ export default function Home(props: {
                 onBlur={(e) => handleTextChange("inq_form_title", e.currentTarget.textContent || "")}
                 className={`font-serif text-2xl text-neutral-900 dark:text-neutral-100 mb-1 inline-block ${editOutlineClass}`}
               >
-                {customText["inq_form_title"] || "Gold Order Inquiry"}
+                {t("Gold Order Inquiry", "स्वर्ण ऑर्डर पूछताछ", "inq_form_title")}
               </h3>
               <p className="font-sans text-[9px] text-[#dfba73] uppercase tracking-wider font-semibold mb-6">
-                ✈ Inquiry logs route directly to your backside admin console.
+                {t("✈ Inquiry logs route directly to your backside admin console.", "✈ पूछताछ विवरण सीधे आपके बैकसाइड एडमिन कंसोल पर भेजे जाते हैं।")}
               </p>
               
               <form onSubmit={handleContactSubmit} className="space-y-6">
                 <div>
                   <label className="block font-sans text-xs tracking-wider uppercase text-neutral-600 dark:text-neutral-300 mb-2 font-bold">
-                    Your Name
+                    {t("Your Name", "आपका नाम")}
                   </label>
                   <input
                     type="text"
@@ -2456,12 +2536,12 @@ export default function Home(props: {
                     value={formState.name}
                     onChange={(e) => setFormState({ ...formState, name: e.target.value })}
                     className="w-full bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 focus:border-[#dfba73] py-3 px-4 outline-none font-sans text-sm text-neutral-900 dark:text-neutral-100 transition-colors rounded-sm placeholder:text-neutral-500"
-                    placeholder="Enter name"
+                    placeholder={t("Enter name", "नाम दर्ज करें")}
                   />
                 </div>
                 <div>
                   <label className="block font-sans text-xs tracking-wider uppercase text-neutral-600 dark:text-neutral-300 mb-2 font-bold">
-                    Email Address
+                    {t("Email Address", "ईमेल पता")}
                   </label>
                   <input
                     type="email"
@@ -2469,12 +2549,12 @@ export default function Home(props: {
                     value={formState.email}
                     onChange={(e) => setFormState({ ...formState, email: e.target.value })}
                     className="w-full bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 focus:border-[#dfba73] py-3 px-4 outline-none font-sans text-sm text-neutral-900 dark:text-neutral-100 transition-colors rounded-sm placeholder:text-neutral-500"
-                    placeholder="Enter email"
+                    placeholder={t("Enter email", "ईमेल दर्ज करें")}
                   />
                 </div>
                 <div>
                   <label className="block font-sans text-xs tracking-wider uppercase text-neutral-600 dark:text-neutral-300 mb-2 font-bold">
-                    Phone / WhatsApp Number
+                    {t("Phone / WhatsApp Number", "फ़ोन / व्हाट्सएप नंबर")}
                   </label>
                   <input
                     type="tel"
@@ -2482,12 +2562,12 @@ export default function Home(props: {
                     value={formState.phone}
                     onChange={(e) => setFormState({ ...formState, phone: e.target.value })}
                     className="w-full bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 focus:border-[#dfba73] py-3 px-4 outline-none font-sans text-sm text-neutral-900 dark:text-neutral-100 transition-colors rounded-sm placeholder:text-neutral-500"
-                    placeholder="Enter Phone/WhatsApp (e.g. +91 99364 88845)"
+                    placeholder={t("Enter Phone/WhatsApp (e.g. +91 99364 88845)", "फ़ोन/व्हाट्सएप दर्ज करें (जैसे +91 99364 88845)")}
                   />
                 </div>
                 <div>
                   <label className="block font-sans text-xs tracking-wider uppercase text-neutral-600 dark:text-neutral-300 mb-2 font-bold">
-                    Custom Requests & Details
+                    {t("Custom Requests & Details", "कस्टम आवश्यकताएं और विवरण")}
                   </label>
                   <textarea
                     rows={4}
@@ -2495,7 +2575,7 @@ export default function Home(props: {
                     value={formState.message}
                     onChange={(e) => setFormState({ ...formState, message: e.target.value })}
                     className="w-full bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 focus:border-[#dfba73] py-3 px-4 outline-none font-sans text-sm text-neutral-900 dark:text-neutral-100 transition-colors rounded-sm resize-none placeholder:text-neutral-500"
-                    placeholder="Describe custom sizes, carat requirements, or catalog questions..."
+                    placeholder={t("Describe custom sizes, carat requirements, or catalog questions...", "कस्टम आकार, कैरेट आवश्यकताएं, या कैटलॉग के प्रश्नों का वर्णन करें...")}
                   />
                 </div>
 
@@ -2504,7 +2584,7 @@ export default function Home(props: {
                   className="w-full py-4 bg-neutral-950 dark:bg-neutral-100 text-neutral-100 dark:text-neutral-950 border border-[#dfba73]/30 hover:bg-[#dfba73] hover:text-neutral-950 font-sans text-xs font-bold tracking-widest uppercase transition-all duration-300 flex items-center justify-center gap-2 rounded-sm"
                 >
                   <Send className="w-4 h-4" />
-                  Send Order Inquiry
+                  {t("Send Order Inquiry", "पूछताछ भेजें")}
                 </button>
               </form>
 
@@ -2514,7 +2594,7 @@ export default function Home(props: {
                   animate={{ opacity: 1, y: 0 }}
                   className="mt-4 p-3 bg-green-500/10 border border-green-500/30 text-green-600 dark:text-green-400 font-sans text-xs font-semibold text-center rounded-sm"
                 >
-                  Thank you! Inquiry logged in Backside Console.
+                  {t("Thank you! Inquiry logged in Backside Console.", "धन्यवाद! पूछताछ सफलतापूर्वक एडमिन कंसोल में दर्ज हो गई है।")}
                 </motion.div>
               )}
             </div>
