@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -72,21 +71,21 @@
 
 @keyframes slowPan {
   0% {
-    transform: scale(1) translate(0, 0);
+    transform: scale(1) translate3d(0, 0, 0);
   }
   100% {
-    transform: scale(1.08) translate(-0.5%, -0.5%);
+    transform: scale(1.08) translate3d(-0.5%, -0.5%, 0);
   }
 }
 
 @keyframes goldGlow {
   0% {
     opacity: 0.15;
-    transform: scale(1) translate(0, 0);
+    transform: scale(1) translate3d(0, 0, 0);
   }
   100% {
     opacity: 0.3;
-    transform: scale(1.15) translate(2%, 2%);
+    transform: scale(1.15) translate3d(2%, 2%, 0);
   }
 }
 
@@ -286,4 +285,25 @@ html, body {
   html {
     font-size: 16px !important;
   }
+}
+
+/* Speed and Smoothness Optimization */
+* {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Force hardware accelerated layouts on animations and large motion elements */
+.motion-gpu {
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform, opacity;
+}
+
+/* Improve scroll performance for large layout sections off-screen */
+section, footer {
+  content-visibility: auto;
+  contain-intrinsic-size: 1000px;
 }

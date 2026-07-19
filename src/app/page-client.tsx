@@ -26,7 +26,10 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import ProductCard from "@/components/ProductCard";
-import QuickViewModal from "@/components/QuickViewModal";
+import dynamic from "next/dynamic";
+const QuickViewModal = dynamic(() => import("@/components/QuickViewModal"), {
+  ssr: false,
+});
 import { products as initialProducts, Product } from "@/data/products";
 
 // Secure SHA-256 Client-Side Hashing Utility
@@ -695,6 +698,7 @@ export default function Home(props: {
             <img
               src="/logo.jpg"
               alt="OJ Seal of Purity"
+              decoding="async"
               className="w-full h-full rounded-full object-cover grayscale brightness-110 group-hover:grayscale-0 transition-all duration-500"
             />
           </div>
@@ -707,6 +711,9 @@ export default function Home(props: {
             <img
               src={customHeroBanner}
               alt="Custom Gold Banner"
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
               className="w-full h-full object-cover brightness-[0.4]"
             />
           ) : (
