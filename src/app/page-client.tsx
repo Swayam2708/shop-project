@@ -838,7 +838,7 @@ export default function Home(props: {
           <span className="font-sans text-[10px] text-[#dfba73] tracking-[0.3em] uppercase font-bold block mb-1">
             {t("Bespoke Registry", "कस्टम आभूषण")}
           </span>
-          <h2 className="font-serif text-2xl md:text-4xl font-light text-[#dfba73]">
+          <h2 className="font-serif text-2xl md:text-4xl font-light text-neutral-900 dark:text-neutral-100">
             {t("Browse By Category", "श्रेणी अनुसार खोजें")}
           </h2>
           <div className="w-12 h-px bg-[#dfba73] mt-3" />
@@ -920,13 +920,13 @@ export default function Home(props: {
                     contentEditable={true}
                     suppressContentEditableWarning
                     onBlur={(e) => handleTextChange(`cat_name_${cat.id}`, e.currentTarget.textContent || "")}
-                    className="font-sans text-[10px] sm:text-xs font-bold uppercase tracking-wider text-neutral-800 dark:text-neutral-250 border border-dashed border-amber-500/40 px-1 rounded-sm cursor-text"
+                    className="font-sans text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#dfba73] border border-dashed border-amber-500/40 px-1 rounded-sm cursor-text"
                   >
                     {catName}
                   </span>
                 ) : (
                   <Link href={`/category/${cat.id}`}>
-                    <span className="font-sans text-[10px] sm:text-xs font-bold uppercase tracking-wider text-neutral-800 dark:text-neutral-250 group-hover:text-[#dfba73] transition-colors cursor-pointer">
+                    <span className="font-sans text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#dfba73] transition-colors cursor-pointer">
                       {catName}
                     </span>
                   </Link>
