@@ -5,6 +5,10 @@ import { useParams } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import ProductCard from "@/components/ProductCard";
 import QuickViewModal from "@/components/QuickViewModal";
+import dynamic from "next/dynamic";
+const AIChatBox = dynamic(() => import("@/components/AIChatBox"), {
+  ssr: false,
+});
 import { products as initialProducts, Product } from "@/data/products";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Heart, ShoppingBag, MessageCircle, ShieldCheck, Truck, RefreshCw, Star, Edit, Lock, X, Upload } from "lucide-react";
@@ -35,6 +39,17 @@ export default function ProductDetailPage() {
   const [cart, setCart] = useState<{ product: Product; quantity: number }[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
+
+  const whatsAppNumber = customText["whats_app_number"] || "9936488845";
+  const [language, setLanguage] = useState<"en" | "hi">("en");
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedLang = localStorage.getItem("oj_language") as "en" | "hi";
+      if (savedLang === "en" || savedLang === "hi") {
+        setLanguage(savedLang);
+      }
+    }
+  }, []);
 
   // Selected details page product
   const [product, setProduct] = useState<Product | null>(null);
@@ -871,6 +886,7 @@ export default function ProductDetailPage() {
         customText={customText}
       />
 
+      <AIChatBox whatsAppNumber={whatsAppNumber} language={language} />
     </div>
   );
 }

@@ -30,6 +30,9 @@ import dynamic from "next/dynamic";
 const QuickViewModal = dynamic(() => import("@/components/QuickViewModal"), {
   ssr: false,
 });
+const AIChatBox = dynamic(() => import("@/components/AIChatBox"), {
+  ssr: false,
+});
 import { products as initialProducts, Product } from "@/data/products";
 
 // Secure SHA-256 Client-Side Hashing Utility
@@ -2830,6 +2833,8 @@ export default function Home(props: {
         onUploadPhoto={handleUploadImage}
         customText={customText}
       />
+
+      <AIChatBox whatsAppNumber={whatsAppNumber} language={language} />
       </div>
     </div>
   );

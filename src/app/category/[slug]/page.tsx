@@ -25,9 +25,26 @@ export default async function Page() {
 
     customContent.forEach((item) => {
       if (item.key.startsWith("oj_custom_txt_")) {
-        customText[item.key.replace("oj_custom_txt_", "")] = item.value;
+        const cleanKey = item.key.replace("oj_custom_txt_", "");
+        customText[cleanKey] = item.value;
       } else if (item.key.startsWith("oj_custom_img_")) {
-        customizedImages[item.key.replace("oj_custom_img_", "")] = item.value;
+        const cleanKey = item.key.replace("oj_custom_img_", "");
+        customizedImages[cleanKey] = item.value;
+      } else {
+        if (
+          item.key.startsWith("rev_avatar_") ||
+          item.key.startsWith("cat_img_") ||
+          item.key.startsWith("sil_cat_") ||
+          item.key.startsWith("gallery_") ||
+          item.key.includes("photo") ||
+          item.key.includes("banner") ||
+          item.value.startsWith("data:image/") ||
+          item.value.startsWith("http")
+        ) {
+          customizedImages[item.key] = item.value;
+        } else {
+          customText[item.key] = item.value;
+        }
       }
     });
 

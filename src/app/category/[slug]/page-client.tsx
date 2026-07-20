@@ -5,6 +5,10 @@ import { useParams } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import ProductCard from "@/components/ProductCard";
 import QuickViewModal from "@/components/QuickViewModal";
+import dynamic from "next/dynamic";
+const AIChatBox = dynamic(() => import("@/components/AIChatBox"), {
+  ssr: false,
+});
 import { products as initialProducts, Product } from "@/data/products";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, SlidersHorizontal, Check, X, Edit, Lock, RefreshCw, Star } from "lucide-react";
@@ -39,6 +43,17 @@ export default function CategoryPage(props: {
   const [cart, setCart] = useState<{ product: Product; quantity: number }[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
+
+  const whatsAppNumber = customText["whats_app_number"] || "9936488845";
+  const [language, setLanguage] = useState<"en" | "hi">("en");
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedLang = localStorage.getItem("oj_language") as "en" | "hi";
+      if (savedLang === "en" || savedLang === "hi") {
+        setLanguage(savedLang);
+      }
+    }
+  }, []);
 
   // Design studio state variables
   const [isDesignMode, setIsDesignMode] = useState(false);
@@ -719,6 +734,7 @@ export default function CategoryPage(props: {
         customText={customText}
       />
 
+      <AIChatBox whatsAppNumber={whatsAppNumber} language={language} />
     </div>
   );
 }
