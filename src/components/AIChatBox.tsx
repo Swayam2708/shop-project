@@ -2,11 +2,11 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageSquare, X, Send, Sparkles, Bot, User, MessageCircle, ChevronDown, RefreshCw } from "lucide-react";
+import { MessageSquare, X, Send, Sparkles, Headphones, User, MessageCircle, ChevronDown, RefreshCw } from "lucide-react";
 
 interface Message {
   id: string;
-  sender: "user" | "ai";
+  sender: "user" | "concierge";
   text: string;
   timestamp: string;
   action?: {
@@ -30,10 +30,10 @@ export default function AIChatBox({ whatsAppNumber = "9936488845", language = "e
 
   const initialGreeting: Message = {
     id: "welcome-1",
-    sender: "ai",
+    sender: "concierge",
     text: language === "hi"
-      ? "नमस्ते! 👋 मैं ओमर ज्वैलर्स ओजे का एआई गोल्ड कंसीयर्ज हूँ। आप मुझसे आज के सोने-चांदी के भाव, बीआईएस हॉलमार्क शुद्धता, कस्टम आभूषण ऑर्डर या हमारे शाहाबाद चौक शोरूम के बारे में कुछ भी पूछ सकते हैं!"
-      : "Welcome to Omar Jewellers OJ! ✨ I am your AI Gold Concierge. Feel free to ask about today's live metal rates, 100% BIS hallmarked purity, custom jewellery commissions, or our Shahabad Chowk showroom!",
+      ? "नमस्ते! 👋 मैं ओमर ज्वैलर्स ओजे का डिजिटल गोल्ड कंसीयर्ज हूँ। आप मुझसे आज के सोने-चांदी के भाव, बीआईएस हॉलमार्क शुद्धता, कस्टम आभूषण ऑर्डर या हमारे शाहाबाद चौक शोरूम के बारे में कुछ भी पूछ सकते हैं!"
+      : "Welcome to Omar Jewellers OJ! ✨ I am your Showroom Concierge. Feel free to ask about today's live metal rates, 100% BIS hallmarked purity, custom jewellery commissions, or our Shahabad Chowk showroom!",
     timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
   };
 
@@ -51,8 +51,8 @@ export default function AIChatBox({ whatsAppNumber = "9936488845", language = "e
     }
   }, [messages, isTyping, isOpen]);
 
-  // Intelligent AI Knowledge Response Engine
-  const generateAIResponse = (userQuery: string): { text: string; action?: Message["action"] } => {
+  // Intelligent Showroom Concierge Response Engine
+  const generateResponse = (userQuery: string): { text: string; action?: Message["action"] } => {
     const query = userQuery.toLowerCase().trim();
 
     // Check for Rates / Price queries
@@ -157,17 +157,17 @@ export default function AIChatBox({ whatsAppNumber = "9936488845", language = "e
     if (!textToSend) setInput("");
     setIsTyping(true);
 
-    // Simulate AI thinking and typing response
+    // Simulate concierge thinking and typing response
     setTimeout(() => {
-      const response = generateAIResponse(messageText);
-      const aiMessage: Message = {
-        id: `ai-${Date.now()}`,
-        sender: "ai",
+      const response = generateResponse(messageText);
+      const conciergeMessage: Message = {
+        id: `concierge-${Date.now()}`,
+        sender: "concierge",
         text: response.text,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         action: response.action,
       };
-      setMessages((prev) => [...prev, aiMessage]);
+      setMessages((prev) => [...prev, conciergeMessage]);
       setIsTyping(false);
     }, 700);
   };
@@ -205,12 +205,12 @@ export default function AIChatBox({ whatsAppNumber = "9936488845", language = "e
             whileTap={{ scale: 0.95 }}
             onClick={() => setIsOpen(true)}
             className="relative group p-4 bg-gradient-to-r from-neutral-950 via-[#1a1105] to-neutral-950 border border-[#dfba73]/40 rounded-full shadow-[0_0_30px_rgba(223,186,115,0.25)] flex items-center justify-center text-[#dfba73] hover:border-[#dfba73] transition-all cursor-pointer"
-            aria-label="Open AI Concierge Chat"
+            aria-label="Open Showroom Concierge Chat"
           >
             {/* Ambient Gold Pulse Ring */}
             <div className="absolute inset-0 rounded-full border border-[#dfba73]/30 animate-ping pointer-events-none opacity-40" />
 
-            <Bot className="w-6 h-6 text-[#dfba73] group-hover:rotate-12 transition-transform duration-300" />
+            <Headphones className="w-6 h-6 text-[#dfba73] group-hover:rotate-12 transition-transform duration-300" />
 
             {/* Unread Badge */}
             {unreadCount > 0 && (
@@ -221,7 +221,7 @@ export default function AIChatBox({ whatsAppNumber = "9936488845", language = "e
 
             {/* Tooltip on Hover */}
             <span className="absolute right-full mr-3 px-3 py-1.5 bg-neutral-950/90 border border-[#dfba73]/30 text-[#dfba73] text-[10px] font-bold tracking-wider uppercase rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg">
-              ✨ OJ AI Concierge
+              ✨ Showroom Concierge
             </span>
           </motion.button>
         )}
@@ -241,12 +241,12 @@ export default function AIChatBox({ whatsAppNumber = "9936488845", language = "e
             <div className="p-4 bg-[#140b0c] border-b border-[#dfba73]/20 flex items-center justify-between z-10">
               <div className="flex items-center gap-3">
                 <div className="relative w-10 h-10 rounded-full border border-[#dfba73]/40 bg-neutral-900 flex items-center justify-center p-1">
-                  <Bot className="w-5 h-5 text-[#dfba73]" />
+                  <Headphones className="w-5 h-5 text-[#dfba73]" />
                   <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border border-neutral-950" />
                 </div>
                 <div>
                   <h3 className="font-serif text-sm font-semibold text-white tracking-wide flex items-center gap-1.5">
-                    OJ AI Concierge
+                    Showroom Concierge
                     <Sparkles className="w-3.5 h-3.5 text-[#dfba73]" />
                   </h3>
                   <p className="font-sans text-[9px] text-[#dfba73] tracking-widest uppercase font-bold">
@@ -283,9 +283,9 @@ export default function AIChatBox({ whatsAppNumber = "9936488845", language = "e
                   className={`flex flex-col ${msg.sender === "user" ? "items-end" : "items-start"}`}
                 >
                   <div className="flex items-end gap-2 max-w-[85%]">
-                    {msg.sender === "ai" && (
+                    {msg.sender === "concierge" && (
                       <div className="w-6 h-6 rounded-full border border-[#dfba73]/30 bg-neutral-900 flex items-center justify-center shrink-0 mb-1">
-                        <Bot className="w-3.5 h-3.5 text-[#dfba73]" />
+                        <Headphones className="w-3.5 h-3.5 text-[#dfba73]" />
                       </div>
                     )}
 
@@ -298,7 +298,7 @@ export default function AIChatBox({ whatsAppNumber = "9936488845", language = "e
                     >
                       <div className="whitespace-pre-wrap">{msg.text}</div>
 
-                      {/* Action Button inside AI response if present */}
+                      {/* Action Button inside response if present */}
                       {msg.action && (
                         <a
                           href={msg.action.href}
@@ -326,7 +326,7 @@ export default function AIChatBox({ whatsAppNumber = "9936488845", language = "e
               {isTyping && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-2">
                   <div className="w-6 h-6 rounded-full border border-[#dfba73]/30 bg-neutral-900 flex items-center justify-center shrink-0">
-                    <Bot className="w-3.5 h-3.5 text-[#dfba73]" />
+                    <Headphones className="w-3.5 h-3.5 text-[#dfba73]" />
                   </div>
                   <div className="px-3 py-2 bg-white/5 border border-[#dfba73]/15 rounded-2xl rounded-bl-none flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 bg-[#dfba73] rounded-full animate-bounce" />
@@ -358,7 +358,7 @@ export default function AIChatBox({ whatsAppNumber = "9936488845", language = "e
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder={language === "hi" ? "पूछें: सोने के भाव, हॉलमार्क, पता..." : "Ask AI: rates, hallmarking, showroom..."}
+                placeholder={language === "hi" ? "पूछें: सोने के भाव, हॉलमार्क, पता..." : "Ask us: rates, hallmarking, showroom..."}
                 className="flex-grow bg-white/5 border border-[#dfba73]/20 focus:border-[#dfba73] px-3.5 py-2.5 text-xs text-white placeholder:text-neutral-500 rounded-xl outline-none transition-colors font-sans"
               />
               <button
