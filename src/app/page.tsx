@@ -2,15 +2,16 @@ import { prisma } from "@/lib/prisma";
 import PageClient from "./page-client";
 import { products as defaultProducts, type Product } from "@/data/products";
 
-export const dynamic = "force-dynamic";
+// Enable Incremental Static Regeneration (ISR) - Revalidate cached page every 60 seconds
+export const revalidate = 60;
 
 export default async function Page() {
   try {
-    // Prefetch all products and customizations on the server side (instant)
-    const dbProducts = await prisma.product.findMany({
-      orderBy: { id: "asc" }
-    });
-    const customContent = await prisma.customContent.findMany();
+    // Parallelize database queries for fast execution
+    const [dbProducts, customContent] = await Promise.all([
+      prisma.product.findMany({ orderBy: { id: "asc" } }).catch(() => []),
+      prisma.customContent.findMany().catch(() => []),
+    ]);
 
     // Map DB products to split specs details
     const mappedProducts = dbProducts.map((p) => ({
@@ -31,7 +32,6 @@ export default async function Page() {
         const cleanKey = item.key.replace("oj_custom_img_", "");
         customizedImages[cleanKey] = item.value;
       } else {
-        // Fallback for keys saved without prefix (e.g. rev_avatar_rev1, owner_photo, cat_img_rings)
         if (
           item.key.startsWith("rev_avatar_") ||
           item.key.startsWith("cat_img_") ||
@@ -49,16 +49,24 @@ export default async function Page() {
       }
     });
 
+    // Sanitize heavy base64 payload for initial SSR HTML script tag to keep page bundle under 200KB
+    const sanitizedCustomizedImages: Record<string, string> = {};
+    Object.entries(customizedImages).forEach(([k, v]) => {
+      if (v.startsWith("data:image/") && v.length > 150000) {
+        return; // Client-side fetch will hydrate large uploaded photos asynchronously
+      }
+      sanitizedCustomizedImages[k] = v;
+    });
+
     return (
       <PageClient
         initialDbProducts={mappedProducts.length > 0 ? mappedProducts : defaultProducts}
         initialCustomText={customText}
-        initialCustomizedImages={customizedImages}
+        initialCustomizedImages={sanitizedCustomizedImages}
       />
     );
   } catch (error) {
     console.error("Failed to load page server data:", error);
-    // Fallback gracefully to defaults if database fails to connect
     return (
       <PageClient
         initialDbProducts={defaultProducts}

@@ -38,6 +38,8 @@ export default function Navbar({
   onLanguageChange,
 }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -56,6 +58,28 @@ export default function Navbar({
       })
       .catch((err) => console.error("Navbar failed to prefetch catalog:", err));
   }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > 20) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+
+      if (currentScrollY > 70 && currentScrollY > lastScrollY) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
 
   // Real-time market rates simulation inside Navbar
   const [marketRates, setMarketRates] = useState({
@@ -245,10 +269,14 @@ export default function Navbar({
     0
   );
 
+  const logoSrc = customText["brand_logo"] || customText["oj_logo"] || customText["custom_logo"] || "/logo.jpg";
+
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 ${
+        className={`fixed top-0 left-0 w-full z-40 transform-gpu transition-all duration-300 ${
+          isVisible ? "translate-y-0" : "-translate-y-full"
+        } ${
           isScrolled
             ? "glass-scrolled shadow-md"
             : "glass"
@@ -317,13 +345,19 @@ export default function Navbar({
           </button>
 
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2 sm:gap-3 select-none group focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none rounded-sm">
+          <a href="/" className="flex items-center gap-2 sm:gap-3 select-none group focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none rounded-sm">
             <img
-              src="/logo.jpg"
+              src={logoSrc}
               alt="Omar Jewellers Logo"
               width={40}
               height={40}
-              className="w-7 h-7 sm:w-10 sm:h-10 rounded-full border border-gold/30 object-cover shadow-sm group-hover:border-gold transition-colors duration-300"
+              onError={(e) => {
+                const target = e.currentTarget as HTMLImageElement;
+                if (target.src !== window.location.origin + "/logo.jpg") {
+                  target.src = "/logo.jpg";
+                }
+              }}
+              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-gold/30 object-cover shadow-sm group-hover:border-gold transition-colors duration-300 bg-neutral-900"
             />
             <div className="flex flex-col">
               <span className="font-serif text-xs sm:text-base md:text-xl font-light tracking-[0.2em] text-neutral-900 dark:text-neutral-100 group-hover:text-gold transition-colors duration-300">

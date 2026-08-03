@@ -490,7 +490,7 @@ export default function ProductDetailPage({
           </div>
 
           {/* Right Column: Customization parameters, availability, and pricing */}
-          <div className="space-y-8">
+          <div className="space-y-5">
             <div>
               <span className="text-[10px] tracking-[0.25em] text-[#dfba73] font-sans font-bold uppercase block mb-1">
                 OJ Custom Couture • {displaySubCat}
@@ -500,7 +500,7 @@ export default function ProductDetailPage({
                 contentEditable={isDesignMode}
                 suppressContentEditableWarning
                 onBlur={(e) => handleTextChange(`prod_name_${product.id}`, e.currentTarget.textContent || "")}
-                className={`font-serif text-3xl md:text-4xl font-light text-white tracking-wide leading-tight ${isDesignMode ? "border border-dashed border-amber-500/40 px-2 py-1 rounded-sm cursor-text" : ""}`}
+                className={`font-serif text-2xl md:text-3xl font-light text-white tracking-wide leading-tight ${isDesignMode ? "border border-dashed border-amber-500/40 px-2 py-1 rounded-sm cursor-text" : ""}`}
               >
                 {displayName}
               </h1>

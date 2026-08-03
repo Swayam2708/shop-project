@@ -89,6 +89,15 @@ export default async function Page({ params }: PageProps) {
       }
     });
 
+    // Sanitize heavy base64 payload for initial SSR HTML script tag
+    const sanitizedCustomizedImages: Record<string, string> = {};
+    Object.entries(customizedImages).forEach(([k, v]) => {
+      if (v.startsWith("data:image/") && v.length > 150000) {
+        return; // Client-side fetch will hydrate large uploaded photos asynchronously
+      }
+      sanitizedCustomizedImages[k] = v;
+    });
+
     const finalProducts = mappedProducts.length > 0 ? mappedProducts : defaultProducts;
 
     return (
@@ -96,7 +105,7 @@ export default async function Page({ params }: PageProps) {
         productId={id}
         initialDbProducts={finalProducts}
         initialCustomText={customText}
-        initialCustomizedImages={customizedImages}
+        initialCustomizedImages={sanitizedCustomizedImages}
       />
     );
   } catch (error) {
