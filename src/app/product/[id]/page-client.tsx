@@ -448,6 +448,9 @@ export default function ProductDetailPage({
                 alt={displayName}
                 width={600}
                 height={600}
+                priority
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                quality={85}
                 className="w-full h-full object-contain p-4 bg-neutral-950/20 transition-transform duration-1000 hover:scale-105"
               />
               

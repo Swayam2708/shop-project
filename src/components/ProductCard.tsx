@@ -21,7 +21,7 @@ interface ProductCardProps {
   customizedImages?: Record<string, string>;
 }
 
-export default function ProductCard({
+function ProductCardComponent({
   product,
   isWishlisted,
   onWishlistToggle,
@@ -65,6 +65,12 @@ export default function ProductCard({
     customText[`cat_img_${product.id}`] ||
     product.image;
 
+  const handlePrefetch = () => {
+    if (!isDesignMode && product.id) {
+      router.prefetch(`/product/${product.id}`);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -73,6 +79,8 @@ export default function ProductCard({
       transition={{ duration: 0.6, ease: "easeOut" }}
       className="group relative bg-[#FAF9F5]/30 dark:bg-neutral-900/30 border border-neutral-200/50 dark:border-neutral-800/50 hover:border-[#dfba73]/60 p-4 transition-all duration-500 ease-out flex flex-col justify-between hover:shadow-2xl hover:shadow-[#dfba73]/8 hover:-translate-y-1 rounded-sm backdrop-blur-xs transform-gpu cursor-pointer"
       onClick={handleCardClick}
+      onMouseEnter={handlePrefetch}
+      onFocus={handlePrefetch}
     >
       <div className="relative overflow-hidden aspect-square border border-gold/10 bg-neutral-950 mb-4">
         {/* Zoom image */}
@@ -82,15 +90,19 @@ export default function ProductCard({
             alt={displayName}
             width={320}
             height={320}
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            quality={80}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         ) : (
-          <Link href={`/product/${product.id}`} tabIndex={-1} className="block w-full h-full">
+          <Link href={`/product/${product.id}`} prefetch={true} tabIndex={-1} className="block w-full h-full">
             <Image
               src={displayImage}
               alt={displayName}
               width={320}
               height={320}
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              quality={80}
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
           </Link>
@@ -233,3 +245,5 @@ export default function ProductCard({
     </motion.div>
   );
 }
+
+export default React.memo(ProductCardComponent);
