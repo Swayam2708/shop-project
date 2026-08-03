@@ -1,6 +1,22 @@
 import { prisma } from "@/lib/prisma";
 import CategoryPageClient from "./page-client";
 import { products as defaultProducts, type Product } from "@/data/products";
+import { Metadata } from "next";
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const categoryNames: Record<string, string> = {
+    "new-arrivals": "New Arrivals Gold",
+    "best-sellers": "Best Sellers Gold",
+    "bridal": "Bridal Gold Couture",
+    "daily-wear": "Daily Wear Gold Essentials",
+    "silver": "Premium Silver Collection",
+  };
+  const categoryName = categoryNames[params.slug] || params.slug;
+  return {
+    title: `${categoryName} | Omar Jewellers OJ`,
+    description: `Explore the finest selection of ${categoryName} at Omar Jewellers Chowk Shahabad. Assured 100% BIS Hallmarked purity.`,
+  };
+}
 
 export const dynamic = "force-dynamic";
 

@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Eye, ShoppingBag, Heart, Upload } from "lucide-react";
 import { Product } from "@/data/products";
 import { motion } from "framer-motion";
@@ -58,18 +59,20 @@ export default function ProductCard({
       <div className="relative overflow-hidden aspect-square border border-gold/10 bg-neutral-950 mb-4">
         {/* Zoom image */}
         {isDesignMode ? (
-          <img
+          <Image
             src={product.image}
             alt={displayName}
-            loading="lazy"
+            width={320}
+            height={320}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         ) : (
           <Link href={`/product/${product.id}`} tabIndex={-1} className="block w-full h-full">
-            <img
+            <Image
               src={product.image}
               alt={displayName}
-              loading="lazy"
+              width={320}
+              height={320}
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
           </Link>
