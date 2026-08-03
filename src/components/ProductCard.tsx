@@ -35,13 +35,16 @@ function ProductCardComponent({
 }: ProductCardProps) {
   const router = useRouter();
 
-  const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleCardClick = (e: React.MouseEvent) => {
     if (isDesignMode) return;
     const target = e.target as HTMLElement;
-    const isInteractive = target.closest("button") || target.closest("input") || target.closest("label") || target.closest("a");
-    if (isInteractive) return;
-    router.push(`/product/${product.id}`);
+    const isInteractive = target.closest("button") || target.closest("input") || target.closest("label");
+    if (isInteractive) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
   };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && onUploadPhoto) {
@@ -71,47 +74,38 @@ function ProductCardComponent({
     }
   };
 
-  return (
+  const cardContent = (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="group relative bg-[#FAF9F5]/30 dark:bg-neutral-900/30 border border-neutral-200/50 dark:border-neutral-800/50 hover:border-[#dfba73]/60 p-4 transition-all duration-500 ease-out flex flex-col justify-between hover:shadow-2xl hover:shadow-[#dfba73]/8 hover:-translate-y-1 rounded-sm backdrop-blur-xs transform-gpu cursor-pointer"
-      onClick={handleCardClick}
+      className="group relative bg-[#FAF9F5]/30 dark:bg-neutral-900/30 border border-neutral-200/50 dark:border-neutral-800/50 hover:border-[#dfba73]/60 p-4 transition-all duration-500 ease-out flex flex-col justify-between hover:shadow-2xl hover:shadow-[#dfba73]/8 hover:-translate-y-1 rounded-sm backdrop-blur-xs transform-gpu cursor-pointer h-full"
       onMouseEnter={handlePrefetch}
       onFocus={handlePrefetch}
+      onPointerDown={handlePrefetch}
+      onTouchStart={handlePrefetch}
+      onClick={handleCardClick}
     >
       <div className="relative overflow-hidden aspect-square border border-gold/10 bg-neutral-950 mb-4">
-        {/* Zoom image */}
-        {isDesignMode ? (
-          <Image
-            src={displayImage}
-            alt={displayName}
-            width={320}
-            height={320}
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            quality={80}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          />
-        ) : (
-          <Link href={`/product/${product.id}`} prefetch={true} tabIndex={-1} className="block w-full h-full">
-            <Image
-              src={displayImage}
-              alt={displayName}
-              width={320}
-              height={320}
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              quality={80}
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-            />
-          </Link>
-        )}
+        <Image
+          src={displayImage}
+          alt={displayName}
+          width={320}
+          height={320}
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          quality={80}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
 
         {/* Hover overlay icons */}
         <div className="absolute inset-0 bg-neutral-950/40 opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 hidden md:flex items-center justify-center gap-3">
           <button
-            onClick={() => onQuickView(product)}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onQuickView(product);
+            }}
             aria-label={`Quick view of ${displayName}`}
             className="p-3 bg-white dark:bg-neutral-900 rounded-full text-neutral-900 dark:text-neutral-100 hover:bg-gold hover:text-neutral-950 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-lg focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer"
             title="Quick View"
@@ -119,7 +113,11 @@ function ProductCardComponent({
             <Eye className="w-4 h-4" />
           </button>
           <button
-            onClick={() => onAddToCart(product)}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onAddToCart(product);
+            }}
             aria-label={`Add ${displayName} to bag`}
             className="p-3 bg-white dark:bg-neutral-900 rounded-full text-neutral-900 dark:text-neutral-100 hover:bg-gold hover:text-neutral-950 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 delay-75 shadow-lg focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer"
             title="Add to Bag"
@@ -147,7 +145,11 @@ function ProductCardComponent({
 
         {/* Wishlist toggle */}
         <button
-          onClick={() => onWishlistToggle(product)}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onWishlistToggle(product);
+          }}
           aria-label={isWishlisted ? `Remove ${displayName} from wishlist` : `Add ${displayName} to wishlist`}
           className="absolute top-3 right-3 p-2 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full text-neutral-900 dark:text-neutral-100 hover:text-gold transition-colors shadow-md z-10 focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer"
         >
@@ -183,22 +185,16 @@ function ProductCardComponent({
           >
             {displaySubCat}
           </p>
-          {isDesignMode ? (
-            <h4 
-              contentEditable={true}
-              suppressContentEditableWarning
-              onBlur={(e) => onEditText && onEditText(`prod_name_${product.id}`, e.currentTarget.textContent || "")}
-              className="font-serif text-base text-neutral-900 dark:text-neutral-100 mt-1 group-hover:text-gold transition-colors truncate border border-dashed border-amber-500/40 px-1 rounded-sm cursor-text"
-            >
-              {displayName}
-            </h4>
-          ) : (
-            <Link href={`/product/${product.id}`}>
-              <h4 className="font-serif text-base text-neutral-900 dark:text-neutral-100 mt-1 group-hover:text-gold transition-colors truncate cursor-pointer">
-                {displayName}
-              </h4>
-            </Link>
-          )}
+          <h4 
+            contentEditable={isDesignMode}
+            suppressContentEditableWarning
+            onBlur={(e) => onEditText && onEditText(`prod_name_${product.id}`, e.currentTarget.textContent || "")}
+            className={`font-serif text-base text-neutral-900 dark:text-neutral-100 mt-1 group-hover:text-gold transition-colors truncate ${
+              isDesignMode ? "border border-dashed border-amber-500/40 px-1 rounded-sm cursor-text" : ""
+            }`}
+          >
+            {displayName}
+          </h4>
         </div>
         
         <div className="mt-4">
@@ -224,7 +220,11 @@ function ProductCardComponent({
           {/* Mobile Action Buttons */}
           <div className="flex gap-2 mt-4 md:hidden">
             <button
-              onClick={() => onQuickView(product)}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onQuickView(product);
+              }}
               aria-label={`Quick view of ${displayName}`}
               className="flex-grow py-2 border border-gold/30 hover:border-gold/60 text-neutral-900 dark:text-neutral-200 hover:bg-gold hover:text-neutral-950 font-sans text-[10px] font-bold tracking-widest uppercase transition-all duration-300 flex items-center justify-center gap-1 rounded-sm active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer"
             >
@@ -232,7 +232,11 @@ function ProductCardComponent({
               Quick View
             </button>
             <button
-              onClick={() => onAddToCart(product)}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onAddToCart(product);
+              }}
               aria-label={`Add ${displayName} to bag`}
               className="py-2 px-3 bg-gold text-neutral-950 font-sans text-[10px] tracking-widest uppercase hover:bg-amber-600 transition-all duration-300 flex items-center justify-center rounded-sm active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer"
               title="Add to Bag"
@@ -243,6 +247,16 @@ function ProductCardComponent({
         </div>
       </div>
     </motion.div>
+  );
+
+  if (isDesignMode) {
+    return cardContent;
+  }
+
+  return (
+    <Link href={`/product/${product.id}`} prefetch={true} className="block h-full no-underline text-inherit">
+      {cardContent}
+    </Link>
   );
 }
 
