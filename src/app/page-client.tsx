@@ -2360,9 +2360,7 @@ export default function Home(props: {
               >
                 {t("Gold Order Inquiry", "स्वर्ण ऑर्डर पूछताछ", "inq_form_title")}
               </h3>
-              <p className="font-sans text-[9px] text-[#dfba73] uppercase tracking-wider font-semibold mb-6">
-                {t("✈ Inquiry logs route directly to your backside admin console.", "✈ पूछताछ विवरण सीधे आपके बैकसाइड एडमिन कंसोल पर भेजे जाते हैं।")}
-              </p>
+
               
               <form onSubmit={handleContactSubmit} className="space-y-6">
                 <div>
