@@ -33,6 +33,12 @@ const QuickViewModal = dynamic(() => import("@/components/QuickViewModal"), {
 const AIChatBox = dynamic(() => import("@/components/AIChatBox"), {
   ssr: false,
 });
+const MeetFounder = dynamic(() => import("@/components/sections/MeetFounder"), {
+  ssr: true,
+});
+const CustomerReviews = dynamic(() => import("@/components/sections/CustomerReviews"), {
+  ssr: true,
+});
 import { products as initialProducts, Product } from "@/data/products";
 
 // Secure SHA-256 Client-Side Hashing Utility
