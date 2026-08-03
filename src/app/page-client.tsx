@@ -690,10 +690,10 @@ export default function Home(props: {
       <div className="absolute top-2/3 right-[-10%] w-[600px] h-[600px] bg-amber-500/5 blur-[180px] rounded-full animate-gold-glow pointer-events-none z-0" style={{ animationDelay: "-3s" }} />
 
       {/* 1. HERO SECTION */}
-      <section id="home" className="relative min-h-[600px] lg:h-[100dvh] flex items-center justify-center overflow-hidden pt-[160px] pb-12 md:pt-[180px] lg:pt-[140px]">
+      <section id="home" className="relative min-h-[600px] lg:min-h-[100dvh] flex items-center justify-center overflow-hidden pt-[180px] sm:pt-[200px] md:pt-[210px] lg:pt-[220px] pb-12">
         {/* Beautiful Decorative Corner Scrolls */}
-        <GoldCorner className="absolute top-[130px] md:top-[170px] left-4 md:left-6 w-8 h-8 md:w-12 md:h-12 pointer-events-none z-20" />
-        <GoldCorner className="absolute top-[130px] md:top-[170px] right-4 md:right-6 w-8 h-8 md:w-12 md:h-12 pointer-events-none z-20" flipX />
+        <GoldCorner className="absolute top-[160px] md:top-[200px] left-4 md:left-6 w-8 h-8 md:w-12 md:h-12 pointer-events-none z-20" />
+        <GoldCorner className="absolute top-[160px] md:top-[200px] right-4 md:right-6 w-8 h-8 md:w-12 md:h-12 pointer-events-none z-20" flipX />
         <GoldCorner className="absolute bottom-4 md:bottom-6 left-4 md:left-6 w-8 h-8 md:w-12 md:h-12 pointer-events-none z-20" flipY />
         <GoldCorner className="absolute bottom-4 md:bottom-6 right-4 md:right-6 w-8 h-8 md:w-12 md:h-12 pointer-events-none z-20" flipX flipY />
 
