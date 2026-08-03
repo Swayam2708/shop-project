@@ -1,0 +1,19 @@
+{
+  "name": "Omar Jewellers OJ | Gen Z Luxury Jewellery",
+  "short_name": "Omar Jewellers",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#0f0e0b",
+  "background_color": "#0f0e0b",
+  "display": "standalone"
+}

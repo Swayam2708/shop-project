@@ -21,10 +21,18 @@ export const metadata: Metadata = {
   description: "Experience modern luxury with Omar Jewellers OJ. Discover champagne gold, pearl white, and blush beige premium collections designed for the contemporary buyer.",
   keywords: ["jewellery", "luxury", "gen z", "gold", "pearls", "bridal collection", "daily wear", "omar jewellers", "oj"],
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", type: "image/png", sizes: "32x32" },
+      { url: "/logo.jpg", type: "image/jpeg" },
+    ],
     shortcut: "/favicon.ico",
-    apple: "/logo.jpg",
+    apple: [
+      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
   },
+  manifest: "/manifest.json",
   openGraph: {
     title: "Omar Jewellers OJ | Gen Z Luxury Jewellery",
     description: "Premium handcrafted jewellery that blends timeless craftsmanship with Gen Z luxury aesthetics.",
