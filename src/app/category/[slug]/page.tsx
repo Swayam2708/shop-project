@@ -3,7 +3,8 @@ import CategoryPageClient from "./page-client";
 import { products as defaultProducts, type Product } from "@/data/products";
 import { Metadata } from "next";
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
   const categoryNames: Record<string, string> = {
     "new-arrivals": "New Arrivals Gold",
     "best-sellers": "Best Sellers Gold",
@@ -11,7 +12,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     "daily-wear": "Daily Wear Gold Essentials",
     "silver": "Premium Silver Collection",
   };
-  const categoryName = categoryNames[params.slug] || params.slug;
+  const categoryName = categoryNames[slug] || slug;
   return {
     title: `${categoryName} | Omar Jewellers OJ`,
     description: `Explore the finest selection of ${categoryName} at Omar Jewellers Chowk Shahabad. Assured 100% BIS Hallmarked purity.`,
