@@ -28,14 +28,26 @@ async function hashPasscode(input: string): Promise<string> {
   return hashHex;
 }
 
-export default function ProductDetailPage() {
+interface ProductDetailPageProps {
+  productId?: string;
+  initialDbProducts?: Product[];
+  initialCustomText?: Record<string, string>;
+  initialCustomizedImages?: Record<string, string>;
+}
+
+export default function ProductDetailPage({
+  productId,
+  initialDbProducts = initialProducts,
+  initialCustomText = {},
+  initialCustomizedImages = {},
+}: ProductDetailPageProps) {
   const params = useParams();
-  const id = params?.id ? (params.id as string) : "";
+  const id = productId || (params?.id ? (params.id as string) : "");
 
   // Core data states
-  const [dbProducts, setDbProducts] = useState<Product[]>(initialProducts);
-  const [customText, setCustomText] = useState<Record<string, string>>({});
-  const [customizedImages, setCustomizedImages] = useState<Record<string, string>>({});
+  const [dbProducts, setDbProducts] = useState<Product[]>(initialDbProducts);
+  const [customText, setCustomText] = useState<Record<string, string>>(initialCustomText);
+  const [customizedImages, setCustomizedImages] = useState<Record<string, string>>(initialCustomizedImages);
   const [wishlist, setWishlist] = useState<Product[]>([]);
   const [cart, setCart] = useState<{ product: Product; quantity: number }[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -53,26 +65,47 @@ export default function ProductDetailPage() {
   }, []);
 
   // Selected details page product
-  const [product, setProduct] = useState<Product | null>(null);
+  const [product, setProduct] = useState<Product | null>(() => {
+    return initialDbProducts.find((p) => p.id === id) || null;
+  });
 
   // Design studio state variables
   const [isDesignMode, setIsDesignMode] = useState(false);
 
   // Gallery slider state
   const [activeImage, setActiveImage] = useState<string>("");
-  const [gallery, setGallery] = useState<string[]>([]);
+  const [gallery, setGallery] = useState<string[]>(() => {
+    const found = initialDbProducts.find((p) => p.id === id);
+    if (found) {
+      const customizedImg = initialCustomizedImages[found.id];
+      return [customizedImg || found.image];
+    }
+    return [];
+  });
 
   // Recently Viewed & Similar Products states
   const [recentlyViewed, setRecentlyViewed] = useState<Product[]>([]);
-  const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
+  const [similarProducts, setSimilarProducts] = useState<Product[]>(() => {
+    const found = initialDbProducts.find((p) => p.id === id);
+    if (found) {
+      return initialDbProducts.filter((p) => p.subCategory === found.subCategory && p.id !== found.id).slice(0, 4);
+    }
+    return [];
+  });
 
   // Product customization option states
   const [selectedRingSize, setSelectedRingSize] = useState<string>("12");
   const [selectedMetal, setSelectedMetal] = useState<string>("champagne");
   const [selectedPurity, setSelectedPurity] = useState<string>("18k");
   const [selectedStone, setSelectedStone] = useState<string>("none");
-  const [basePrice, setBasePrice] = useState<number>(0);
-  const [livePrice, setLivePrice] = useState<number>(0);
+  const [basePrice, setBasePrice] = useState<number>(() => {
+    const found = initialDbProducts.find((p) => p.id === id);
+    return found ? found.price : 0;
+  });
+  const [livePrice, setLivePrice] = useState<number>(() => {
+    const found = initialDbProducts.find((p) => p.id === id);
+    return found ? found.price : 0;
+  });
 
   // Load wishlist, cart, customizations, and products
   useEffect(() => {
@@ -102,12 +135,8 @@ export default function ProductDetailPage() {
             setLivePrice(found.price);
             
             // Build visual gallery
-            setGallery([
-              found.image,
-              "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=800&auto=format&fit=crop", // Close-up detail
-              "https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=800&auto=format&fit=crop", // Elegant gold layout
-              "https://images.unsplash.com/photo-1543294001-f7cbfe92237e?q=80&w=800&auto=format&fit=crop"  // Presentation case
-            ]);
+            const customizedImg = customizedImages[found.id];
+            setGallery([customizedImg || found.image]);
 
             // Save to recently viewed lists
             saveToRecentlyViewed(found, data.products);
@@ -142,6 +171,10 @@ export default function ProductDetailPage() {
           });
           setCustomizedImages(loadedCustoms);
           setCustomText(loadedTexts);
+          if (product) {
+            const latestImg = loadedCustoms[product.id] || product.image;
+            setGallery([latestImg]);
+          }
         }
       })
       .catch((err) => console.error("Product details failed to load customized overrides:", err));
@@ -441,7 +474,7 @@ export default function ProductDetailPage() {
 
             {/* Thumbnail list */}
             <div className="grid grid-cols-4 gap-3">
-              {[displayImage, gallery[1], gallery[2], gallery[3]].map((imgUrl, index) => (
+              {[displayImage, ...gallery.slice(1)].filter(Boolean).map((imgUrl, index) => (
                 <button
                   key={index}
                   onClick={() => setActiveImage(imgUrl || "")}

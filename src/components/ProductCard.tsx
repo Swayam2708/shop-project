@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Eye, ShoppingBag, Heart, Upload } from "lucide-react";
 import { Product } from "@/data/products";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
 interface ProductCardProps {
@@ -30,6 +31,15 @@ export default function ProductCard({
   onEditText,
   customText = {},
 }: ProductCardProps) {
+  const router = useRouter();
+
+  const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isDesignMode) return;
+    const target = e.target as HTMLElement;
+    const isInteractive = target.closest("button") || target.closest("input") || target.closest("label") || target.closest("a");
+    if (isInteractive) return;
+    router.push(`/product/${product.id}`);
+  };
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && onUploadPhoto) {
@@ -54,7 +64,8 @@ export default function ProductCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="group relative bg-[#FAF9F5]/30 dark:bg-neutral-900/30 border border-neutral-200/50 dark:border-neutral-800/50 hover:border-[#dfba73]/60 p-4 transition-all duration-500 ease-out flex flex-col justify-between hover:shadow-2xl hover:shadow-[#dfba73]/8 hover:-translate-y-1 rounded-sm backdrop-blur-xs transform-gpu"
+      className="group relative bg-[#FAF9F5]/30 dark:bg-neutral-900/30 border border-neutral-200/50 dark:border-neutral-800/50 hover:border-[#dfba73]/60 p-4 transition-all duration-500 ease-out flex flex-col justify-between hover:shadow-2xl hover:shadow-[#dfba73]/8 hover:-translate-y-1 rounded-sm backdrop-blur-xs transform-gpu cursor-pointer"
+      onClick={handleCardClick}
     >
       <div className="relative overflow-hidden aspect-square border border-gold/10 bg-neutral-950 mb-4">
         {/* Zoom image */}
