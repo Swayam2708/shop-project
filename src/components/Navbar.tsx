@@ -49,7 +49,7 @@ export default function Navbar({
   // Dynamic product loading inside Navbar for search suggestions
   const [navbarProducts, setNavbarProducts] = useState<Product[]>([]);
   useEffect(() => {
-    fetch("/api/products", { cache: "no-store" })
+    fetch("/api/products")
       .then((res) => res.json())
       .then((data) => {
         if (data.success && data.products) {

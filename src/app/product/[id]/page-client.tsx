@@ -107,9 +107,8 @@ export default function ProductDetailPage({
     return found ? found.price : 0;
   });
 
-  // Load wishlist, cart, customizations, and products
+  // Load wishlist, cart, and save to recently viewed
   useEffect(() => {
-    // 1. Fetch wishlist & cart from localStorage
     if (typeof window !== "undefined") {
       const savedWish = localStorage.getItem("oj_wishlist");
       const savedCart = localStorage.getItem("oj_cart");
@@ -121,37 +120,10 @@ export default function ProductDetailPage({
       }
     }
 
-    // 2. Fetch products
-    fetch("/api/products", { cache: "no-store" })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success && data.products) {
-          setDbProducts(data.products);
-          
-          const found = data.products.find((p: Product) => p.id === id);
-          if (found) {
-            setProduct(found);
-            setBasePrice(found.price);
-            setLivePrice(found.price);
-            
-            // Build visual gallery
-            const customizedImg = customizedImages[found.id];
-            setGallery([customizedImg || found.image]);
-
-            // Save to recently viewed lists
-            saveToRecentlyViewed(found, data.products);
-
-            // Fetch similar products in same subcategory (exclude current)
-            const matched = data.products.filter((p: Product) => p.subCategory === found.subCategory && p.id !== found.id);
-            setSimilarProducts(matched.slice(0, 4));
-          }
-        }
-      })
-      .catch((err) => console.error("Product details failed to load products:", err));
-
-    // 3. Fetch customizations
-    fetchCustomContent();
-  }, [id]);
+    if (product) {
+      saveToRecentlyViewed(product, dbProducts);
+    }
+  }, [id, product]);
 
   const fetchCustomContent = () => {
     fetch("/api/custom-content", { cache: "no-store" })
