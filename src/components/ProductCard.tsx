@@ -65,7 +65,7 @@ export default function ProductCard({
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         ) : (
-          <Link href={`/product/${product.id}`} className="block w-full h-full">
+          <Link href={`/product/${product.id}`} tabIndex={-1} className="block w-full h-full">
             <img
               src={product.image}
               alt={displayName}
@@ -79,14 +79,16 @@ export default function ProductCard({
         <div className="absolute inset-0 bg-neutral-950/40 opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 hidden md:flex items-center justify-center gap-3">
           <button
             onClick={() => onQuickView(product)}
-            className="p-3 bg-white dark:bg-neutral-900 rounded-full text-neutral-900 dark:text-neutral-100 hover:bg-gold hover:text-neutral-950 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-lg"
+            aria-label={`Quick view of ${displayName}`}
+            className="p-3 bg-white dark:bg-neutral-900 rounded-full text-neutral-900 dark:text-neutral-100 hover:bg-gold hover:text-neutral-950 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-lg focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer"
             title="Quick View"
           >
             <Eye className="w-4 h-4" />
           </button>
           <button
             onClick={() => onAddToCart(product)}
-            className="p-3 bg-white dark:bg-neutral-900 rounded-full text-neutral-900 dark:text-neutral-100 hover:bg-gold hover:text-neutral-950 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 delay-75 shadow-lg"
+            aria-label={`Add ${displayName} to bag`}
+            className="p-3 bg-white dark:bg-neutral-900 rounded-full text-neutral-900 dark:text-neutral-100 hover:bg-gold hover:text-neutral-950 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 delay-75 shadow-lg focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer"
             title="Add to Bag"
           >
             <ShoppingBag className="w-4 h-4" />
@@ -104,6 +106,7 @@ export default function ProductCard({
               type="file"
               accept="image/*"
               className="hidden"
+              aria-label={`Upload replacement gold photo for ${displayName}`}
               onChange={handleFileChange}
             />
           </label>
@@ -112,7 +115,8 @@ export default function ProductCard({
         {/* Wishlist toggle */}
         <button
           onClick={() => onWishlistToggle(product)}
-          className="absolute top-3 right-3 p-2 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full text-neutral-900 dark:text-neutral-100 hover:text-gold transition-colors shadow-md z-10"
+          aria-label={isWishlisted ? `Remove ${displayName} from wishlist` : `Add ${displayName} to wishlist`}
+          className="absolute top-3 right-3 p-2 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-full text-neutral-900 dark:text-neutral-100 hover:text-gold transition-colors shadow-md z-10 focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer"
         >
           <Heart
             className={`w-4 h-4 transition-colors ${
@@ -140,7 +144,7 @@ export default function ProductCard({
             contentEditable={isDesignMode}
             suppressContentEditableWarning
             onBlur={(e) => onEditText && onEditText(`prod_subcat_${product.id}`, e.currentTarget.textContent || "")}
-            className={`font-sans text-[10px] text-gold tracking-widest uppercase font-semibold inline-block ${
+            className={`font-sans text-[10px] text-[#a87a2a] dark:text-gold tracking-widest uppercase font-semibold inline-block ${
               isDesignMode ? "border border-dashed border-amber-500/40 px-1 rounded-sm cursor-text" : ""
             }`}
           >
@@ -188,14 +192,16 @@ export default function ProductCard({
           <div className="flex gap-2 mt-4 md:hidden">
             <button
               onClick={() => onQuickView(product)}
-              className="flex-grow py-2 border border-gold/30 hover:border-gold/60 text-neutral-900 dark:text-neutral-200 hover:bg-gold hover:text-neutral-950 font-sans text-[10px] font-bold tracking-widest uppercase transition-all duration-300 flex items-center justify-center gap-1 rounded-sm active:scale-[0.98] cursor-pointer"
+              aria-label={`Quick view of ${displayName}`}
+              className="flex-grow py-2 border border-gold/30 hover:border-gold/60 text-neutral-900 dark:text-neutral-200 hover:bg-gold hover:text-neutral-950 font-sans text-[10px] font-bold tracking-widest uppercase transition-all duration-300 flex items-center justify-center gap-1 rounded-sm active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer"
             >
               <Eye className="w-3.5 h-3.5" />
               Quick View
             </button>
             <button
               onClick={() => onAddToCart(product)}
-              className="py-2 px-3 bg-gold text-neutral-950 font-sans text-[10px] tracking-widest uppercase hover:bg-amber-600 transition-all duration-300 flex items-center justify-center rounded-sm active:scale-[0.98] cursor-pointer"
+              aria-label={`Add ${displayName} to bag`}
+              className="py-2 px-3 bg-gold text-neutral-950 font-sans text-[10px] tracking-widest uppercase hover:bg-amber-600 transition-all duration-300 flex items-center justify-center rounded-sm active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer"
               title="Add to Bag"
             >
               <ShoppingBag className="w-3.5 h-3.5" />

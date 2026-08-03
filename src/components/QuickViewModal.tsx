@@ -35,6 +35,16 @@ export default function QuickViewModal({
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState<"description" | "specifications">("description");
 
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!product) return null;
 
   // Customized text mappings
@@ -68,14 +78,17 @@ export default function QuickViewModal({
             animate={{ opacity: 1, scale: 1, rotateX: 0, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, rotateX: -8, y: 15 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-title"
             className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto md:overflow-hidden bg-neutral-900 border border-[#dfba73]/25 shadow-2xl z-10 grid grid-cols-1 md:grid-cols-2 rounded-sm transform-gpu scrollbar-none"
           >
             {/* Close Button */}
             <motion.button
               onClick={onClose}
-              whileHover={{ rotate: 90 }}
-              transition={{ duration: 0.3 }}
-              className="absolute top-4 right-4 p-2 bg-neutral-950/80 border border-[#dfba73]/20 hover:border-[#dfba73] text-neutral-300 hover:text-[#dfba73] rounded-full transition-colors z-20"
+              whileHover={{ scale: 1.1 }}
+              transition={{ duration: 0.2 }}
+              className="absolute top-4 right-4 p-2 bg-neutral-950/80 border border-[#dfba73]/20 hover:border-[#dfba73] text-neutral-300 hover:text-[#dfba73] rounded-full transition-colors z-20 focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer"
               aria-label="Close modal"
             >
               <X className="w-4 h-4" />
@@ -164,6 +177,7 @@ export default function QuickViewModal({
                 </div>
 
                 <h2 
+                  id="modal-title"
                   contentEditable={isDesignMode}
                   suppressContentEditableWarning
                   onBlur={(e) => onEditText && onEditText(`prod_name_${product.id}`, e.currentTarget.textContent || "")}
@@ -299,7 +313,8 @@ export default function QuickViewModal({
                   <div className="flex items-center border border-[#dfba73]/25 rounded-sm bg-neutral-950">
                     <button
                       onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                      className="px-3.5 py-1.5 text-neutral-300 hover:text-[#dfba73] transition-colors font-sans text-sm font-bold"
+                      aria-label="Decrease quantity"
+                      className="px-3.5 py-1.5 text-neutral-300 hover:text-[#dfba73] transition-colors font-sans text-sm font-bold focus-visible:ring-1 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer"
                     >
                       -
                     </button>
@@ -308,7 +323,8 @@ export default function QuickViewModal({
                     </span>
                     <button
                       onClick={() => setQuantity((q) => q + 1)}
-                      className="px-3.5 py-1.5 text-neutral-300 hover:text-[#dfba73] transition-colors font-sans text-sm font-bold"
+                      aria-label="Increase quantity"
+                      className="px-3.5 py-1.5 text-neutral-300 hover:text-[#dfba73] transition-colors font-sans text-sm font-bold focus-visible:ring-1 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer"
                     >
                       +
                     </button>
@@ -320,27 +336,30 @@ export default function QuickViewModal({
                   <div className="grid grid-cols-5 gap-3">
                     <button
                       onClick={() => onAddToCart({ ...product })}
-                      className="col-span-4 py-3.5 bg-neutral-950 hover:bg-neutral-800 text-white border border-[#dfba73]/30 font-sans text-xs font-bold tracking-widest uppercase transition-all duration-300 flex items-center justify-center gap-2 rounded-sm shadow-md shimmer-hover"
+                      aria-label={`Add ${displayName} to shopping bag`}
+                      className="col-span-4 py-3.5 bg-neutral-950 hover:bg-neutral-800 text-white border border-[#dfba73]/30 font-sans text-xs font-bold tracking-widest uppercase transition-all duration-300 flex items-center justify-center gap-2 rounded-sm shadow-md shimmer-hover focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer"
                     >
                       <ShoppingBag className="w-4 h-4 text-[#dfba73]" />
                       Add to Shopping Bag
                     </button>
                     <button
                       onClick={() => onWishlistToggle(product)}
-                      className={`py-3.5 border border-[#dfba73]/30 font-sans text-xs flex items-center justify-center transition-all duration-300 rounded-sm ${
+                      aria-label={isWishlisted ? `Remove ${displayName} from wishlist` : `Add ${displayName} to wishlist`}
+                      className={`py-3.5 border border-[#dfba73]/30 font-sans text-xs flex items-center justify-center transition-all duration-300 rounded-sm focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer ${
                         isWishlisted
                           ? "bg-[#dfba73] text-neutral-950"
                           : "bg-transparent text-neutral-300 hover:bg-[#dfba73]/10"
                       }`}
                       title={isWishlisted ? "Wishlisted" : "Add to Wishlist"}
                     >
-                      <Heart className={`w-4 h-4 ${isWishlisted ? "fill-neutral-950" : ""}`} />
+                      <Heart className={`w-4 h-4 ${isWishlisted ? "fill-neutral-950 text-neutral-950" : "text-neutral-300"}`} />
                     </button>
                   </div>
 
                   <button
                     onClick={() => onInquiry(product, quantity)}
-                    className="w-full py-3.5 bg-[#dfba73] hover:bg-[#c5a059] text-neutral-950 font-sans text-xs font-bold tracking-widest uppercase transition-all duration-300 flex items-center justify-center gap-2 rounded-sm shadow-lg shadow-[#dfba73]/10"
+                    aria-label={`Send WhatsApp inquiry for ${quantity} items of ${displayName}`}
+                    className="w-full py-3.5 bg-[#dfba73] hover:bg-[#c5a059] text-neutral-950 font-sans text-xs font-bold tracking-widest uppercase transition-all duration-300 flex items-center justify-center gap-2 rounded-sm shadow-lg shadow-[#dfba73]/10 focus-visible:ring-2 focus-visible:ring-white focus:outline-none cursor-pointer"
                   >
                     <Send className="w-4 h-4" />
                     Inquire on WhatsApp (Custom Pricing)

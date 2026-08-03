@@ -700,7 +700,9 @@ export default function Home(props: {
             <div className="absolute inset-0 rounded-full border border-dashed border-[#dfba73]/20 animate-[spin_20s_linear_infinite]" />
             <img
               src="/logo.jpg"
-              alt="OJ Seal of Purity"
+              alt="Omar Jewellers Purity Seal Logo"
+              width={96}
+              height={96}
               decoding="async"
               className="w-full h-full rounded-full object-cover grayscale brightness-110 group-hover:grayscale-0 transition-all duration-500"
             />
@@ -713,7 +715,9 @@ export default function Home(props: {
           {customHeroBanner ? (
             <img
               src={customHeroBanner}
-              alt="Custom Gold Banner"
+              alt="Omar Jewellers Gold Showroom Banner"
+              width={1920}
+              height={1080}
               loading="eager"
               fetchPriority="high"
               decoding="async"
@@ -892,6 +896,8 @@ export default function Home(props: {
                     <img 
                       src={catImg} 
                       alt={catName} 
+                      width={80}
+                      height={80}
                       className="w-full h-full object-cover aspect-square rounded-full"
                     />
                     <label className="absolute inset-0 bg-neutral-950/80 flex flex-col items-center justify-center text-[#dfba73] cursor-pointer text-[7px] uppercase tracking-wider text-center p-1 font-bold z-10">
@@ -901,6 +907,7 @@ export default function Home(props: {
                         type="file"
                         accept="image/*"
                         className="hidden"
+                        aria-label={`Upload replacement photo for ${catName} category`}
                         onChange={async (e) => {
                           const file = e.target.files?.[0];
                           if (file) {
@@ -914,11 +921,13 @@ export default function Home(props: {
                     </label>
                   </div>
                 ) : (
-                  <Link href={`/category/${cat.id}`}>
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border border-[#dfba73]/30 p-1 group-hover:border-[#dfba73] transition-all duration-300 transform group-hover:scale-105 overflow-hidden cursor-pointer">
+                  <Link href={`/category/${cat.id}`} aria-label={`Browse ${catName} category`} className="focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none rounded-full cursor-pointer">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border border-[#dfba73]/30 p-1 group-hover:border-[#dfba73] transition-all duration-300 transform group-hover:scale-105 overflow-hidden">
                       <img 
                         src={catImg} 
                         alt={catName} 
+                        width={80}
+                        height={80}
                         className="w-full h-full object-cover aspect-square rounded-full"
                       />
                     </div>
@@ -961,7 +970,7 @@ export default function Home(props: {
               <h3 className="font-serif text-2xl md:text-3xl tracking-wide text-neutral-900 dark:text-neutral-100 mt-1">
                 {t("Today's Showroom Metal Rates", "आज के शोरूम धातु भाव")}
               </h3>
-              <p className="font-sans text-xs text-neutral-500 mt-1">
+              <p className="font-sans text-xs text-neutral-600 dark:text-neutral-400 mt-1">
                 {t("Daily verified market rates of Shahabad Chowk, Hardoi. (Assured 100% BIS Hallmarked Purity)", "शाहाबाद चौक, हरदोई के दैनिक सत्यापित बाज़ार भाव। (१००% बीआईएस हॉलमार्क शुद्धता सुनिश्चित)")}
               </p>
             </div>
@@ -976,10 +985,10 @@ export default function Home(props: {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-8 text-center">
             {/* 24K Gold Card */}
             <div className="bg-neutral-50/40 dark:bg-neutral-900/10 border border-[#dfba73]/10 p-6 rounded-sm relative group hover:border-[#dfba73]/30 transition-all duration-300 shadow-sm hover:shadow-luxury-gold">
-              <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-neutral-400">Gold 24K</span>
-              <p className="text-[9px] font-sans text-neutral-500 mt-0.5">{t("99.9% Pure Fine Gold", "९९.९% शुद्ध सोना")}</p>
+              <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-neutral-600 dark:text-neutral-400">Gold 24K</span>
+              <p className="text-[9px] font-sans text-neutral-600 dark:text-neutral-400 mt-0.5">{t("99.9% Pure Fine Gold", "९९.९% शुद्ध सोना")}</p>
               <h4 className="font-serif text-xl sm:text-2xl text-neutral-900 dark:text-white mt-3 font-semibold">
-                ₹{Math.round(marketRates.g24k).toLocaleString()} <span className="text-xs text-neutral-400">/ g</span>
+                ₹{Math.round(marketRates.g24k).toLocaleString()} <span className="text-xs text-neutral-500 dark:text-neutral-400">/ g</span>
               </h4>
               <span className={`inline-block text-[10px] font-bold font-mono mt-1 ${marketRates.g24kDiff >= 0 ? "text-green-500" : "text-red-500"}`}>
                 {marketRates.g24kDiff >= 0 ? "▲" : "▼"}{Math.abs(marketRates.g24kDiff).toFixed(2)}%
@@ -988,10 +997,10 @@ export default function Home(props: {
 
             {/* 22K Gold Card */}
             <div className="bg-neutral-50/40 dark:bg-neutral-900/10 border border-[#dfba73]/10 p-6 rounded-sm relative group hover:border-[#dfba73]/30 transition-all duration-300 shadow-sm hover:shadow-luxury-gold">
-              <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-[#dfba73]">Gold 22K</span>
-              <p className="text-[9px] font-sans text-neutral-500 mt-0.5">{t("91.6% Pure Jeweller Gold", "९१.६% शुद्ध आभूषण सोना")}</p>
+              <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-[#a87a2a] dark:text-[#dfba73]">Gold 22K</span>
+              <p className="text-[9px] font-sans text-neutral-600 dark:text-neutral-400 mt-0.5">{t("91.6% Pure Jeweller Gold", "९१.६% शुद्ध आभूषण सोना")}</p>
               <h4 className="font-serif text-xl sm:text-2xl text-neutral-900 dark:text-white mt-3 font-semibold">
-                ₹{Math.round(marketRates.g22k).toLocaleString()} <span className="text-xs text-neutral-400">/ g</span>
+                ₹{Math.round(marketRates.g22k).toLocaleString()} <span className="text-xs text-neutral-500 dark:text-neutral-400">/ g</span>
               </h4>
               <span className={`inline-block text-[10px] font-bold font-mono mt-1 ${marketRates.g22kDiff >= 0 ? "text-green-500" : "text-red-500"}`}>
                 {marketRates.g22kDiff >= 0 ? "▲" : "▼"}{Math.abs(marketRates.g22kDiff).toFixed(2)}%
@@ -1000,10 +1009,10 @@ export default function Home(props: {
 
             {/* 18K Gold Card */}
             <div className="bg-neutral-50/40 dark:bg-neutral-900/10 border border-[#dfba73]/10 p-6 rounded-sm relative group hover:border-[#dfba73]/30 transition-all duration-300 shadow-sm hover:shadow-luxury-gold">
-              <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-neutral-400">Gold 18K</span>
-              <p className="text-[9px] font-sans text-neutral-500 mt-0.5">{t("75% Pure Designer Gold", "७५% शुद्ध डिज़ाइनर सोना")}</p>
+              <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-neutral-600 dark:text-neutral-400">Gold 18K</span>
+              <p className="text-[9px] font-sans text-neutral-600 dark:text-neutral-400 mt-0.5">{t("75% Pure Designer Gold", "७५% शुद्ध डिज़ाइनर सोना")}</p>
               <h4 className="font-serif text-xl sm:text-2xl text-neutral-900 dark:text-white mt-3 font-semibold">
-                ₹{Math.round(marketRates.g18k).toLocaleString()} <span className="text-xs text-neutral-400">/ g</span>
+                ₹{Math.round(marketRates.g18k).toLocaleString()} <span className="text-xs text-neutral-500 dark:text-neutral-400">/ g</span>
               </h4>
               <span className={`inline-block text-[10px] font-bold font-mono mt-1 ${marketRates.g18kDiff >= 0 ? "text-green-500" : "text-red-500"}`}>
                 {marketRates.g18kDiff >= 0 ? "▲" : "▼"}{Math.abs(marketRates.g18kDiff).toFixed(2)}%
@@ -1012,8 +1021,8 @@ export default function Home(props: {
 
             {/* 999 Silver Card */}
             <div className="bg-neutral-50/40 dark:bg-neutral-900/10 border border-[#dfba73]/10 p-6 rounded-sm relative group hover:border-[#dfba73]/30 transition-all duration-300 shadow-sm hover:shadow-luxury-gold">
-              <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-neutral-400">Silver 999</span>
-              <p className="text-[9px] font-sans text-neutral-500 mt-0.5">{t("99.9% Pure Fine Silver", "९९.९% शुद्ध बढ़िया चांदी")}</p>
+              <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-neutral-600 dark:text-neutral-400">Silver 999</span>
+              <p className="text-[9px] font-sans text-neutral-600 dark:text-neutral-400 mt-0.5">{t("99.9% Pure Fine Silver", "९९.९% शुद्ध बढ़िया चांदी")}</p>
               <h4 className="font-serif text-xl sm:text-2xl text-neutral-900 dark:text-white mt-3 font-semibold">
                 ₹{Math.round(marketRates.s999).toLocaleString()} <span className="text-xs text-neutral-400">/ g</span>
               </h4>
@@ -1264,23 +1273,34 @@ export default function Home(props: {
               return (
                 <div
                   key={space.id}
-                  className={`flex flex-col items-center p-3 rounded-xl border transition-all duration-500 shrink-0 w-28 sm:w-32 group/card text-center relative ${
+                  role="button"
+                  tabIndex={isDesignMode ? -1 : 0}
+                  onClick={() => {
+                    if (!isDesignMode) {
+                      setActiveSilverSub(space.id);
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      if (!isDesignMode) {
+                        setActiveSilverSub(space.id);
+                      }
+                    }
+                  }}
+                  aria-label={`Filter by ${spaceLabel}`}
+                  className={`flex flex-col items-center p-3 rounded-xl border transition-all duration-500 shrink-0 w-28 sm:w-32 group/card text-center relative focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer ${
                     isActive
                       ? "bg-[#dfba73]/15 border-[#dfba73] shadow-md shadow-[#dfba73]/5 scale-105"
                       : "bg-white/5 border-neutral-200/10 hover:border-[#dfba73]/40"
                   }`}
                 >
-                  <div 
-                    onClick={() => {
-                      if (!isDesignMode) {
-                        setActiveSilverSub(space.id);
-                      }
-                    }}
-                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border border-[#dfba73]/20 mb-3 group-hover/card:border-[#dfba73] transition-colors relative shadow-sm cursor-pointer"
-                  >
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border border-[#dfba73]/20 mb-3 group-hover/card:border-[#dfba73] transition-colors relative shadow-sm">
                     <img
                       src={spaceImg}
                       alt={spaceLabel}
+                      width={64}
+                      height={64}
                       className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-500"
                     />
                     {isDesignMode ? (
@@ -1291,6 +1311,7 @@ export default function Home(props: {
                           type="file"
                           accept="image/*"
                           className="hidden"
+                          aria-label={`Upload replacement photo for ${spaceLabel} subcategory`}
                           onChange={async (e) => {
                             const file = e.target.files?.[0];
                             if (file) {
@@ -1933,8 +1954,10 @@ export default function Home(props: {
           {/* Large portrait frame */}
           <div className="relative aspect-[3/4] md:max-h-[550px] border border-[#dfba73]/25 overflow-hidden group shadow-2xl bg-neutral-950">
             <img
-              src={customizedImages["owner_big_photo"] || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600&auto=format&fit=crop"}
+              src={customizedImages["owner_big_photo"] || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=75&w=600&auto=format&fit=crop"}
               alt="Mr. Yogesh Kumar Gupta - Founder"
+              width={600}
+              height={800}
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
             {isDesignMode && (
@@ -1947,6 +1970,7 @@ export default function Home(props: {
                   type="file"
                   accept="image/*"
                   className="hidden"
+                  aria-label="Upload replacement portrait photo of founder Mr. Yogesh Kumar Gupta"
                   onChange={async (e) => {
                     const file = e.target.files?.[0];
                     if (file) {
@@ -2101,6 +2125,8 @@ export default function Home(props: {
                   <img
                     src={customizedImages[`rev_avatar_${review.id}`] || review.img}
                     alt={review.name}
+                    width={40}
+                    height={40}
                     className="w-full h-full object-cover"
                   />
                   {isDesignMode && (
@@ -2110,6 +2136,7 @@ export default function Home(props: {
                         type="file"
                         accept="image/*"
                         className="hidden"
+                        aria-label={`Upload replacement avatar for ${review.name}`}
                         onChange={async (e) => {
                           const file = e.target.files?.[0];
                           if (file) {
@@ -2299,7 +2326,9 @@ export default function Home(props: {
             >
               <img
                 src={customizedImages[`gallery_${idx}`] || imgUrl}
-                alt="Gold jewellery details"
+                alt={`Omar Jewellers showroom design showcase ${idx + 1}`}
+                width={300}
+                height={300}
                 loading="lazy"
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
@@ -2312,6 +2341,7 @@ export default function Home(props: {
                     type="file"
                     accept="image/*"
                     className="hidden"
+                    aria-label={`Upload replacement photo for showroom design showcase ${idx + 1}`}
                     onChange={async (e) => {
                       const file = e.target.files?.[0];
                       if (file) {
@@ -2375,8 +2405,10 @@ export default function Home(props: {
             <div className="bg-[#dfba73]/5 border border-[#dfba73]/20 p-5 rounded-sm flex items-center gap-5 mb-8 relative group hover:border-[#dfba73]/50 transition-colors">
               <div className="relative w-16 h-16 rounded-full overflow-hidden border border-[#dfba73]/40 shrink-0 shadow-lg">
                 <img
-                  src={customizedImages["owner_photo"] || "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=200&auto=format&fit=crop"}
+                  src={customizedImages["owner_photo"] || "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=75&w=200&auto=format&fit=crop"}
                   alt="Mr. Yogesh Kumar Gupta"
+                  width={64}
+                  height={64}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 {isDesignMode && (
@@ -2387,6 +2419,7 @@ export default function Home(props: {
                       type="file"
                       accept="image/*"
                       className="hidden"
+                      aria-label="Upload replacement profile photo of founder Mr. Yogesh Kumar Gupta"
                       onChange={async (e) => {
                         const file = e.target.files?.[0];
                         if (file) {
@@ -2537,61 +2570,65 @@ export default function Home(props: {
               
               <form onSubmit={handleContactSubmit} className="space-y-6">
                 <div>
-                  <label className="block font-sans text-xs tracking-wider uppercase text-neutral-600 dark:text-neutral-300 mb-2 font-bold">
+                  <label htmlFor="contact-name" className="block font-sans text-xs tracking-wider uppercase text-neutral-600 dark:text-neutral-300 mb-2 font-bold">
                     {t("Your Name", "आपका नाम")}
                   </label>
                   <input
                     type="text"
+                    id="contact-name"
                     required
                     value={formState.name}
                     onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-                    className="w-full bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 focus:border-[#dfba73] py-3 px-4 outline-none font-sans text-sm text-neutral-900 dark:text-neutral-100 transition-colors rounded-sm placeholder:text-neutral-500"
+                    className="w-full bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 focus:border-[#dfba73] focus-visible:ring-2 focus-visible:ring-[#dfba73] py-3 px-4 outline-none font-sans text-sm text-neutral-900 dark:text-neutral-100 transition-colors rounded-sm placeholder:text-neutral-500"
                     placeholder={t("Enter name", "नाम दर्ज करें")}
                   />
                 </div>
                 <div>
-                  <label className="block font-sans text-xs tracking-wider uppercase text-neutral-600 dark:text-neutral-300 mb-2 font-bold">
+                  <label htmlFor="contact-email" className="block font-sans text-xs tracking-wider uppercase text-neutral-600 dark:text-neutral-300 mb-2 font-bold">
                     {t("Email Address", "ईमेल पता")}
                   </label>
                   <input
                     type="email"
+                    id="contact-email"
                     required
                     value={formState.email}
                     onChange={(e) => setFormState({ ...formState, email: e.target.value })}
-                    className="w-full bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 focus:border-[#dfba73] py-3 px-4 outline-none font-sans text-sm text-neutral-900 dark:text-neutral-100 transition-colors rounded-sm placeholder:text-neutral-500"
+                    className="w-full bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 focus:border-[#dfba73] focus-visible:ring-2 focus-visible:ring-[#dfba73] py-3 px-4 outline-none font-sans text-sm text-neutral-900 dark:text-neutral-100 transition-colors rounded-sm placeholder:text-neutral-500"
                     placeholder={t("Enter email", "ईमेल दर्ज करें")}
                   />
                 </div>
                 <div>
-                  <label className="block font-sans text-xs tracking-wider uppercase text-neutral-600 dark:text-neutral-300 mb-2 font-bold">
+                  <label htmlFor="contact-phone" className="block font-sans text-xs tracking-wider uppercase text-neutral-600 dark:text-neutral-300 mb-2 font-bold">
                     {t("Phone / WhatsApp Number", "फ़ोन / व्हाट्सएप नंबर")}
                   </label>
                   <input
                     type="tel"
+                    id="contact-phone"
                     required
                     value={formState.phone}
                     onChange={(e) => setFormState({ ...formState, phone: e.target.value })}
-                    className="w-full bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 focus:border-[#dfba73] py-3 px-4 outline-none font-sans text-sm text-neutral-900 dark:text-neutral-100 transition-colors rounded-sm placeholder:text-neutral-500"
+                    className="w-full bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 focus:border-[#dfba73] focus-visible:ring-2 focus-visible:ring-[#dfba73] py-3 px-4 outline-none font-sans text-sm text-neutral-900 dark:text-neutral-100 transition-colors rounded-sm placeholder:text-neutral-500"
                     placeholder={t("Enter Phone/WhatsApp (e.g. +91 99364 88845)", "फ़ोन/व्हाट्सएप दर्ज करें (जैसे +91 99364 88845)")}
                   />
                 </div>
                 <div>
-                  <label className="block font-sans text-xs tracking-wider uppercase text-neutral-600 dark:text-neutral-300 mb-2 font-bold">
+                  <label htmlFor="contact-message" className="block font-sans text-xs tracking-wider uppercase text-neutral-600 dark:text-neutral-300 mb-2 font-bold">
                     {t("Custom Requests & Details", "कस्टम आवश्यकताएं और विवरण")}
                   </label>
                   <textarea
                     rows={4}
+                    id="contact-message"
                     required
                     value={formState.message}
                     onChange={(e) => setFormState({ ...formState, message: e.target.value })}
-                    className="w-full bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 focus:border-[#dfba73] py-3 px-4 outline-none font-sans text-sm text-neutral-900 dark:text-neutral-100 transition-colors rounded-sm resize-none placeholder:text-neutral-500"
+                    className="w-full bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 focus:border-[#dfba73] focus-visible:ring-2 focus-visible:ring-[#dfba73] py-3 px-4 outline-none font-sans text-sm text-neutral-900 dark:text-neutral-100 transition-colors rounded-sm resize-none placeholder:text-neutral-500"
                     placeholder={t("Describe custom sizes, carat requirements, or catalog questions...", "कस्टम आकार, कैरेट आवश्यकताएं, या कैटलॉग के प्रश्नों का वर्णन करें...")}
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-4 bg-neutral-950 dark:bg-neutral-100 text-neutral-100 dark:text-neutral-950 border border-[#dfba73]/30 hover:bg-[#dfba73] hover:text-neutral-950 font-sans text-xs font-bold tracking-widest uppercase transition-all duration-300 flex items-center justify-center gap-2 rounded-sm"
+                  className="w-full py-4 bg-neutral-950 dark:bg-neutral-100 text-neutral-100 dark:text-neutral-950 border border-[#dfba73]/30 hover:bg-[#dfba73] hover:text-neutral-950 font-sans text-xs font-bold tracking-widest uppercase transition-all duration-300 flex items-center justify-center gap-2 rounded-sm focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer"
                 >
                   <Send className="w-4 h-4" />
                   {t("Send Order Inquiry", "पूछताछ भेजें")}
@@ -2667,25 +2704,26 @@ export default function Home(props: {
             <p className="font-sans text-xs text-neutral-400 mb-4 leading-relaxed">
               Subscribe to unlock VIP access to early gold drops and private sales.
             </p>
-            <div className="flex border border-neutral-800 rounded-sm overflow-hidden focus-within:border-[#dfba73] transition-colors">
+            <div className="flex border border-neutral-800 rounded-sm overflow-hidden focus-within:border-[#dfba73] transition-colors focus-within:ring-2 focus-within:ring-[#dfba73]">
               <input
                 type="email"
+                aria-label="Your email address"
                 placeholder="Your email address"
-                className="bg-transparent text-xs py-3 px-4 outline-none w-full font-sans text-neutral-100"
+                className="bg-transparent text-xs py-3 px-4 outline-none w-full font-sans text-neutral-100 placeholder:text-neutral-500"
               />
-              <button className="bg-[#dfba73] hover:bg-[#c5a059] text-neutral-950 px-4 font-sans text-xs font-bold uppercase transition-colors">
+              <button aria-label="Subscribe to newsletter" className="bg-[#dfba73] hover:bg-[#c5a059] text-neutral-950 px-4 font-sans text-xs font-bold uppercase transition-colors focus-visible:ring-2 focus-visible:ring-white focus:outline-none cursor-pointer">
                 Join
               </button>
             </div>
             {/* Social icons */}
             <div className="flex gap-4 mt-6">
-              <a href="#" className="p-2 border border-neutral-800 rounded-full hover:text-gold hover:border-gold transition-all">
+              <a href="#" aria-label="Follow Omar Jewellers on Instagram" className="p-3 -m-1 border border-neutral-800 rounded-full hover:text-gold hover:border-gold transition-all focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer">
                 <Instagram className="w-4 h-4" />
               </a>
-              <a href="#" className="p-2 border border-neutral-800 rounded-full hover:text-gold hover:border-gold transition-all">
+              <a href="#" aria-label="Follow Omar Jewellers on Facebook" className="p-3 -m-1 border border-neutral-800 rounded-full hover:text-gold hover:border-gold transition-all focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer">
                 <Facebook className="w-4 h-4" />
               </a>
-              <a href="#" className="p-2 border border-neutral-800 rounded-full hover:text-gold hover:border-gold transition-all">
+              <a href="#" aria-label="Follow Omar Jewellers on Twitter" className="p-3 -m-1 border border-neutral-800 rounded-full hover:text-gold hover:border-gold transition-all focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer">
                 <Twitter className="w-4 h-4" />
               </a>
             </div>

@@ -310,17 +310,19 @@ export default function Navbar({
           {/* Mobile Menu Trigger */}
           <button
             onClick={() => setIsMobileMenuOpen(true)}
-            className="md:hidden text-neutral-900 dark:text-neutral-100 hover:text-gold transition-colors"
-            aria-label="Open menu"
+            className="md:hidden p-3 -m-3 text-neutral-900 dark:text-neutral-100 hover:text-gold transition-colors focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none rounded-full cursor-pointer"
+            aria-label="Open navigation menu"
           >
             <Menu className="w-5 h-5" />
           </button>
 
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2 sm:gap-3 select-none group">
+          <a href="#" className="flex items-center gap-2 sm:gap-3 select-none group focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none rounded-sm">
             <img
               src="/logo.jpg"
               alt="Omar Jewellers Logo"
+              width={40}
+              height={40}
               className="w-7 h-7 sm:w-10 sm:h-10 rounded-full border border-gold/30 object-cover shadow-sm group-hover:border-gold transition-colors duration-300"
             />
             <div className="flex flex-col">
@@ -342,6 +344,7 @@ export default function Navbar({
               <input
                 type="text"
                 value={searchQuery}
+                aria-label="Search jewelry catalog"
                 onChange={(e) => {
                   if (setSearchQuery) {
                     setSearchQuery(e.target.value);
@@ -356,27 +359,30 @@ export default function Navbar({
                   }
                 }}
                 placeholder={t("Search for gold, diamonds, rings...", "सोना, चांदी, अंगूठी खोजें...")}
-                className="w-full bg-[#FAF9F5] dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 focus:border-gold hover:border-neutral-400 dark:hover:border-neutral-600 outline-none rounded-full py-2 pl-11 pr-24 text-xs font-sans text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-500 dark:placeholder:text-neutral-400 transition-all shadow-sm"
+                className="w-full bg-[#FAF9F5] dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 focus:border-gold hover:border-neutral-400 dark:hover:border-neutral-600 outline-none rounded-full py-2 pl-11 pr-24 text-xs font-sans text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-600 dark:placeholder:text-neutral-400 transition-all shadow-sm focus-visible:ring-2 focus-visible:ring-[#dfba73]"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery && setSearchQuery("")}
-                  className="absolute inset-y-0 right-14 flex items-center pr-2 text-neutral-400 hover:text-gold transition-colors text-[9px] uppercase tracking-wider font-sans font-bold"
+                  aria-label="Clear search query"
+                  className="absolute inset-y-0 right-16 flex items-center pr-2 text-neutral-500 dark:text-neutral-400 hover:text-gold transition-colors text-[9px] uppercase tracking-wider font-sans font-bold focus-visible:ring-1 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer"
                 >
                   Clear
                 </button>
               )}
-              <div className="absolute inset-y-0 right-0 pr-4 flex items-center gap-3 text-neutral-400">
+              <div className="absolute inset-y-0 right-0 pr-4 flex items-center gap-3 text-neutral-500 dark:text-neutral-400">
                 <button
                   onClick={handleCameraClick}
-                  className="hover:text-gold transition-colors"
+                  aria-label="Search by uploading photo"
+                  className="hover:text-gold transition-colors p-1.5 focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none rounded-full cursor-pointer"
                   title="Search by photo"
                 >
                   <Camera className="w-4 h-4" />
                 </button>
                 <button
                   onClick={startVoiceSearch}
-                  className="hover:text-gold transition-colors"
+                  aria-label="Search by voice"
+                  className="hover:text-gold transition-colors p-1.5 focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none rounded-full cursor-pointer"
                   title="Search by voice"
                 >
                   <Mic className="w-4 h-4" />
@@ -446,7 +452,8 @@ export default function Navbar({
             {/* Language Toggle */}
             <button
               onClick={() => onLanguageChange && onLanguageChange(language === "en" ? "hi" : "en")}
-              className="flex items-center gap-1.5 px-3 py-1 border border-gold/30 hover:border-gold rounded-full bg-gold/5 hover:bg-gold/15 text-neutral-800 dark:text-neutral-200 text-[10px] sm:text-xs font-serif font-bold uppercase transition-all duration-300 select-none cursor-pointer"
+              aria-label={language === "en" ? "Switch language to Hindi" : "Switch language to English"}
+              className="flex items-center gap-1.5 px-3 py-2 border border-gold/30 hover:border-gold rounded-full bg-gold/5 hover:bg-gold/15 text-neutral-800 dark:text-neutral-200 text-[10px] sm:text-xs font-serif font-bold uppercase transition-all duration-300 select-none cursor-pointer focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none"
               title="Change Language / भाषा बदलें"
             >
               <span>{language === "en" ? "हिंदी" : "EN"}</span>
@@ -455,8 +462,8 @@ export default function Navbar({
             {/* Wishlist Button */}
             <button
               onClick={() => setIsWishlistOpen(true)}
-              className="relative p-2 text-neutral-900 dark:text-neutral-100 hover:text-gold transition-colors"
-              aria-label="Wishlist"
+              aria-label={`View wishlist, contains ${wishlist.length} items`}
+              className="relative p-2.5 -m-1 text-neutral-900 dark:text-neutral-100 hover:text-gold transition-colors focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none rounded-full cursor-pointer"
             >
               <Heart className="w-5 h-5" />
               {wishlist.length > 0 && (
@@ -473,8 +480,8 @@ export default function Navbar({
             {/* Cart Button */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="relative p-2 text-neutral-900 dark:text-neutral-100 hover:text-gold transition-colors"
-              aria-label="Shopping Bag"
+              aria-label={`View shopping bag, contains ${cart.reduce((total, item) => total + item.quantity, 0)} items`}
+              className="relative p-2.5 -m-1 text-neutral-900 dark:text-neutral-100 hover:text-gold transition-colors focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none rounded-full cursor-pointer"
             >
               <ShoppingBag className="w-5 h-5" />
               {cart.length > 0 && (
@@ -499,6 +506,7 @@ export default function Navbar({
             <input
               type="text"
               value={searchQuery}
+              aria-label="Search jewelry catalog"
               onChange={(e) => {
                 if (setSearchQuery) {
                   setSearchQuery(e.target.value);
@@ -509,27 +517,30 @@ export default function Navbar({
                 }
               }}
               placeholder="Search gold, silver, rings..."
-              className="w-full bg-[#FAF9F5] dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 focus:border-gold outline-none rounded-full py-1.5 pl-9 pr-20 text-xs font-sans text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-500 dark:placeholder:text-neutral-400 transition-all shadow-sm"
+              className="w-full bg-[#FAF9F5] dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 focus:border-gold outline-none rounded-full py-1.5 pl-9 pr-20 text-xs font-sans text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-600 dark:placeholder:text-neutral-400 transition-all shadow-sm focus-visible:ring-2 focus-visible:ring-[#dfba73]"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery && setSearchQuery("")}
-                className="absolute inset-y-0 right-14 flex items-center pr-2 text-neutral-400 hover:text-gold transition-colors text-[9px] uppercase tracking-wider font-sans font-bold"
+                aria-label="Clear search query"
+                className="absolute inset-y-0 right-16 flex items-center pr-2 text-neutral-500 dark:text-neutral-400 hover:text-gold transition-colors text-[9px] uppercase tracking-wider font-sans font-bold focus-visible:ring-1 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer"
               >
                 Clear
               </button>
             )}
-            <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center gap-2.5 text-neutral-400">
+            <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center gap-2.5 text-neutral-500 dark:text-neutral-400">
               <button
                 onClick={handleCameraClick}
-                className="hover:text-gold transition-colors"
+                aria-label="Search by uploading photo"
+                className="hover:text-gold transition-colors p-1.5 focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none rounded-full cursor-pointer"
                 title="Search by photo"
               >
                 <Camera className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={startVoiceSearch}
-                className="hover:text-gold transition-colors"
+                aria-label="Search by voice"
+                className="hover:text-gold transition-colors p-1.5 focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none rounded-full cursor-pointer"
                 title="Search by voice"
               >
                 <Mic className="w-3.5 h-3.5" />
@@ -590,6 +601,9 @@ export default function Navbar({
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "tween", duration: 0.4 }}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Mobile navigation drawer"
               className="fixed inset-y-0 left-0 w-80 bg-[#FAF9F5] dark:bg-neutral-950 border-r border-gold/10 z-50 p-6 flex flex-col justify-between"
             >
               <div>
@@ -598,6 +612,8 @@ export default function Navbar({
                     <img
                       src="/logo.jpg"
                       alt="Omar Jewellers Logo"
+                      width={44}
+                      height={44}
                       className="w-11 h-11 rounded-full border border-gold/30 object-cover"
                     />
                     <div className="flex flex-col">
@@ -611,7 +627,8 @@ export default function Navbar({
                   </div>
                   <button
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="text-neutral-900 dark:text-neutral-100 hover:text-gold"
+                    aria-label="Close navigation menu"
+                    className="text-neutral-900 dark:text-neutral-100 hover:text-gold p-2.5 -m-2.5 rounded-full focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer"
                   >
                     <X className="w-6 h-6" />
                   </button>
@@ -706,6 +723,9 @@ export default function Navbar({
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "tween", duration: 0.4 }}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Wishlist drawer"
               className="fixed inset-y-0 right-0 w-full sm:w-96 bg-[#FAF9F5] dark:bg-neutral-950 border-l border-gold/10 z-50 p-6 flex flex-col"
             >
               <div className="flex items-center justify-between border-b border-gold/10 pb-4 mb-6">
@@ -717,7 +737,8 @@ export default function Navbar({
                 </div>
                 <button
                   onClick={() => setIsWishlistOpen(false)}
-                  className="text-neutral-900 dark:text-neutral-100 hover:text-gold"
+                  aria-label="Close wishlist drawer"
+                  className="text-neutral-900 dark:text-neutral-100 hover:text-gold p-2.5 -m-2.5 rounded-full focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer"
                 >
                   <X className="w-6 h-6" />
                 </button>
@@ -769,8 +790,8 @@ export default function Navbar({
                       </div>
                       <button
                         onClick={() => removeFromWishlist(item.id)}
-                        className="text-red-500/70 hover:text-red-500 p-1"
-                        aria-label="Remove item"
+                        className="text-red-500/70 hover:text-red-500 p-2.5 -m-1.5 hover:bg-red-500/5 rounded-full focus-visible:ring-1 focus-visible:ring-red-500 focus:outline-none cursor-pointer"
+                        aria-label={`Remove ${item.name} from wishlist`}
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -801,6 +822,9 @@ export default function Navbar({
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "tween", duration: 0.4 }}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Shopping cart drawer"
               className="fixed inset-y-0 right-0 w-full sm:w-96 bg-[#FAF9F5] dark:bg-neutral-950 border-l border-gold/10 z-50 p-6 flex flex-col"
             >
               <div className="flex items-center justify-between border-b border-gold/10 pb-4 mb-6">
@@ -812,7 +836,8 @@ export default function Navbar({
                 </div>
                 <button
                   onClick={() => setIsCartOpen(false)}
-                  className="text-neutral-900 dark:text-neutral-100 hover:text-gold"
+                  aria-label="Close shopping bag drawer"
+                  className="text-neutral-900 dark:text-neutral-100 hover:text-gold p-2.5 -m-2.5 rounded-full focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer"
                 >
                   <X className="w-6 h-6" />
                 </button>
@@ -851,14 +876,14 @@ export default function Navbar({
                           <p className="font-sans text-xs text-neutral-500 dark:text-neutral-400">
                             Qty: {item.quantity}
                           </p>
-                          <p className="font-sans text-xs text-gold font-semibold mt-1">
-                            ${(item.product.price * item.quantity).toLocaleString()}
+                          <p className="font-sans text-xs text-[#a87a2a] dark:text-gold font-semibold mt-1">
+                            ₹{(item.product.price * item.quantity).toLocaleString()}
                           </p>
                         </div>
                         <button
                           onClick={() => removeFromCart(item.product.id)}
-                          className="text-red-500/70 hover:text-red-500 p-1"
-                          aria-label="Remove item"
+                          className="text-red-500/70 hover:text-red-500 p-2.5 -m-1.5 hover:bg-red-500/5 rounded-full focus-visible:ring-1 focus-visible:ring-red-500 focus:outline-none cursor-pointer"
+                          aria-label={`Remove ${item.product.name} from shopping bag`}
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -872,7 +897,7 @@ export default function Navbar({
                         Estimated Total
                       </span>
                       <span className="font-sans text-lg font-bold text-gold">
-                        ${cartTotal.toLocaleString()}
+                        ₹{cartTotal.toLocaleString()}
                       </span>
                     </div>
                     <p className="font-sans text-[11px] text-neutral-500 dark:text-neutral-400 mb-6">
@@ -884,13 +909,13 @@ export default function Navbar({
                           onOpenInquiry(cart[0].product);
                           setIsCartOpen(false);
                         }}
-                        className="w-full py-3 bg-gold hover:bg-gold-dark text-neutral-950 font-sans text-xs font-bold tracking-widest uppercase transition-all duration-300 text-center flex items-center justify-center gap-2"
+                        className="w-full py-3 bg-[#dfba73] hover:bg-[#c5a059] text-neutral-950 font-sans text-xs font-bold tracking-widest uppercase transition-all duration-300 text-center flex items-center justify-center gap-2 focus-visible:ring-2 focus-visible:ring-white focus:outline-none cursor-pointer rounded-sm"
                       >
                         Inquire on WhatsApp
                       </button>
                       <button
                         onClick={() => setIsCartOpen(false)}
-                        className="w-full py-3 border border-gold/30 hover:border-gold hover:bg-gold/5 font-sans text-xs font-bold tracking-widest uppercase text-neutral-900 dark:text-neutral-100 transition-all duration-300"
+                        className="w-full py-3 border border-gold/30 hover:border-gold hover:bg-gold/5 font-sans text-xs font-bold tracking-widest uppercase text-neutral-900 dark:text-neutral-100 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer rounded-sm"
                       >
                         Keep Shopping
                       </button>

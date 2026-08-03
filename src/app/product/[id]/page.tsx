@@ -442,11 +442,12 @@ export default function ProductDetailPage() {
                 <button
                   key={index}
                   onClick={() => setActiveImage(imgUrl || "")}
-                  className={`aspect-square overflow-hidden border bg-neutral-950 rounded-sm transition-all ${
+                  aria-label={`View product gallery photo ${index + 1}`}
+                  className={`aspect-square overflow-hidden border bg-neutral-950 rounded-sm transition-all focus-visible:ring-2 focus-visible:ring-[#dfba73] focus:outline-none cursor-pointer ${
                     (activeImage || displayImage) === imgUrl ? "border-[#dfba73] ring-1 ring-[#dfba73]" : "border-neutral-800 hover:border-[#dfba73]/45"
                   }`}
                 >
-                  <img src={imgUrl} alt="Thumbnail view" className="w-full h-full object-cover" />
+                  <img src={imgUrl} alt={`Product gallery thumbnail ${index + 1}`} width={80} height={80} className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>
