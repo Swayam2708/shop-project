@@ -2,9 +2,6 @@ import { prisma } from "@/lib/prisma";
 import PageClient from "./page-client";
 import { products as defaultProducts, type Product } from "@/data/products";
 
-// Enable Incremental Static Regeneration (ISR) - Revalidate cached page every 60 seconds
-export const revalidate = 60;
-
 export default async function Page() {
   try {
     // Parallelize database queries for fast execution

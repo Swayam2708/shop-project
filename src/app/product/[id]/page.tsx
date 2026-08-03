@@ -3,15 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { Metadata } from "next";
 import { products as defaultProducts, type Product } from "@/data/products";
 
-// Enable Incremental Static Regeneration (ISR) - Revalidate cached product pages every 60 seconds
-export const revalidate = 60;
-
 interface PageProps {
   params: Promise<{ id: string }>;
-}
-
-export async function generateStaticParams() {
-  return defaultProducts.map((p) => ({ id: p.id }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
