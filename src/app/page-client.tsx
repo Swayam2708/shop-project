@@ -1383,6 +1383,7 @@ export default function Home(props: {
                 onUploadPhoto={handleUploadImage}
                 onEditText={handleTextChange}
                 customText={customText}
+                customizedImages={customizedImages}
               />
             ))}
         </div>
@@ -1442,6 +1443,7 @@ export default function Home(props: {
                 onUploadPhoto={handleUploadImage}
                 onEditText={handleTextChange}
                 customText={customText}
+                customizedImages={customizedImages}
               />
             ))}
         </div>
@@ -1807,6 +1809,7 @@ export default function Home(props: {
                 onUploadPhoto={handleUploadImage}
                 onEditText={handleTextChange}
                 customText={customText}
+                customizedImages={customizedImages}
               />
             ))}
         </div>
@@ -2664,6 +2667,7 @@ export default function Home(props: {
         onEditText={handleTextChange}
         onUploadPhoto={handleUploadImage}
         customText={customText}
+        customizedImages={customizedImages}
       />
 
       <AIChatBox whatsAppNumber={whatsAppNumber} language={language} />

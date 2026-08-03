@@ -764,6 +764,7 @@ export default function ProductDetailPage({
                   onEditText={handleTextChange}
                   onUploadPhoto={handleUploadImage}
                   customText={customText}
+                  customizedImages={customizedImages}
                 />
               ))}
             </div>
@@ -795,6 +796,7 @@ export default function ProductDetailPage({
                   onEditText={handleTextChange}
                   onUploadPhoto={handleUploadImage}
                   customText={customText}
+                  customizedImages={customizedImages}
                 />
               ))}
             </div>

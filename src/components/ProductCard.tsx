@@ -18,6 +18,7 @@ interface ProductCardProps {
   onUploadPhoto?: (id: string, base64: string) => void;
   onEditText?: (key: string, text: string) => void;
   customText?: Record<string, string>;
+  customizedImages?: Record<string, string>;
 }
 
 export default function ProductCard({
@@ -30,6 +31,7 @@ export default function ProductCard({
   onUploadPhoto,
   onEditText,
   customText = {},
+  customizedImages = {},
 }: ProductCardProps) {
   const router = useRouter();
 
@@ -57,6 +59,11 @@ export default function ProductCard({
   const displayName = customText[`prod_name_${product.id}`] || product.name;
   const displaySubCat = customText[`prod_subcat_${product.id}`] || product.subCategory;
   const displayPrice = customText[`prod_price_${product.id}`] || `₹${product.price.toLocaleString()}`;
+  const displayImage =
+    customizedImages[product.id] ||
+    customText[`oj_custom_img_${product.id}`] ||
+    customText[`cat_img_${product.id}`] ||
+    product.image;
 
   return (
     <motion.div
@@ -71,7 +78,7 @@ export default function ProductCard({
         {/* Zoom image */}
         {isDesignMode ? (
           <Image
-            src={product.image}
+            src={displayImage}
             alt={displayName}
             width={320}
             height={320}
@@ -80,7 +87,7 @@ export default function ProductCard({
         ) : (
           <Link href={`/product/${product.id}`} tabIndex={-1} className="block w-full h-full">
             <Image
-              src={product.image}
+              src={displayImage}
               alt={displayName}
               width={320}
               height={320}

@@ -603,6 +603,7 @@ export default function CategoryPage(props: {
                       onEditText={handleTextChange}
                       onUploadPhoto={handleUploadImage}
                       customText={customText}
+                      customizedImages={customizedImages}
                     />
                   ))}
                 </AnimatePresence>

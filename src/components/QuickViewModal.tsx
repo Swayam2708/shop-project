@@ -17,6 +17,7 @@ interface QuickViewModalProps {
   onEditText?: (key: string, text: string) => void;
   onUploadPhoto?: (id: string, base64: string) => void;
   customText?: Record<string, string>;
+  customizedImages?: Record<string, string>;
 }
 
 export default function QuickViewModal({
@@ -31,6 +32,7 @@ export default function QuickViewModal({
   onEditText,
   onUploadPhoto,
   customText = {},
+  customizedImages = {},
 }: QuickViewModalProps) {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState<"description" | "specifications">("description");
@@ -47,12 +49,17 @@ export default function QuickViewModal({
 
   if (!product) return null;
 
-  // Customized text mappings
+  // Customized text & image mappings
   const displayName = customText[`prod_name_${product.id}`] || product.name;
   const displaySubCat = customText[`prod_subcat_${product.id}`] || product.subCategory;
   const displayPrice = customText[`prod_price_${product.id}`] || `₹${product.price.toLocaleString()}`;
   const displayDesc = customText[`prod_desc_${product.id}`] || product.description;
   const displayMaterials = customText[`prod_mat_${product.id}`] || product.materials;
+  const displayImage =
+    customizedImages[product.id] ||
+    customText[`oj_custom_img_${product.id}`] ||
+    customText[`cat_img_${product.id}`] ||
+    product.image;
 
   // Extremely premium editor outline styling
   const editOutlineClass = isDesignMode
@@ -102,7 +109,7 @@ export default function QuickViewModal({
               className="relative h-60 md:h-[450px] bg-neutral-955 border-r border-[#dfba73]/15 overflow-hidden"
             >
               <img
-                src={product.image}
+                src={displayImage}
                 alt={displayName}
                 className="w-full h-full object-contain p-4 bg-neutral-950/20 transition-transform duration-1000 hover:scale-105"
               />

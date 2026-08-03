@@ -50,10 +50,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function Page({ params }: PageProps) {
   try {
     const { id } = await params;
-    const dbProducts = await prisma.product.findMany({
-      orderBy: { id: "asc" }
-    });
-    const customContent = await prisma.customContent.findMany();
+    const [dbProducts, customContent] = await Promise.all([
+      prisma.product.findMany({ orderBy: { id: "asc" } }).catch(() => []),
+      prisma.customContent.findMany().catch(() => []),
+    ]);
 
     const mappedProducts = dbProducts.map((p) => ({
       ...p,
