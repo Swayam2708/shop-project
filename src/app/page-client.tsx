@@ -336,7 +336,15 @@ export default function Home(props: {
       })
       .catch((err) => console.error("Failed to load products from server:", err));
 
-    // Fetch custom content overrides
+    // Instantly load cached custom content from localStorage (no flash)
+    try {
+      const cachedImages = localStorage.getItem("oj_cached_images");
+      const cachedTexts = localStorage.getItem("oj_cached_texts");
+      if (cachedImages) setCustomizedImages(JSON.parse(cachedImages));
+      if (cachedTexts) setCustomText(JSON.parse(cachedTexts));
+    } catch (e) {}
+
+    // Fetch custom content overrides (update cache after fetch)
     fetch("/api/custom-content", { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
@@ -355,6 +363,12 @@ export default function Home(props: {
           });
           setCustomizedImages(loadedCustoms);
           setCustomText(loadedTexts);
+
+          // Save to localStorage cache for instant load on next refresh
+          try {
+            localStorage.setItem("oj_cached_images", JSON.stringify(loadedCustoms));
+            localStorage.setItem("oj_cached_texts", JSON.stringify(loadedTexts));
+          } catch (e) {}
 
           // Load baseline rates from database
           const db24k = data.content["oj_base_price_24k"];
