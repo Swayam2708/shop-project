@@ -123,7 +123,10 @@ export default function ProductDetailPage({
     if (product) {
       saveToRecentlyViewed(product, dbProducts);
     }
-  }, [id, product]);
+
+    // Fetch custom content to restore uploaded photos
+    fetchCustomContent();
+  }, [id]);
 
   const fetchCustomContent = () => {
     fetch("/api/custom-content", { cache: "no-store" })

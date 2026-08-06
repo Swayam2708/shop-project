@@ -46,14 +46,8 @@ export default async function Page() {
       }
     });
 
-    // Sanitize heavy base64 payload for initial SSR HTML script tag to keep page bundle under 200KB
-    const sanitizedCustomizedImages: Record<string, string> = {};
-    Object.entries(customizedImages).forEach(([k, v]) => {
-      if (v.startsWith("data:image/") && v.length > 150000) {
-        return; // Client-side fetch will hydrate large uploaded photos asynchronously
-      }
-      sanitizedCustomizedImages[k] = v;
-    });
+    // Pass all custom images from database directly (includes user uploaded photos)
+    const sanitizedCustomizedImages: Record<string, string> = customizedImages;
 
     return (
       <PageClient
