@@ -47,16 +47,6 @@ export default function CustomerReviews({
       img: "",
       id: "rev3"
     }
-  ];200&auto=format&fit=crop",
-      id: "rev2"
-    },
-    {
-      name: t("Zoe L.", "ज़ो एल."),
-      role: t("Daily Wear Fan", "दैनिक उपयोग आभूषण प्रशंसक"),
-      text: t("“I wear the Helix bracelet and sphere studs daily. They have been submerged in water, perfume, and still shine with that authentic luxury luster. OJ is my go-to for gold.”", "“मैं रोजाना हेलिक्स ब्रेसलेट और स्फीयर स्टड्स पहनती हूं। वे पानी और परफ्यूम के संपर्क में आने के बाद भी प्रामाणिक लग्जरी चमक के साथ चमकते हैं। सोने के लिए ओजे मेरा पसंदीदा है।”", "rev_text_rev3"),
-      img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=200&auto=format&fit=crop",
-      id: "rev3"
-    }
   ];
 
   return (
