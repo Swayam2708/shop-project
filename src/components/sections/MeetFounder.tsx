@@ -35,13 +35,23 @@ export default function MeetFounder({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         {/* Large portrait frame */}
         <div className="relative aspect-[3/4] md:max-h-[550px] border border-[#dfba73]/25 overflow-hidden group shadow-2xl bg-neutral-950">
-          <Image
-            src={customizedImages["owner_big_photo"] || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=75&w=600&auto=format&fit=crop"}
-            alt="Mr. Yogesh Kumar Gupta - Founder"
-            width={600}
-            height={800}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          />
+          {customizedImages["owner_big_photo"] ? (
+            <Image
+              src={customizedImages["owner_big_photo"]}
+              alt="Mr. Yogesh Kumar Gupta - Founder"
+              width={600}
+              height={800}
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+          ) : (
+            <div className="w-full h-full flex flex-col items-center justify-center bg-neutral-950">
+              <div className="w-20 h-20 rounded-full bg-[#dfba73]/10 border border-[#dfba73]/30 flex items-center justify-center mb-4">
+                <span className="text-[#dfba73] font-serif text-3xl font-bold">Y</span>
+              </div>
+              <p className="text-neutral-600 text-xs tracking-widest uppercase font-sans">Upload Owner Photo</p>
+            </div>
+          )}
+
           {isDesignMode && (
             <label className="absolute inset-0 bg-neutral-900/80 backdrop-blur-xs flex flex-col items-center justify-center text-amber-500 cursor-pointer z-10">
               <Upload className="w-10 h-10 mb-2 animate-bounce" />

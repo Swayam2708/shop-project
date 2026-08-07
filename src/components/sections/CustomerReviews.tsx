@@ -29,15 +29,25 @@ export default function CustomerReviews({
     {
       name: t("Amara K.", "अमारा के."),
       role: t("Verified Buyer", "सत्यापित खरीदार"),
-      text: t("“The Hammered Choker is an absolute dream! It’s light yet makes me feel like royalty. The gold color is so warm and different from typical brassy jewelry. A must-have!”", "“नक्काशीदार चोकर एक बिल्कुल सपने जैसा है! यह हल्का है फिर भी मुझे शाही महसूस कराता है। सोने का रंग बहुत गर्म है और आम पीतल के आभूषणों से बिल्कुल अलग है। बेहद खूबसूरत!”", "rev_text_rev1"),
-      img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop",
+      text: t("“The Hammered Choker is an absolute dream! It's light yet makes me feel like royalty. The gold color is so warm and different from typical brassy jewelry. A must-have!”", "“नक्काशीदार चोकर एक बिल्कुल सपने जैसा है! यह हल्का है फिर भी मुझे शाही महसूस कराता है। सोने का रंग बहुत गर्म है और आम पीतल के आभूषणों से बिल्कुल अलग है। बेहद खूबसूरत!”", "rev_text_rev1"),
+      img: "",
       id: "rev1"
     },
     {
       name: t("Rohit S.", "रोहित एस."),
       role: t("Bespoke Bridal Client", "कस्टम दुल्हन सेट ग्राहक"),
       text: t("“Stunning craftsmanship. We ordered the Temple Floral Collar and customized the hanging gold beads. The team shared design blueprints on WhatsApp and completed the set perfectly.”", "“शानदार शिल्प कौशल। हमने टेंपल फ्लोरल कॉलर का ऑर्डर दिया और लटकने वाले सोने के मोतियों को कस्टमाइज़ किया। टीम ने व्हाट्सएप पर डिज़ाइन ब्लूप्रिंट साझा किए और सेट को पूरी तरह से पूरा किया।”", "rev_text_rev2"),
-      img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop",
+      img: "",
+      id: "rev2"
+    },
+    {
+      name: t("Zoe L.", "ज़ो एल."),
+      role: t("Daily Wear Fan", "दैनिक उपयोग आभूषण प्रशंसक"),
+      text: t("“I wear the Helix bracelet and sphere studs daily. They have been submerged in water, perfume, and still shine with that authentic luxury luster. OJ is my go-to for gold.”", "“मैं रोजाना हेलिक्स ब्रेसलेट और स्फीयर स्टड्स पहनती हूं। वे पानी और परफ्यूम के संपर्क में आने के बाद भी प्रामाणिक लग्जरी चमक के साथ चमकते हैं। सोने के लिए ओजे मेरा पसंदीदा है।”", "rev_text_rev3"),
+      img: "",
+      id: "rev3"
+    }
+  ];200&auto=format&fit=crop",
       id: "rev2"
     },
     {
@@ -110,13 +120,21 @@ export default function CustomerReviews({
             {/* Review Avatar Image Uploader */}
             <div className="flex items-center gap-4 mt-8 pt-4 border-t border-[#dfba73]/10">
               <div className="relative w-10 h-10 rounded-full overflow-hidden border border-[#dfba73]/25 shrink-0">
-                <Image
-                  src={customizedImages[`rev_avatar_${review.id}`] || review.img}
-                  alt={review.name}
-                  width={40}
-                  height={40}
-                  className="w-full h-full object-cover"
-                />
+                {customizedImages[`rev_avatar_${review.id}`] ? (
+                  <Image
+                    src={customizedImages[`rev_avatar_${review.id}`]}
+                    alt={review.name}
+                    width={40}
+                    height={40}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-[#dfba73]/20 flex items-center justify-center">
+                    <span className="text-[#dfba73] font-serif font-bold text-sm">
+                      {review.name.charAt(0)}
+                    </span>
+                  </div>
+                )}
                 {isDesignMode && (
                   <label className="absolute inset-0 bg-neutral-900/80 backdrop-blur-xs flex items-center justify-center text-amber-500 cursor-pointer z-10">
                     <Upload className="w-3.5 h-3.5" />
